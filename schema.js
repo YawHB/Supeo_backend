@@ -1,5 +1,5 @@
 export const typeDefs = `#graphql
-scalar Date
+#scalar Date
 
 
 type Employee {
@@ -13,8 +13,8 @@ type Employee {
 
 type TimeEntry{
     id: ID!
-    start_time: String!
-    end_time: String!
+    startTime: String!
+    endTime: String!
     duration: String!
     comment: String
     #date: dateScala!
@@ -22,14 +22,14 @@ type TimeEntry{
 
 type Admin {
     id: ID!
-    first_name: String!
+    firstName: String!
 }
 
 #Entry points
 type Query {
-    employees: [Employee]
-    admins: [Admin]
-    timeEntries: [TimeEntry]
+    employees: [Employee]!
+    admins: [Admin]!
+    timeEntries: [TimeEntry]!
 }
 
 `
