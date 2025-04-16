@@ -1,4 +1,4 @@
-const timeEntryResolver = {
+export const timeEntryResolver = {
   Query: {
     timeEntries: async (_, __, { sql }) => {
       console.log('inside time entry call')
@@ -6,5 +6,3 @@ const timeEntryResolver = {
     },
   },
 }
-
-export { timeEntryResolver }
