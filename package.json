@@ -19,6 +19,7 @@
         "dotenv": "^16.5.0",
         "express": "^5.1.0",
         "graphql": "^16.10.0",
+        "lodash.snakecase": "^4.1.1",
         "postgres": "^3.4.5"
     },
     "devDependencies": {
