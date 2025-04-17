@@ -17,7 +17,7 @@ type TimeEntry{
     endTime: String!
     duration: String!
     comment: String
-    #date: dateScala!
+   #Insæt date her
 }
 
 type Admin {
