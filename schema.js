@@ -33,9 +33,9 @@ type Admin {
 type Query {
     employees: [Employee]!
     employee(id: ID!):Employee!
-   
     admins: [Admin]!
     timeEntries: [TimeEntry]!
+    timeEntry(id: ID!): TimeEntry!
     
 }
 
