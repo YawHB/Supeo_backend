@@ -36,4 +36,4 @@ app.use(
 
 app.listen(PORT, () => console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`))
 
-export default sql
+//export default sql
