@@ -5,4 +5,10 @@ export const employeeResolver = {
       return await sql`SELECT * FROM employee`
     },
   },
+
+  Employee: {
+    timeEntries: async (parent) => {
+      return await sql`SELECT * FROM time_entries WHERE id  `
+    },
+  },
 }

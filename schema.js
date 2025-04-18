@@ -9,6 +9,7 @@ type Employee {
     role: String!
     email:String!
     phoneNumber: String!
+    timeEntries: [TimeEntry]!
 }
 
 type TimeEntry{
@@ -17,7 +18,7 @@ type TimeEntry{
     endTime: String!
     duration: String!
     comment: String
-   date: Date!
+    date: Date!
 
 }
 
@@ -31,6 +32,7 @@ type Query {
     employees: [Employee]!
     admins: [Admin]!
     timeEntries: [TimeEntry]!
+    employee(id: ID!): [TimeEntry]!
 }
 
 `
