@@ -6,22 +6,23 @@ export const dateScala = new GraphQLScalarType({
 
   //Sender værdier til klienten
   serialize(value) {
-    return value.toString()
-    //"2025-12-02"
-    // if (value instanceof Date) {
-    //   return value.getTime()
-    // }¨
-    // return dateToString(value)
+    if (value instanceof Date) {
+      return value.toLocaleDateString('da-DK')
+    }
   },
+
   //Modtager en værdi fra klienten
   parseValue(value) {
-    return stringToDate(value)
+    //convert string to date
   },
 
   //Læser hardcoded værdier direkte fra querien
   parseLiteral(ast) {
-    if (ast.kind === Kind.STRING) {
-      return stringTODate(ast.value)
+    if (ast.kind === Kind.INT) {
+      // Convert hard-coded AST string to integer and then to Date
+      return new Date(parseInt(ast.value, 10))
     }
+    // Invalid hard-coded value (not an integer)
+    return null
   },
 })
