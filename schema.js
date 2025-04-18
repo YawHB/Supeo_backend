@@ -1,5 +1,5 @@
 export const typeDefs = `#graphql
-#scalar Date
+scalar Date
 
 
 type Employee {
@@ -17,7 +17,8 @@ type TimeEntry{
     endTime: String!
     duration: String!
     comment: String
-   #Insæt date her
+   date: Date!
+
 }
 
 type Admin {
