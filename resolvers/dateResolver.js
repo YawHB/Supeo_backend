@@ -1,4 +1,5 @@
-import { dateScala } from '../scalas/Date.js'
+import { dateScala } from '../src/scalas/Date.scalar'
+
 export const scalaResolvers = {
   Date: dateScala,
 }
