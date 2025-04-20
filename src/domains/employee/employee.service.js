@@ -1,5 +1,4 @@
-import { getAllEmployees } from './employee.reposity'
-
-export function getAllEmployees() {
-  return getAllEmployees()
+import { getAllEmployees } from './employee.repository.js'
+export function getEmployees(sql) {
+  return getAllEmployees(sql)
 }

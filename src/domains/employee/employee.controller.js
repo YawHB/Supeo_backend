@@ -1,10 +1,10 @@
-import { getAllEmployees } from './employee.service.js'
+import { getEmployees } from './employee.service.js'
 
 export const employeeResolver = {
   Query: {
     employees: async (_, __, { sql }) => {
       console.log('inside usemplyeeer call')
-      return getAllEmployees()
+      return getEmployees(sql)
     },
     employee: async (_, { id }, { sql }) => {
       console.log('inside usemplyeeer call')
