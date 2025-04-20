@@ -4,10 +4,10 @@ import { ApolloServer } from '@apollo/server'
 import { expressMiddleware } from '@apollo/server/express4'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import { typeDefs } from '../schema.js'
 import snakeCase from 'lodash.snakecase'
-import { sql } from './config/db_config.js'
+import { sql } from './config/db-config.js'
 import { resolvers } from '../resolvers/mergeResolver.js'
+import { typeDefs } from './schema-builder/merge-type-defs.js'
 
 const PORT = 4000
 

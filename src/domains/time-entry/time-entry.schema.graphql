@@ -1,0 +1,14 @@
+#scalar Date
+type TimeEntry {
+  id: ID!
+  startTime: String!
+  endTime: String!
+  duration: String!
+  comment: String
+  date: Date!
+}
+
+#Entry points
+extend type Query {
+  timeEntries: [TimeEntry]!
+}
