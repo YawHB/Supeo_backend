@@ -6,4 +6,4 @@ export const typeDefs = loadSchemaSync('./**/*.graphql', {
   loaders: [new GraphQLFileLoader()],
 })
 
-console.log(printSchema(typeDefs))
+//console.log(printSchema(typeDefs))
