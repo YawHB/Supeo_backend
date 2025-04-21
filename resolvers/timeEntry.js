@@ -9,11 +9,4 @@ export const timeEntryResolver = {
       return timeEntry[0]
     },
   },
-
-  TimeEntry: {
-    employee: async (parent, _, { sql }) => {
-      const employee = await sql`SELECT * FROM employee WHERE id = ${parent.id}`
-      return employee[0]
-    },
-  },
 }

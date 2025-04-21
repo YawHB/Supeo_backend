@@ -11,4 +11,5 @@ type TimeEntry {
 #Entry points
 extend type Query {
   timeEntries: [TimeEntry]!
+  timeEntry(id: ID!): TimeEntry!
 }
