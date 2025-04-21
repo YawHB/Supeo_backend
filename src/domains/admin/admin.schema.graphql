@@ -1,0 +1,10 @@
+scalar Date
+
+type Admin {
+  id: ID!
+  firstName: String!
+}
+
+type Query {
+  admins: [Admin]!
+}

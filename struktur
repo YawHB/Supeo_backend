@@ -1,0 +1,22 @@
+src/
+├── timeEntry/✅
+│   ├── schema.graphql             // GraphQL type definitions
+│   ├── query.resolvers.js         // Query resolvers
+│   ├── mutation.resolvers.js      // Mutation resolvers
+│   ├── service.js                 // Forretningslogik
+│   └── repository.js              // Databaseforespørgsler
+├── employee/✅
+│   ├── schema.graphql
+│   ├── query.resolvers.js
+│   ├── mutation.resolvers.js
+│   ├── service.js
+│   └── repository.js
+├── scalars/✅
+│   ├── Date.scalar.js             // Custom scalar for Date
+│   └── mergeCustomScalars.js      // Samler alle custom scalars
+├── schemaBuilder/✅
+│   ├── mergeTypeDefs.js           // Kombinerer alle typeDefs
+│   └── mergeResolvers.js          // Kombinerer alle resolvers
+├── config/✅
+│   └── db_config.js               // Databaseforbindelse
+└── main.js                        // Initialiserer og starter Apollo Server

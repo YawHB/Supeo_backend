@@ -1,0 +1,17 @@
+scalar Date
+
+type Employee {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  role: String!
+  email: String!
+  phoneNumber: String!
+  timeEntries: [TimeEntry]!
+}
+
+#Entry points
+extend type Query {
+  employees: [Employee]!
+  employee(id: ID!): Employee!
+}
