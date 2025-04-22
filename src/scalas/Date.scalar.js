@@ -7,16 +7,8 @@ export const dateScala = new GraphQLScalarType({
   //Sender værdier til klienten
   serialize(value) {
     if (value instanceof Date) {
-      return value.toLocaleTimeString('da-DK', {
-        hour12: false, // bruger 24-timers format
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      })
+      return value.toLocaleDateString('da-DK')
     }
-    // if (value instanceof String) {
-    //   return value
-    // }
   },
 
   //Modtager en værdi fra klienten
