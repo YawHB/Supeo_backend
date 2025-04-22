@@ -1,6 +1,7 @@
 import { getAllEmployees } from './employee.repository.js'
 import { getEmployeeById } from './employee.repository.js'
 import { createEmployee } from './employee.repository.js'
+import { updateEmployee } from './employee.repository.js'
 
 export function getEmployees(sql) {
   return getAllEmployees(sql)
@@ -14,3 +15,6 @@ export function addNewEmployee(sql, employee) {
   return createEmployee(sql, employee)
 }
 
+export function editEmployee(sql, id, employee) {
+  return updateEmployee(sql, id, employee)
+}

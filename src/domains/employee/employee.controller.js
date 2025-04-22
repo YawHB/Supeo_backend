@@ -7,6 +7,7 @@ export const employeeResolver = {
       console.log('inside usemplyeeer call')
       return getEmployees(sql)
     },
+
     employee: async (_, { id }, { sql }) => {
       console.log('inside usemplyeeer call')
       const rows = await sql`SELECT * FROM employee where id = ${id}`
@@ -25,6 +26,23 @@ export const employeeResolver = {
   Mutation: {
     createEmployee: async (_, { newEmployee }, { sql }) => {
       return await addNewEmployee(sql, newEmployee)
+    },
+
+    updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
+      const { firstName, lastName, email, role, phoneNumber } = updatedEmployee
+
+      const rows = await sql`
+    UPDATE employee SET
+      first_name = ${firstName},
+      last_name = ${lastName},
+      email = ${email},
+      role = ${role},
+      phone_number = ${phoneNumber}
+    WHERE id = ${id}
+    RETURNING *
+  `
+
+      return rows[0]
     },
   },
 }

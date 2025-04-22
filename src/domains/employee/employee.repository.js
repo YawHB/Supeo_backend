@@ -15,3 +15,14 @@ export async function createEmployee(sql, employee) {
   `
   return result[0]
 }
+
+export async function updateEmployee(sql, id, employee) {
+  const { firstName, lastName, email, role, phoneNumber } = employee
+  const result = await sql`
+    UPDATE employee
+    SET "first_name" = ${firstName}, "last_name" = ${lastName}, "email" = ${email}, "role" = ${role}, "phone_number" = ${phoneNumber}
+    WHERE id = ${id}
+    RETURNING *
+  `
+  return result[0]
+}

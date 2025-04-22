@@ -26,4 +26,5 @@ input CreateEmployeeInput {
 
 type Mutation {
   createEmployee(newEmployee: CreateEmployeeInput): Employee!
+  updateEmployee(id: ID!, updatedEmployee: CreateEmployeeInput): Employee!
 }
