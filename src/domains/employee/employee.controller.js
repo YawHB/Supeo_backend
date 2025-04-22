@@ -15,7 +15,7 @@ export const employeeResolver = {
   Employee: {
     timeEntries: async (parent, _, { sql }) => {
       return await fetchEmployeeTimeEntries(parent, sql)
-   
+    },
   },
 
   Mutation: {
