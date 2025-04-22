@@ -1,4 +1,5 @@
 import { getEmployees } from './employee.service.js'
+import { addNewEmployee } from './employee.service.js'
 
 export const employeeResolver = {
   Query: {
@@ -17,7 +18,13 @@ export const employeeResolver = {
   Employee: {
     timeEntries: async (parent, { id }, { sql }) => {
       console.log('INSIDE EMPLOYEE.TIMEENTRIES')
-      return await sql`SELECT * FROM time_entry WHERE employee_id = ${parent.id} `
+      return await sql`SELECT * FROM time_entry WHERE employee_id = ${parent.id}`
+    },
+  },
+
+  Mutation: {
+    createEmployee: async (_, { newEmployee }, { sql }) => {
+      return await addNewEmployee(sql, newEmployee)
     },
   },
 }

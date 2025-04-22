@@ -1,5 +1,11 @@
 scalar Date
 
+#Entry points
+extend type Query {
+  employees: [Employee]!
+  employee(id: ID!): Employee!
+}
+
 type Employee {
   id: ID!
   firstName: String!
@@ -10,8 +16,14 @@ type Employee {
   timeEntries: [TimeEntry]!
 }
 
-#Entry points
-extend type Query {
-  employees: [Employee]!
-  employee(id: ID!): Employee!
+input CreateEmployeeInput {
+  firstName: String!
+  lastName: String!
+  role: String!
+  email: String!
+  phoneNumber: String!
+}
+
+type Mutation {
+  createEmployee(newEmployee: CreateEmployeeInput): Employee!
 }
