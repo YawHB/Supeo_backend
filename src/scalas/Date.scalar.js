@@ -6,14 +6,21 @@ export const dateScala = new GraphQLScalarType({
 
   //Sender værdier til klienten
   serialize(value) {
-    if (value instanceof Date) {
-      return value.toLocaleDateString('da-DK')
-    }
+    const isoDate = new Date(value)
+    return isoDate.toLocaleDateString('da-DK')
+    // if (value instanceof Date) {
+    //   return value.toLocaleDateString('da-DK')
+    // }
   },
 
   //Modtager en værdi fra klienten
   parseValue(value) {
     //convert string to date
+    const numberFromDate = Date.parse(value)
+    const isoDate = new Date(numberFromDate)
+    console.log('isoDate: ', isoDate.toISOString())
+    return isoDate
+    // return new Date(numberFromDate)
   },
 
   //Læser hardcoded værdier direkte fra querien

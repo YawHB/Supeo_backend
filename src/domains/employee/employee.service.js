@@ -29,17 +29,13 @@ export async function fetchEmployeeTimeEntries(employee, sql) {
     duration: convertMinToHour(entry.duration),
   }))
 
-  console.log(prepatedTimeEntries)
-
   return prepatedTimeEntries
 }
 
 function convertToTime(rawDate) {
-  console.log('rawDate :', rawDate)
   let stringDate = rawDate.toISOString()
   const [_date, time] = stringDate.split('T')
   const result = time.split('.')[0]
-  console.log(result[0])
   return result
 }
 
