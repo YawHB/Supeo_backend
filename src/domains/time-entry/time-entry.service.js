@@ -1,14 +1,26 @@
-import { updateTimeEntryStatus } from './time-entry.repository.js'
+import { findAllTimeEntries, findTimeEntryById, updateTimeEntryStatus } from './time-entry.repository.js'
 
-const updateStatus = async (id, status, sql) => {
-  const validStatuses = ['PENDING', 'GODKENDT', 'AFVIST']
-  if (!validStatuses.includes(status)) {
-    throw new Error('Invalid status')
-  }
-
-  return updateTimeEntryStatus(id, status, sql)
+export async function fetchAllTimeEntries(sql) {
+  const entries = await findAllTimeEntries(sql)
+  return entries.map((entry) => ({
+    ...entry,
+    startTime: convertUnixToTime(entry.startTime),
+    endTime: convertUnixToTime(entry.endTime),
+  }))
 }
 
-export default {
-  updateStatus,
+export function convertUnixToTime(msString) {
+  const date = new Date(Number(msString))
+  const [_, timeWithMs] = date.toISOString().split('T')
+  return timeWithMs.split('.')[0]
+}
+
+export async function fetchTimeEntryById(id, sql) {
+  return await findTimeEntryById(id, sql)
+}
+
+export async function updateStatus(id, status, sql) {
+  const valid = ['PENDING', 'GODKENDT', 'AFVIST']
+  if (!valid.includes(status)) throw new Error('Invalid status')
+  return await updateTimeEntryStatus(id, status, sql)
 }
