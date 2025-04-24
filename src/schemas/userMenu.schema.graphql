@@ -1,0 +1,7 @@
+extend type Query {
+  userMenuLinks(employeeId: Int!): [UserMenuLink!]!
+}
+
+type UserMenuLink {
+  menuItem: String!
+}

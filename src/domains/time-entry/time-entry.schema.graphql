@@ -6,10 +6,22 @@ type TimeEntry {
   duration: String!
   comment: String
   date: Date!
+  status: String!
 }
 
 #Entry points
 extend type Query {
   timeEntries: [TimeEntry]!
   timeEntry(id: ID!): TimeEntry!
+}
+
+extend type Mutation {
+  updateTimeEntryStatus(id: ID!, status: String!): TimeEntry!
+}
+
+type Notification {
+  id: ID!
+  comment: String
+  timestamp: String
+  status: String!
 }
