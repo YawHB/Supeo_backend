@@ -1,4 +1,9 @@
-import { fetchAllTimeEntries, fetchTimeEntryById, updateStatus } from './time-entry.service.js'
+import {
+  fetchAllTimeEntries,
+  fetchTimeEntryById,
+  updateStatus,
+  addNewTimeEntry,
+} from './time-entry.service.js'
 
 export const timeEntryResolver = {
   Query: {
@@ -9,7 +14,12 @@ export const timeEntryResolver = {
       return await fetchTimeEntryById(id, sql)
     },
   },
+
   Mutation: {
+    createTimeEntry: async (_, { newTimeEntry }, { sql }) => {
+      console.log('newTimeEntry object in Mutation resolver: ', newTimeEntry)
+      return await addNewTimeEntry(sql, newTimeEntry)
+    },
     updateTimeEntryStatus: async (_, { id, status }, { sql }) => {
       return await updateStatus(id, status, sql)
     },
