@@ -1,5 +1,5 @@
 scalar Date
-scalar MyTimeStamp
+scalar Time
 
 type TimeEntry {
   id: ID!
@@ -22,14 +22,13 @@ extend type Query {
 }
 
 input CreateTimeEntryInput {
-  startTime: MyTimeStamp!
-  endTime: MyTimeStamp!
+  startTime: Time!
+  endTime: Time!
   duration: String!
   comment: String
   date: Date!
   notification: NotificationInput!
   employeeID: ID!
-  #employeeID: ID!
 }
 
 type Mutation {
@@ -38,7 +37,7 @@ type Mutation {
 
 input NotificationInput {
   comment: String
-  timestamp: MyTimeStamp!
+  timestamp: Time!
   status: String!
 }
 

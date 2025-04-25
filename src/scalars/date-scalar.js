@@ -1,6 +1,6 @@
 import { GraphQLScalarType, Kind } from 'graphql'
 
-export const dateScala = new GraphQLScalarType({
+export const dateScalar = new GraphQLScalarType({
   name: 'Date',
   description: 'Date custom scala type',
 

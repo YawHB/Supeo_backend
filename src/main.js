@@ -6,7 +6,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import snakeCase from 'lodash.snakecase'
 import { sql } from './config/db-config.js'
-import { resolvers } from '../resolvers/mergeResolver.js'
+import { resolvers } from './schema-builder/merge-resolvers.js'
 import { typeDefs } from './schema-builder/merge-type-defs.js'
 
 const PORT = 4000

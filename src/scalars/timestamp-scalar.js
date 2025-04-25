@@ -1,7 +1,7 @@
 import { GraphQLScalarType, Kind } from 'graphql'
 
-export const TimestampType = new GraphQLScalarType({
-  name: 'MyTimeStamp',
+export const timestampScalar = new GraphQLScalarType({
+  name: 'Time',
   description:
     'The javascript `Date` as integer. Type represents date and time ' +
     'as number of milliseconds from start of UNIX epoch.',

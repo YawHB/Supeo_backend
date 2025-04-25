@@ -5,5 +5,3 @@ import { printSchema } from 'graphql'
 export const typeDefs = loadSchemaSync('./**/*.graphql', {
   loaders: [new GraphQLFileLoader()],
 })
-
-//console.log(printSchema(typeDefs))
