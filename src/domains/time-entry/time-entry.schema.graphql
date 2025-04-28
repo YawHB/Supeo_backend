@@ -37,7 +37,7 @@ type Mutation {
 
 input NotificationInput {
   comment: String
-  timestamp: Time!
+  timestamp: String
   status: String!
 }
 

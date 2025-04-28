@@ -17,7 +17,6 @@ export const timeEntryResolver = {
 
   Mutation: {
     createTimeEntry: async (_, { newTimeEntry }, { sql }) => {
-      console.log('newTimeEntry object in Mutation resolver: ', newTimeEntry)
       return await addNewTimeEntry(sql, newTimeEntry)
     },
     updateTimeEntryStatus: async (_, { id, status }, { sql }) => {
