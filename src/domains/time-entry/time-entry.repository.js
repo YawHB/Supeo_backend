@@ -48,10 +48,8 @@ export async function updateTimeEntryStatus(id, status, sql) {
   return timeEntry[0]
 }
 export async function createTimeEntry(sql, newTimeEntry) {
-  console.log(newTimeEntry)
   const { startTime, endTime, duration, comment, date, employeeID, notification } = newTimeEntry
-  console.log('REPO - TIME ENTRY')
-  console.log(notification)
+
   const { comment: notificationComment, timestamp, status } = notification
 
   const notificationResultArr =
