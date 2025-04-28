@@ -1,10 +1,15 @@
-import { networkInterfaces } from 'os'
 import {
   findAllTimeEntries,
   findTimeEntryById,
   updateTimeEntryStatus,
   createTimeEntry,
 } from './time-entry.repository.js'
+
+import {
+  combineDateAndTimeToUnixTime,
+  unixTimeToTimestamp,
+  convertUnixToTime,
+} from '../../utils/date-time-helpers.js'
 
 export async function fetchAllTimeEntries(sql) {
   const entries = await findAllTimeEntries(sql)
@@ -13,12 +18,6 @@ export async function fetchAllTimeEntries(sql) {
     startTime: convertUnixToTime(entry.startTime),
     endTime: convertUnixToTime(entry.endTime),
   }))
-}
-
-export function convertUnixToTime(msString) {
-  const date = new Date(Number(msString))
-  const [_, timeWithMs] = date.toISOString().split('T')
-  return timeWithMs.split('.')[0]
 }
 
 export async function fetchTimeEntryById(id, sql) {
@@ -32,11 +31,8 @@ export async function updateStatus(id, status, sql) {
 }
 
 export async function addNewTimeEntry(sql, newTimeEntry) {
-  console.log('Inside add new time entry -- service')
-  console.log(newTimeEntry)
   const { date, startTime, endTime, notification } = newTimeEntry
   const { timestamp } = notification
-  console.log('notification: ', timestamp)
   const convertedTimeEntry = {
     ...newTimeEntry,
     startTime: unixTimeToTimestamp(combineDateAndTimeToUnixTime(date, startTime)),
@@ -46,24 +42,6 @@ export async function addNewTimeEntry(sql, newTimeEntry) {
       timestamp: unixTimeToTimestamp(timestamp),
     },
   }
-  console.log('-----------------hallloo-----------------------')
-  console.log('convertedTimeEntry: ', convertedTimeEntry)
+
   return await createTimeEntry(sql, convertedTimeEntry)
-}
-
-function combineDateAndTimeToUnixTime(currentDate, time) {
-  const tempDate = currentDate
-  const stringDate = tempDate.toISOString()
-  const [date] = stringDate.split('T')
-  const dateToParse = `${date} ${time}`
-  const unixTimestamp = Date.parse(dateToParse)
-
-  return unixTimestamp
-  //---------------
-}
-function unixTimeToTimestamp(unixTime) {
-  unixTime = Number(unixTime)
-  const timestamp = new Date(unixTime).toISOString()
-  console.log('timestamp: ', timestamp)
-  return timestamp
 }
