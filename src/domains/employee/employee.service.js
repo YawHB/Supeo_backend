@@ -7,10 +7,6 @@ import {
   updateEmployee,
 } from './employee.repository.js'
 
-// import { getEmployeeById } from './employee.repository.js'
-// import { createEmployee } from './employee.repository.js'
-// import { updateEmployee } from './employee.repository.js'
-
 export function getEmployees(sql) {
   return getAllEmployees(sql)
 }
@@ -20,27 +16,7 @@ export async function fetchEmployee(employeeID, sql) {
 }
 
 export async function fetchEmployeeTimeEntries(employee, sql) {
-  let timeEntries = await findAllEmployeeTimeEntries(employee, sql)
-
-  const prepatedTimeEntries = timeEntries.map((entry) => ({
-    ...entry,
-    start_time: convertToTime(entry.start_time),
-    end_time: convertToTime(entry.end_time),
-    duration: convertMinToHour(entry.duration),
-  }))
-
-  return prepatedTimeEntries
-}
-
-function convertToTime(rawDate) {
-  let stringDate = rawDate.toISOString()
-  const [_date, time] = stringDate.split('T')
-  const result = time.split('.')[0]
-  return result
-}
-
-function convertMinToHour(minutes) {
-  return minutes / 60
+  return await findAllEmployeeTimeEntries(employee, sql)
 }
 
 export function getEmployee(sql, id) {
