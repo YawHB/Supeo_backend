@@ -1,14 +1,15 @@
 scalar Date
 scalar Time
+scalar Unix
 
 type TimeEntry {
   id: ID!
-  startTime: Time
-  endTime: Time
+  startTime: Time!
+  endTime: Time!
   duration: String
-  comment: String
-  date: Date
-  status: String
+  comment: String!
+  date: Date!
+  status: String!
   firstName: String
   lastName: String
   notification: Notification!
@@ -37,7 +38,7 @@ type Mutation {
 
 input NotificationInput {
   comment: String
-  timestamp: String
+  timestamp: Unix
   status: String!
 }
 
@@ -48,6 +49,6 @@ extend type Mutation {
 type Notification {
   id: ID!
   comment: String
-  timestamp: String
+  timestamp: Unix
   status: String!
 }
