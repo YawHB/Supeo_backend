@@ -3,8 +3,8 @@ scalar Time
 
 type TimeEntry {
   id: ID!
-  startTime: String
-  endTime: String
+  startTime: Time
+  endTime: Time
   duration: String
   comment: String
   date: Date
