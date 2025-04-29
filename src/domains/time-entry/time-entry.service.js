@@ -29,7 +29,7 @@ export async function updateStatus(id, status, sql) {
 }
 
 export async function addNewTimeEntry(sql, newTimeEntry) {
-  const { date, startTime, endTime, notification } = newTimeEntry
+  const { notification } = newTimeEntry
   const { timestamp } = notification
   const convertedTimeEntry = {
     ...newTimeEntry,
