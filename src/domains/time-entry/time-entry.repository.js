@@ -5,19 +5,20 @@ export async function findTimeEntryById(id, sql) {
 
 export async function findAllTimeEntries(sql) {
   return await sql`
-    SELECT 
-      te.id,
-      te.start_time   AS "startTime",
-      te.end_time     AS "endTime",
-      te.duration     AS "duration",
-      te.comment      AS "comment",
-      te.date         AS "date",
-      n.status        AS "status",
-      e.first_name    AS "firstName",
-      e.last_name     AS "lastName"
-    FROM time_entry te
-    JOIN notification n ON te.notification_id = n.id
-    JOIN employee e     ON te.employee_id     = e.id
+  SELECT 
+  te.id,
+  te.start_time,
+  te.end_time,
+  te.duration,
+  te.comment,
+  te.date,
+  n.status,
+  e.first_name,
+  e.last_name
+FROM time_entry te
+JOIN notification n ON te.notification_id = n.id
+JOIN employee e     ON te.employee_id     = e.id
+
   `
 }
 
@@ -70,5 +71,4 @@ export async function createTimeEntry(sql, newTimeEntry) {
     ...timeEntryResultArr[0],
     notification: notificationResult,
   }
-  // return timeEntryResultArr[0]
 }
