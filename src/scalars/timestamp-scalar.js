@@ -6,37 +6,24 @@ export const timestampScalar = new GraphQLScalarType({
     'The javascript `Date` as integer. Type represents date and time ' +
     'as number of milliseconds from start of UNIX epoch.',
 
-  serializeDate(date) {
-    // if (value instanceof Date) {
-    //   return value.getTime()
-    // } else if (typeof value === 'number') {
-    //   return Math.trunc(value)
-    // } else if (typeof value === 'string') {
-    //   return Date.parse(value)
-    // }
-    // return null
+  serialize(msString) {
+    console.log('Enter serialize: ', msString)
 
-    let tempTime = date.split(':')
-    let dt = new Date()
-    dt.setHours(tempTime[0])
-    dt.setMinutes(tempTime[1])
-    dt.setSeconds(tempTime[2])
-    return dt
+    const result = new Date(Number(msString)).toLocaleTimeString('da-DK', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+    console.log('Exit serialize: ', result)
+
+    return result
   },
 
-  parseDate(value) {
-    if (value === null) {
-      return null
-    }
-
-    try {
-      return new Date(value)
-    } catch (err) {
-      return null
-    }
+  parseValue(value) {
+    console.log('Enter parseValue: ', value)
+    return convertTimeToTimestamp(value)
   },
 
-  parseDateFromLiteral(ast) {
+  parseLiteral(ast) {
     if (ast.kind === Kind.INT) {
       const num = parseInt(ast.value, 10)
       return new Date(num)
@@ -46,3 +33,11 @@ export const timestampScalar = new GraphQLScalarType({
     return null
   },
 })
+
+function convertTimeToTimestamp(timeString) {
+  const [hours, minutes] = timeString.split(':').map(Number)
+  const now = new Date()
+  const utcTimestamp = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes)
+  console.log('Exit parseValue: ', utcTimestamp)
+  return utcTimestamp
+}
