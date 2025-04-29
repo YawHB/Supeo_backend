@@ -5,11 +5,7 @@ import {
   createTimeEntry,
 } from './time-entry.repository.js'
 
-import {
-  combineDateAndTimeToUnixTime,
-  unixTimeToTimestamp,
-  convertUnixToTime,
-} from '../../utils/date-time-helpers.js'
+import { unixTimeToTimestamp, convertUnixToTime } from '../../utils/date-time-helpers.js'
 
 export async function fetchAllTimeEntries(sql) {
   const entries = await findAllTimeEntries(sql)
@@ -21,7 +17,9 @@ export async function fetchAllTimeEntries(sql) {
 }
 
 export async function fetchTimeEntryById(id, sql) {
-  return await findTimeEntryById(id, sql)
+  const result = await findTimeEntryById(id, sql)
+  console.log(result)
+  return result
 }
 
 export async function updateStatus(id, status, sql) {
@@ -35,8 +33,6 @@ export async function addNewTimeEntry(sql, newTimeEntry) {
   const { timestamp } = notification
   const convertedTimeEntry = {
     ...newTimeEntry,
-    startTime: unixTimeToTimestamp(combineDateAndTimeToUnixTime(date, startTime)),
-    endTime: unixTimeToTimestamp(combineDateAndTimeToUnixTime(date, endTime)),
     notification: {
       ...notification,
       timestamp: unixTimeToTimestamp(timestamp),
