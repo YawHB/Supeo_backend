@@ -7,19 +7,13 @@ export const timestampScalar = new GraphQLScalarType({
     'as number of milliseconds from start of UNIX epoch.',
 
   serialize(msString) {
-    console.log('Enter serialize: ', msString)
-
-    const result = new Date(Number(msString)).toLocaleTimeString('da-DK', {
+    return new Date(Number(msString)).toLocaleTimeString('da-DK', {
       hour: '2-digit',
       minute: '2-digit',
     })
-    console.log('Exit serialize: ', result)
-
-    return result
   },
 
   parseValue(value) {
-    console.log('Enter parseValue: ', value)
     return convertTimeToTimestamp(value)
   },
 
@@ -38,6 +32,5 @@ function convertTimeToTimestamp(timeString) {
   const [hours, minutes] = timeString.split(':').map(Number)
   const now = new Date()
   const utcTimestamp = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes)
-  console.log('Exit parseValue: ', utcTimestamp)
   return utcTimestamp
 }

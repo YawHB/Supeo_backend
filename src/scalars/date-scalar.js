@@ -18,9 +18,7 @@ export const dateScalar = new GraphQLScalarType({
     //convert string to date
     const numberFromDate = Date.parse(value)
     const isoDate = new Date(numberFromDate)
-    console.log('isoDate: ', isoDate.toISOString())
     return isoDate
-    // return new Date(numberFromDate)
   },
 
   //Læser hardcoded værdier direkte fra querien
