@@ -1,10 +1,15 @@
 scalar Date
 
-#Entry points
 extend type Query {
   employees: [Employee]!
   employee(id: ID!): Employee!
 }
+
+# type Query {
+#   employees: [Employee]!
+#   employee(id: ID!): Employee!
+#   employees(pagination: PaginationInput!): EmployeesPage!
+# }
 
 type Employee {
   id: ID!
@@ -27,4 +32,20 @@ input CreateEmployeeInput {
 type Mutation {
   createEmployee(newEmployee: CreateEmployeeInput): Employee!
   updateEmployee(id: ID!, updatedEmployee: CreateEmployeeInput): Employee!
+}
+
+input PaginationInput {
+  page: Int!
+  perPage: Int!
+}
+
+type PaginationResponse {
+  page: Int!
+  perPage: Int!
+  totalCount: Int!
+}
+
+type EmployeesPage {
+  pagination: PaginationResponse!
+  items: [Employee]!
 }

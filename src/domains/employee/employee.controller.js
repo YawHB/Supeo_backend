@@ -1,11 +1,15 @@
 import { fetchEmployee, getEmployees, fetchEmployeeTimeEntries } from './employee.service.js'
-import { addNewEmployee } from './employee.service.js'
+import { addNewEmployee, editEmployee } from './employee.service.js'
 
 export const employeeResolver = {
   Query: {
     employees: async (_, __, { sql }) => {
       return await getEmployees(sql)
     },
+
+    // employees: async (_, { pagination }, { sql }) => {
+    //   return await getEmployees(sql, pagination)
+    // },
 
     employee: async (_, { id }, { sql }) => {
       return await fetchEmployee(id, sql)
@@ -36,8 +40,11 @@ export const employeeResolver = {
     WHERE id = ${id}
     RETURNING *
   `
-
       return rows[0]
     },
   },
 }
+
+// updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
+//       return await editEmployee(sql, id, updatedEmployee)
+//     }
