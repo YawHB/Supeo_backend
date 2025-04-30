@@ -33,7 +33,7 @@ type PaginationResponse {
 
 type EmployeesPage {
   pagination: PaginationResponse!
-  items: [Employee]!
+  employees: [Employee]!
 }
 
 input CreateEmployeeInput {

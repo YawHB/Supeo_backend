@@ -14,11 +14,12 @@ export const employeeResolver = {
 
       return {
         pagination: {
-          page: Number(pageInfo.page),
-          perPage: Number(pageInfo.perPage),
-          totalCount: Number(pageInfo.totalCount),
+          page: pageInfo.page,
+          perPage: pageInfo.perPage,
+          totalCount: pageInfo.totalCount,
         },
         items,
+        employees: items,
       }
     },
     
@@ -47,15 +48,9 @@ export const employeeResolver = {
   },
 
   PaginationResponse: {
-    page: (parent) => {
-      return parent.page
-    },
-    perPage: (parent) => {
-      return parent.perPage
-    },
-    totalCount: (parent) => {
-      return parent.totalCount
-    },
+    page: parent => parent.page,
+    perPage: parent => parent.perPage,
+    totalCount: parent => parent.totalCount,
   },
 }
 
