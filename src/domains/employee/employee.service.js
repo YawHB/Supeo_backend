@@ -30,3 +30,16 @@ export function addNewEmployee(sql, employee) {
 export function editEmployee(sql, id, employee) {
   return updateEmployee(sql, id, employee)
 }
+
+export async function getPaginatedEmployees(sql, pagination = {}) {
+  const page = pagination.page ?? 1
+  const perPage = pagination.perPage ?? 10
+
+  const totalCount = await countEmployees(sql)
+  const items = await getEmployeesPaginated(sql, { page, perPage })
+
+  return {
+    pagination: { page, perPage, totalCount },
+    items,
+  }
+}

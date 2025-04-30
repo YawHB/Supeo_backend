@@ -35,3 +35,21 @@ export async function updateEmployee(sql, id, employee) {
   `
   return result[0]
 }
+
+export async function countEmployees(sql) {
+  const [{ count }] = await sql`
+    SELECT COUNT(*)::int AS count
+    FROM employee
+  `;
+  return count;
+}
+
+export async function getEmployeesPaginated(sql, { page, perPage }) {
+  const offset = (page - 1) * perPage;
+  return await sql`
+    SELECT *
+    FROM employee
+    LIMIT ${perPage}
+    OFFSET ${offset}
+  `;
+}
