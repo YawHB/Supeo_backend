@@ -2,6 +2,7 @@ scalar Date
 scalar Time
 scalar Unix
 
+# TYPES
 type TimeEntry {
   id: ID!
   startTime: Time!
@@ -16,12 +17,20 @@ type TimeEntry {
   employeeID: ID
 }
 
-#Entry points
+type Notification {
+  id: ID!
+  comment: String
+  timestamp: Unix
+  status: String!
+}
+
+# Queries - ENTRY POINTS
 extend type Query {
   timeEntries: [TimeEntry]!
   timeEntry(id: ID!): TimeEntry!
 }
 
+# INPUT
 input CreateTimeEntryInput {
   startTime: Time!
   endTime: Time!
@@ -32,23 +41,19 @@ input CreateTimeEntryInput {
   employeeID: ID!
 }
 
-type Mutation {
-  createTimeEntry(newTimeEntry: CreateTimeEntryInput): TimeEntry!
-}
-
 input NotificationInput {
   comment: String
   timestamp: Unix
   status: String!
 }
 
-extend type Mutation {
-  updateTimeEntryStatus(id: ID!, status: String!): TimeEntry!
+# MUTATIONS
+
+type Mutation {
+  createTimeEntry(newTimeEntry: CreateTimeEntryInput): TimeEntry!
 }
 
-type Notification {
-  id: ID!
-  comment: String
-  timestamp: Unix
-  status: String!
+extend type Mutation {
+  updateTimeEntryStatus(id: ID!, status: String!): TimeEntry!
+  #updateTimeEntryForEmployee():
 }
