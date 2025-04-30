@@ -46,5 +46,5 @@ export const employeeResolver = {
 }
 
 // updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
-//       return await editEmployee(sql, id, updatedEmployee)
-//     }
+// return await editEmployee(sql, id, updatedEmployee)
+// }
