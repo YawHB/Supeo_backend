@@ -5,6 +5,11 @@ extend type Query {
   employee(id: ID!): Employee!
 }
 
+type Mutation {
+  createEmployee(newEmployee: CreateEmployeeInput): Employee!
+  updateEmployee(id: ID!, updatedEmployee: CreateEmployeeInput): Employee!
+}
+
 type Employee {
   id: ID!
   firstName: String!
@@ -29,11 +34,6 @@ type PaginationResponse {
 type EmployeesPage {
   pagination: PaginationResponse!
   items: [Employee]!
-}
-
-type Mutation {
-  createEmployee(newEmployee: CreateEmployeeInput): Employee!
-  updateEmployee(id: ID!, updatedEmployee: CreateEmployeeInput): Employee!
 }
 
 input CreateEmployeeInput {

@@ -21,7 +21,7 @@ export const employeeResolver = {
         items,
       }
     },
-
+    
     // employees: async (_, __, { sql }) => {
     //   return await getEmployees(sql)
     // },
@@ -60,21 +60,20 @@ export const employeeResolver = {
 }
 
 // updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
-// return await editEmployee(sql, id, updatedEmployee)
+//   return await editEmployee(sql, id, updatedEmployee)
 // }
 
 // updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
-//       const { firstName, lastName, email, role, phoneNumber } = updatedEmployee
-
-//       const rows = await sql`
-//     UPDATE employee SET
-//       first_name = ${firstName},
-//       last_name = ${lastName},
-//       email = ${email},
-//       role = ${role},
-//       phone_number = ${phoneNumber}
+//   const { firstName, lastName, email, role, phoneNumber } = updatedEmployee
+//   const rows = await sql`
+//     UPDATE employee
+//     SET first_name = ${firstName},
+//         last_name = ${lastName},
+//         email = ${email},
+//         role = ${role},
+//         phone_number = ${phoneNumber}
 //     WHERE id = ${id}
 //     RETURNING *
 //   `
-//       return rows[0]
-//     },
+//   return rows[0]
+// },
