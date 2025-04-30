@@ -5,6 +5,8 @@ import {
   getEmployeeById,
   createEmployee,
   updateEmployee,
+  countEmployees,
+  getEmployeesPaginated,
 } from './employee.repository.js'
 
 export function getEmployees(sql) {

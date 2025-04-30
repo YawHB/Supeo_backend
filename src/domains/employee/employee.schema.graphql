@@ -1,8 +1,13 @@
+# employee.schema.graphql
+
 scalar Date
 
 extend type Query {
   employees: [Employee]!
   employee(id: ID!): Employee!
+
+  # Hent alle medarbejdere med pagination
+  #employees(pagination: PaginationInput!): EmployeesPage!
 }
 
 # type Query {
@@ -21,19 +26,6 @@ type Employee {
   timeEntries: [TimeEntry]!
 }
 
-input CreateEmployeeInput {
-  firstName: String!
-  lastName: String!
-  role: String!
-  email: String!
-  phoneNumber: String!
-}
-
-type Mutation {
-  createEmployee(newEmployee: CreateEmployeeInput): Employee!
-  updateEmployee(id: ID!, updatedEmployee: CreateEmployeeInput): Employee!
-}
-
 input PaginationInput {
   page: Int!
   perPage: Int!
@@ -48,4 +40,17 @@ type PaginationResponse {
 type EmployeesPage {
   pagination: PaginationResponse!
   items: [Employee]!
+}
+
+type Mutation {
+  createEmployee(newEmployee: CreateEmployeeInput): Employee!
+  updateEmployee(id: ID!, updatedEmployee: CreateEmployeeInput): Employee!
+}
+
+input CreateEmployeeInput {
+  firstName: String!
+  lastName: String!
+  role: String!
+  email: String!
+  phoneNumber: String!
 }

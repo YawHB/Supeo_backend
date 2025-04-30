@@ -36,6 +36,7 @@ export async function updateEmployee(sql, id, employee) {
   return result[0]
 }
 
+// Hent total antal rækker
 export async function countEmployees(sql) {
   const [{ count }] = await sql`
     SELECT COUNT(*)::int AS count
@@ -44,6 +45,7 @@ export async function countEmployees(sql) {
   return count;
 }
 
+// Hent kun den side, vi skal bruge
 export async function getEmployeesPaginated(sql, { page, perPage }) {
   const offset = (page - 1) * perPage;
   return await sql`
