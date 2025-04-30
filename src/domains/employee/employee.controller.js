@@ -1,11 +1,30 @@
-import { fetchEmployee, getEmployees, fetchEmployeeTimeEntries } from './employee.service.js'
-import { addNewEmployee, editEmployee } from './employee.service.js'
+import {
+  fetchEmployee,
+  fetchEmployeeTimeEntries,
+  addNewEmployee,
+  editEmployee,
+  getPaginatedEmployees,
+  getEmployees,
+} from './employee.service.js'
 
 export const employeeResolver = {
   Query: {
-    employees: async (_, {pagination}, { sql }) => {
-      return await getEmployees(sql, pagination)
+    employees: async (_, { pagination }, { sql }) => {
+      const { pagination: pageInfo, items } = await getPaginatedEmployees(sql, pagination)
+
+      return {
+        pagination: {
+          page: Number(pageInfo.page),
+          perPage: Number(pageInfo.perPage),
+          totalCount: Number(pageInfo.totalCount),
+        },
+        items,
+      }
     },
+
+    // employees: async (_, __, { sql }) => {
+    //   return await getEmployees(sql)
+    // },
 
     employee: async (_, { id }, { sql }) => {
       return await fetchEmployee(id, sql)
@@ -23,20 +42,19 @@ export const employeeResolver = {
       return await addNewEmployee(sql, newEmployee)
     },
 
-    updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
-      const { firstName, lastName, email, role, phoneNumber } = updatedEmployee
+    updateEmployee: async (_, { id, updatedEmployee }, { sql }) =>
+      await editEmployee(sql, id, updatedEmployee),
+  },
 
-      const rows = await sql`
-    UPDATE employee SET
-      first_name = ${firstName},
-      last_name = ${lastName},
-      email = ${email},
-      role = ${role},
-      phone_number = ${phoneNumber}
-    WHERE id = ${id}
-    RETURNING *
-  `
-      return rows[0]
+  PaginationResponse: {
+    page: (parent) => {
+      return parent.page
+    },
+    perPage: (parent) => {
+      return parent.perPage
+    },
+    totalCount: (parent) => {
+      return parent.totalCount
     },
   },
 }
@@ -44,3 +62,19 @@ export const employeeResolver = {
 // updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
 // return await editEmployee(sql, id, updatedEmployee)
 // }
+
+// updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
+//       const { firstName, lastName, email, role, phoneNumber } = updatedEmployee
+
+//       const rows = await sql`
+//     UPDATE employee SET
+//       first_name = ${firstName},
+//       last_name = ${lastName},
+//       email = ${email},
+//       role = ${role},
+//       phone_number = ${phoneNumber}
+//     WHERE id = ${id}
+//     RETURNING *
+//   `
+//       return rows[0]
+//     },

@@ -1,13 +1,4 @@
-import {
-  findAllEmployees,
-  getAllEmployees,
-  findAllEmployeeTimeEntries,
-  getEmployeeById,
-  createEmployee,
-  updateEmployee,
-  countEmployees,
-  getEmployeesPaginated,
-} from './employee.repository.js'
+import { findAllEmployees, getAllEmployees, findAllEmployeeTimeEntries, getEmployeeById, createEmployee, updateEmployee, countEmployees, getEmployeesPaginated } from './employee.repository.js'
 
 export function getEmployees(sql) {
   return getAllEmployees(sql)
@@ -34,14 +25,17 @@ export function editEmployee(sql, id, employee) {
 }
 
 export async function getPaginatedEmployees(sql, pagination = {}) {
-  const page = pagination.page ?? 1
-  const perPage = pagination.perPage ?? 10
-
+  const page = pagination?.page ?? 1
+  const perPage = pagination?.perPage ?? 10
   const totalCount = await countEmployees(sql)
   const items = await getEmployeesPaginated(sql, { page, perPage })
 
   return {
-    pagination: { page, perPage, totalCount },
+    pagination: {
+      page: Number(page),
+      perPage: Number(perPage),
+      totalCount: Number(totalCount),
+    },
     items,
   }
 }
