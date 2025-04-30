@@ -3,8 +3,8 @@ import { addNewEmployee, editEmployee } from './employee.service.js'
 
 export const employeeResolver = {
   Query: {
-    employees: async (_, __, { sql }) => {
-      return await getEmployees(sql)
+    employees: async (_, { pagination }, { sql }) => {
+      return await getEmployees(sql, pagination)
     },
 
     // employees: async (_, { pagination }, { sql }) => {

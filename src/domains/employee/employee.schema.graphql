@@ -1,8 +1,13 @@
+# employee.schema.graphql
+
 scalar Date
 
 extend type Query {
   employees: [Employee]!
   employee(id: ID!): Employee!
+
+  # Hent alle medarbejdere med pagination
+  employees(pagination: PaginationInput!): EmployeesPage!
 }
 
 # type Query {
