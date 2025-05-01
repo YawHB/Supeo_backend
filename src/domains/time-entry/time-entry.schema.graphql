@@ -18,13 +18,6 @@ type TimeEntry {
   employeeID: ID
 }
 
-type Notification {
-  id: ID!
-  comment: String
-  timestamp: Unix
-  status: String!
-}
-
 # Queries - ENTRY POINTS
 extend type Query {
   timeEntries: [TimeEntry]!
