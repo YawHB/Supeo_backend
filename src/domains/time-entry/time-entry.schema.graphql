@@ -6,11 +6,11 @@ scalar Unix
 type TimeEntry {
   id: ID!
   startTime: Time!
-  endTime: Time!
+  endTime: Time
   duration: String
   comment: String!
   startDate: Date!
-  endDate: Date!
+  endDate: Date
   status: String!
   firstName: String
   lastName: String
@@ -27,11 +27,11 @@ extend type Query {
 # INPUT
 input CreateTimeEntryInput {
   startTime: Time!
-  endTime: Time!
-  duration: String!
+  endTime: Time
+  duration: String
   comment: String
   startDate: Date!
-  endDate: Date!
+  endDate: Date
   notification: NotificationInput!
   employeeID: ID!
 }
