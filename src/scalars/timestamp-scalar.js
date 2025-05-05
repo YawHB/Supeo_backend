@@ -15,9 +15,24 @@ export const timestampScalar = new GraphQLScalarType({
 
   parseValue(dateTimeString) {
     console.log('INSIDE CALCULATE DATE TIME TO UNIX')
-    const [date, time] = dateTimeString.split('T')
+    if (!dateTimeString || typeof dateTimeString !== 'string') return null
+
+    const [date, time] = dateTimeString.split(' ')
+    if (!date || !time) return null
+
     const [year, month, day] = date.split('-').map(Number)
     const [hours, minutes] = time.split(':').map(Number)
+
+    if (
+      Number.isNaN(year) ||
+      Number.isNaN(month) ||
+      Number.isNaN(day) ||
+      Number.isNaN(hours) ||
+      Number.isNaN(minutes)
+    ) {
+      console.warn('Invalid date/time parts:', { year, month, day, hours, minutes })
+      return null
+    }
 
     console.log(Date.UTC(year, month - 1, day, hours, minutes))
     return Date.UTC(year, month - 1, day, hours, minutes)
