@@ -16,7 +16,7 @@ export async function fetchTimeEntryById(id, sql) {
 }
 
 export async function updateStatus(id, status, sql) {
-  const valid = ['PENDING', 'GODKENDT', 'AFVIST']
+  const valid = ['AFVENTER', 'GODKENDT', 'AFVIST', 'IGANG']
   if (!valid.includes(status)) throw new Error('Invalid status')
   return await updateTimeEntryStatus(id, status, sql)
 }
