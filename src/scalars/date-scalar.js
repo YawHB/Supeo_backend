@@ -7,7 +7,8 @@ export const dateScalar = new GraphQLScalarType({
   //Sender værdier til klienten
   serialize(value) {
     const isoDate = new Date(value)
-    return isoDate.toLocaleDateString('da-DK')
+    const result = isoDate.toLocaleDateString('da-DK')
+    return result.split('.').join('-')
     // if (value instanceof Date) {
     //   return value.toLocaleDateString('da-DK')
     // }
