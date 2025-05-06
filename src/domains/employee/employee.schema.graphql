@@ -10,7 +10,6 @@ type Employee {
   id: ID!
   firstName: String!
   lastName: String!
-  role: String!
   email: String!
   phoneNumber: String!
   timeEntries: [TimeEntry]!
@@ -19,7 +18,6 @@ type Employee {
 input CreateEmployeeInput {
   firstName: String!
   lastName: String!
-  role: String!
   email: String!
   phoneNumber: String!
 }

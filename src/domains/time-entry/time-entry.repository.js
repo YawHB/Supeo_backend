@@ -24,7 +24,7 @@ JOIN employee e     ON te.employee_id     = e.id
 }
 
 export async function updateTimeEntryStatus(id, status, sql) {
-  const result = await sql`
+  const notification = await sql`
     UPDATE notification
     SET status = ${status}
     WHERE id = (
@@ -34,7 +34,7 @@ export async function updateTimeEntryStatus(id, status, sql) {
     )
     RETURNING *;
   `
-  if (result.length === 0) {
+  if (notification.length === 0) {
     throw new Error('Time entry not found')
   }
 
@@ -47,11 +47,16 @@ export async function updateTimeEntryStatus(id, status, sql) {
     throw new Error('Time entry not found')
   }
 
-  return timeEntry[0]
+  //return timeEntry[0]
+  return {
+    notification: notification[0],
+    id,
+  }
 }
 
 export async function createTimeEntry(sql, newTimeEntry) {
-  const { startTime, endTime, duration, comment, startDate, endDate, employeeID, notification } = newTimeEntry
+  const { startTime, endTime, duration, comment, startDate, endDate, employeeID, notification } =
+    newTimeEntry
 
   const { comment: notificationComment, timestamp, status } = notification
 

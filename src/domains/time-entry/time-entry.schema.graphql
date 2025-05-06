@@ -8,7 +8,7 @@ type TimeEntry {
   startTime: Time!
   endTime: Time
   duration: String
-  comment: String!
+  comment: String
   startDate: Date!
   endDate: Date
   status: String!
@@ -16,6 +16,11 @@ type TimeEntry {
   lastName: String
   notification: Notification!
   employeeID: ID
+}
+
+type TimeEntryStatus {
+  id: ID!
+  notification: Notification!
 }
 
 # Queries - ENTRY POINTS
@@ -43,12 +48,10 @@ input NotificationInput {
 }
 
 # MUTATIONS
-
 type Mutation {
   createTimeEntry(newTimeEntry: CreateTimeEntryInput): TimeEntry!
 }
 
 extend type Mutation {
-  updateTimeEntryStatus(id: ID!, status: String!): TimeEntry!
-  #updateTimeEntryForEmployee():
+  updateTimeEntryStatus(id: ID!, status: String!): TimeEntryStatus!
 }

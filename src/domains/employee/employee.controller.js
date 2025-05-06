@@ -24,14 +24,13 @@ export const employeeResolver = {
     },
 
     updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
-      const { firstName, lastName, email, role, phoneNumber } = updatedEmployee
+      const { firstName, lastName, email, phoneNumber } = updatedEmployee
 
       const rows = await sql`
     UPDATE employee SET
       first_name = ${firstName},
       last_name = ${lastName},
       email = ${email},
-      role = ${role},
       phone_number = ${phoneNumber}
     WHERE id = ${id}
     RETURNING *
