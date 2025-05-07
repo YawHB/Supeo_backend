@@ -23,4 +23,14 @@ export const timeEntryResolver = {
       return await updateStatus(id, status, sql)
     },
   },
+
+  TimeEntry: {
+    notification: async (parent, _, { sql }) => {
+      if (!parent.notification_id) return null
+      const result = await sql`
+        SELECT * FROM notification WHERE id = ${parent.notification_id}
+      `
+      return result[0] || null
+    },
+  },
 }
