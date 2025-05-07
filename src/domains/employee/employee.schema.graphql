@@ -28,18 +28,18 @@ type Mutation {
   updateEmployee(id: ID!, updatedEmployee: CreateEmployeeInput): Employee!
 }
 
-input PaginationInput {
-  page: Int!
-  perPage: Int!
-}
+# input PaginationInput {
+#   page: Int!
+#   perPage: Int!
+# }
 
-type PaginationResponse {
-  page: Int!
-  perPage: Int!
-  totalCount: Int!
-}
+# type PaginationResponse {
+#   page: Int!
+#   perPage: Int!
+#   totalCount: Int!
+# }
 
-type EmployeesPage {
-  pagination: PaginationResponse!
-  employees: [Employee]!
-}
+# type EmployeesPage {
+#   pagination: PaginationResponse!
+#   employees: [Employee]!
+# }
