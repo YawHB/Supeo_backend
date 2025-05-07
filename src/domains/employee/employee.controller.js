@@ -12,7 +12,6 @@ export const employeeResolver = {
 
     // employees: async (_, { pagination }, { sql }) => {
     //   const { pagination: pageInfo, items } = await getPaginatedEmployees(sql, pagination)
-
     //   return {
     //     pagination: {
     //       page: pageInfo.page,
@@ -36,8 +35,28 @@ export const employeeResolver = {
       return await addNewEmployee(sql, newEmployee)
     },
 
-    updateEmployee: async (_, { id, updatedEmployee }, { sql }) =>
-      await editEmployee(sql, id, updatedEmployee),
+    updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
+      const { firstName, lastName, email, phoneNumber } = updatedEmployee
+
+      const rows = await sql`
+    UPDATE employee SET
+      first_name = ${firstName},
+      last_name = ${lastName},
+      email = ${email},
+      phone_number = ${phoneNumber}
+    WHERE id = ${id}
+    RETURNING *
+  `
+
+      return rows[0]
+    },
+
+    // updateEmployee: async (_, { id, updatedEmployee }, { sql }) =>
+    //   await editEmployee(sql, id, updatedEmployee),
+
+    // updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
+    //   return await editEmployee(sql, id, updatedEmployee)
+    // }
   },
 
   PaginationResponse: {
@@ -46,22 +65,3 @@ export const employeeResolver = {
     totalCount: (parent) => parent.totalCount,
   },
 }
-
-// updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
-//   return await editEmployee(sql, id, updatedEmployee)
-// }
-
-// updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
-//   const { firstName, lastName, email, role, phoneNumber } = updatedEmployee
-//   const rows = await sql`
-//     UPDATE employee
-//     SET first_name = ${firstName},
-//         last_name = ${lastName},
-//         email = ${email},
-//         role = ${role},
-//         phone_number = ${phoneNumber}
-//     WHERE id = ${id}
-//     RETURNING *
-//   `
-//   return rows[0]
-// },
