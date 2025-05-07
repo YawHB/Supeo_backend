@@ -1,11 +1,4 @@
-import {
-  fetchEmployee,
-  fetchEmployeeTimeEntries,
-  addNewEmployee,
-  editEmployee,
-  getPaginatedEmployees,
-  getEmployees,
-} from './employee.service.js'
+import { fetchEmployee, fetchEmployeeTimeEntries, addNewEmployee, editEmployee, getEmployees, getPaginatedEmployees } from './employee.service.js'
 
 export const employeeResolver = {
   Query: {
