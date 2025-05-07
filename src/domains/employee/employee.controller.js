@@ -9,27 +9,27 @@ import {
 
 export const employeeResolver = {
   Query: {
-    employees: async (_, { pagination }, { sql }) => {
-      const { pagination: pageInfo, items } = await getPaginatedEmployees(sql, pagination)
-
-      return {
-        pagination: {
-          page: pageInfo.page,
-          perPage: pageInfo.perPage,
-          totalCount: pageInfo.totalCount,
-        },
-        items,
-        employees: items,
-      }
+    employees: async (_, __, { sql }) => {
+      return await getEmployees(sql)
     },
-    
-    // employees: async (_, __, { sql }) => {
-    //   return await getEmployees(sql)
-    // },
 
     employee: async (_, { id }, { sql }) => {
       return await fetchEmployee(id, sql)
     },
+
+    // employees: async (_, { pagination }, { sql }) => {
+    //   const { pagination: pageInfo, items } = await getPaginatedEmployees(sql, pagination)
+
+    //   return {
+    //     pagination: {
+    //       page: pageInfo.page,
+    //       perPage: pageInfo.perPage,
+    //       totalCount: pageInfo.totalCount,
+    //     },
+    //     items,
+    //     employees: items,
+    //   }
+    // },
   },
 
   Employee: {
@@ -48,9 +48,9 @@ export const employeeResolver = {
   },
 
   PaginationResponse: {
-    page: parent => parent.page,
-    perPage: parent => parent.perPage,
-    totalCount: parent => parent.totalCount,
+    page: (parent) => parent.page,
+    perPage: (parent) => parent.perPage,
+    totalCount: (parent) => parent.totalCount,
   },
 }
 
