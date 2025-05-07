@@ -1,7 +1,8 @@
 scalar Date
 
 extend type Query {
-  employees(pagination: PaginationInput): EmployeesPage!
+  employees: [Employee]!
+  #employees(pagination: PaginationInput): EmployeesPage!
   employee(id: ID!): Employee!
 }
 
@@ -14,7 +15,6 @@ type Employee {
   id: ID!
   firstName: String!
   lastName: String!
-  role: String!
   email: String!
   phoneNumber: String!
   timeEntries: [TimeEntry]!
@@ -39,7 +39,6 @@ type EmployeesPage {
 input CreateEmployeeInput {
   firstName: String!
   lastName: String!
-  role: String!
   email: String!
   phoneNumber: String!
 }
