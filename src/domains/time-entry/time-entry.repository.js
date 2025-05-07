@@ -11,7 +11,8 @@ export async function findAllTimeEntries(sql) {
   te.end_time,
   te.duration,
   te.comment,
-  te.date,
+  te.start_date,
+  te.end_date,
   n.status,
   e.first_name,
   e.last_name
@@ -23,7 +24,7 @@ JOIN employee e     ON te.employee_id     = e.id
 }
 
 export async function updateTimeEntryStatus(id, status, sql) {
-  const result = await sql`
+  const notification = await sql`
     UPDATE notification
     SET status = ${status}
     WHERE id = (
@@ -33,7 +34,7 @@ export async function updateTimeEntryStatus(id, status, sql) {
     )
     RETURNING *;
   `
-  if (result.length === 0) {
+  if (notification.length === 0) {
     throw new Error('Time entry not found')
   }
 
@@ -46,10 +47,16 @@ export async function updateTimeEntryStatus(id, status, sql) {
     throw new Error('Time entry not found')
   }
 
-  return timeEntry[0]
+  //return timeEntry[0]
+  return {
+    notification: notification[0],
+    id,
+  }
 }
+
 export async function createTimeEntry(sql, newTimeEntry) {
-  const { startTime, endTime, duration, comment, date, employeeID, notification } = newTimeEntry
+  const { startTime, endTime, duration, comment, startDate, endDate, employeeID, notification } =
+    newTimeEntry
 
   const { comment: notificationComment, timestamp, status } = notification
 
@@ -62,8 +69,8 @@ export async function createTimeEntry(sql, newTimeEntry) {
   const notificationResult = notificationResultArr[0]
 
   const timeEntryResultArr =
-    await sql`INSERT INTO time_entry ("start_time", "end_time", "duration", "comment", "date","employee_id", "notification_id")
-  VALUES(${startTime}, ${endTime},${duration},${comment},${date},${employeeID}, ${notificationID})
+    await sql`INSERT INTO time_entry ("start_time", "end_time", "duration", "comment", "start_date", "end_date", "employee_id", "notification_id")
+  VALUES(${startTime}, ${endTime}, ${duration}, ${comment}, ${startDate}, ${endDate}, ${employeeID}, ${notificationID})
   RETURNING *
   `
 
