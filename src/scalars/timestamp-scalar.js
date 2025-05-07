@@ -13,8 +13,29 @@ export const timestampScalar = new GraphQLScalarType({
     })
   },
 
-  parseValue(value) {
-    return convertTimeToTimestamp(value)
+  parseValue(dateTimeString) {
+    console.log('INSIDE CALCULATE DATE TIME TO UNIX')
+    if (!dateTimeString || typeof dateTimeString !== 'string') return null
+
+    const [date, time] = dateTimeString.split(' ')
+    if (!date || !time) return null
+
+    const [year, month, day] = date.split('-').map(Number)
+    const [hours, minutes] = time.split(':').map(Number)
+
+    if (
+      Number.isNaN(year) ||
+      Number.isNaN(month) ||
+      Number.isNaN(day) ||
+      Number.isNaN(hours) ||
+      Number.isNaN(minutes)
+    ) {
+      console.warn('Invalid date/time parts:', { year, month, day, hours, minutes })
+      return null
+    }
+
+    console.log(Date.UTC(year, month - 1, day, hours, minutes))
+    return Date.UTC(year, month - 1, day, hours, minutes)
   },
 
   parseLiteral(ast) {
@@ -27,10 +48,3 @@ export const timestampScalar = new GraphQLScalarType({
     return null
   },
 })
-
-function convertTimeToTimestamp(timeString) {
-  const [hours, minutes] = timeString.split(':').map(Number)
-  const now = new Date()
-  const utcTimestamp = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes)
-  return utcTimestamp
-}
