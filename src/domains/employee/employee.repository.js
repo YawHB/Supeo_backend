@@ -53,6 +53,10 @@ export async function updateEmployee(sql, id, employee) {
   return result[0]
 }
 
+export async function getAllRoles(sql) {
+  return await sql`SELECT * FROM role`
+}
+
 // export async function countEmployees(sql) {
 //   const [{ count }] = await sql`
 //     SELECT COUNT(*)::int AS count
