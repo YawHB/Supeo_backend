@@ -16,13 +16,30 @@ export async function getEmployeeById(sql, id) {
 }
 
 export async function createEmployee(sql, employee) {
-  const { firstName, lastName, email, phoneNumber } = employee
+  const { firstName, lastName, email, phoneNumber, roleName, permissionLevel } = employee
+
+  let roleID = await sql` SELECT id FROM role WHERE "role_name" = ${roleName}`
+  let permissionID =
+    await sql` SELECT id FROM permission WHERE "permission_level" = ${permissionLevel}`
+
+  roleID = roleID[0].id
+  permissionID = permissionID[0].id
+
+  console.log('roleID', roleID)
+  console.log('permissionID', permissionID)
   const result = await sql`
-    INSERT INTO employee ("first_name", "last_name", "email", "phone_number")
-    VALUES (${firstName}, ${lastName}, ${email}, ${phoneNumber})
+    INSERT INTO employee ("first_name", "last_name", "email", "phone_number", "role_id", "permission_id")
+    VALUES (${firstName}, ${lastName}, ${email}, ${phoneNumber}, ${roleID}, ${permissionID})
     RETURNING *
   `
-  return result[0]
+  console.log('result', result[0])
+
+  const createdEmployee = result[0]
+  return {
+    ...createdEmployee,
+    roleID: roleID,
+    permissionID: permissionID,
+  }
 }
 
 export async function updateEmployee(sql, id, employee) {
