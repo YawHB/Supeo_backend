@@ -5,26 +5,47 @@ extend type Query {
   employees: [Employee]!
   #employees(pagination: PaginationInput): EmployeesPage!
   employee(id: ID!): Employee!
+  roles: [Role]!
 }
 
 type Employee {
   id: ID!
   firstName: String!
   lastName: String!
+  roleName: String
+  permissionLevel: String
   email: String!
   phoneNumber: String!
   timeEntries: [TimeEntry]!
 }
 
-input CreateEmployeeInput {
+type Role {
+  id: ID!
+  roleName: String!
+}
+
+type CreatedEmployee {
+  id: ID!
   firstName: String!
   lastName: String!
+  roleID: ID
+  permissionID: ID
   email: String!
   phoneNumber: String!
 }
 
+input CreateEmployeeInput {
+  firstName: String!
+  lastName: String!
+  roleName: String!
+  permissionLevel: String!
+  email: String!
+  phoneNumber: String!
+}
+
+
 type Mutation {
-  createEmployee(newEmployee: CreateEmployeeInput): Employee!
+  createEmployee(newEmployee: CreateEmployeeInput): CreatedEmployee!
   updateEmployee(id: ID!, updatedEmployee: CreateEmployeeInput): Employee!
 }
 
