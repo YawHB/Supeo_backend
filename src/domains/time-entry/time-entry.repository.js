@@ -23,34 +23,36 @@ JOIN employee e     ON te.employee_id     = e.id
   `
 }
 
-export async function updateTimeEntryStatus(id, status, sql) {
-  const notification = await sql`
+export async function updateTimeEntryStatus({ notification }, sql) {
+  console.log('inside time-entry repository')
+  console.log('notification', notification)
+  const updatedNotification = await sql`
     UPDATE notification
-    SET status = ${status}
+    SET status = ${notification.status}
     WHERE id = (
       SELECT notification_id
       FROM time_entry
-      WHERE id = ${id}
+      WHERE id = ${notification}
     )
     RETURNING *;
   `
+  console.log('updatedNotification', updatedNotification)
   if (notification.length === 0) {
     throw new Error('Time entry not found')
   }
 
   const timeEntry = await sql`
     SELECT * FROM time_entry
-    WHERE id = ${id}
+    WHERE id = ${notification}
   `
 
   if (timeEntry.length === 0) {
     throw new Error('Time entry not found')
   }
 
-  //return timeEntry[0]
+  console.log('timeEntry', timeEntry)
   return {
-    notification: notification[0],
-    id,
+    notification: updatedNotification[0],
   }
 }
 
