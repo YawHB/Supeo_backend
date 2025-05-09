@@ -6,6 +6,7 @@ extend type Query {
   #employees(pagination: PaginationInput): EmployeesPage!
   employee(id: ID!): Employee!
   roles: [Role]!
+  permissions: [Permission]!
 }
 
 type Employee {
@@ -22,6 +23,11 @@ type Employee {
 type Role {
   id: ID!
   roleName: String!
+}
+
+type Permission {
+  id: ID!
+  permissionLevel: String!
 }
 
 type CreatedEmployee {

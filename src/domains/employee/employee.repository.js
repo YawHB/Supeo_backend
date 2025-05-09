@@ -57,6 +57,10 @@ export async function getAllRoles(sql) {
   return await sql`SELECT * FROM role`
 }
 
+export async function getAllPermissions(sql) {
+  return await sql`SELECT * FROM permission`
+}
+
 // export async function countEmployees(sql) {
 //   const [{ count }] = await sql`
 //     SELECT COUNT(*)::int AS count

@@ -6,6 +6,7 @@ import {
   createEmployee,
   updateEmployee,
   getAllRoles,
+  getAllPermissions,
   //countEmployees,
   //getEmployeesPaginated,
 } from './employee.repository.js'
@@ -36,6 +37,10 @@ export function editEmployee(sql, id, employee) {
 
 export async function getRoles(sql) {
   return await getAllRoles(sql)
+}
+
+export async function getPermissions(sql) {
+  return await getAllPermissions(sql)
 }
 
 // export async function getPaginatedEmployees(sql, pagination = {}) {

@@ -1,4 +1,4 @@
-import { fetchEmployee, fetchEmployeeTimeEntries, addNewEmployee, getEmployees, getRoles } from './employee.service.js'
+import { fetchEmployee, fetchEmployeeTimeEntries, addNewEmployee, getEmployees, getRoles, getPermissions } from './employee.service.js'
 //import { editEmployee, getPaginatedEmployees } from './employee.service.js'
 
 export const employeeResolver = {
@@ -13,7 +13,11 @@ export const employeeResolver = {
 
     roles: async (_, __, { sql }) => {
       return await getRoles(sql)
-    }
+    },
+
+    permissions: async (_, __, { sql }) => {
+      return await getPermissions(sql)
+    },
     // employees: async (_, { pagination }, { sql }) => {
     //   const { pagination: pageInfo, items } = await getPaginatedEmployees(sql, pagination)
     //   return {
