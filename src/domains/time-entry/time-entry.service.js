@@ -15,10 +15,12 @@ export async function fetchTimeEntryById(id, sql) {
   return result
 }
 
-export async function updateStatus(id, status, sql) {
-  const valid = ['AFVENTER', 'GODKENDT', 'AFVIST', 'IGANG']
-  if (!valid.includes(status)) throw new Error('Invalid status')
-  return await updateTimeEntryStatus(id, status, sql)
+export async function updateStatus(notification, sql) {
+  console.log('INSIDE SERVICE')
+  console.log('notification', notification)
+  const valid = ['AFVENTER', 'GODKENDT', 'AFVIST']
+  if (!valid.includes(notification)) throw new Error('Invalid status')
+  return await updateTimeEntryStatus(notification, sql)
 }
 
 export async function addNewTimeEntry(sql, newTimeEntry) {

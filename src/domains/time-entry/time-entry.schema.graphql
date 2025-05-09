@@ -18,6 +18,13 @@ type TimeEntry {
   employeeID: ID
 }
 
+# Type som bliver returneret i updateringen af en notification
+type TimeEntryNotification {
+  id: ID!
+  notification: Notification!
+  employeeID: ID
+}
+
 type TimeEntryStatus {
   id: ID!
   notification: Notification!
@@ -53,5 +60,5 @@ type Mutation {
 }
 
 extend type Mutation {
-  updateTimeEntryStatus(id: ID!, status: String!): TimeEntryStatus!
+  updateTimeEntryStatus(notification: NotificationInput!): TimeEntryNotification!
 }

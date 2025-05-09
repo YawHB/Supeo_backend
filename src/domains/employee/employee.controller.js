@@ -1,5 +1,5 @@
-import { fetchEmployee, getEmployees, fetchEmployeeTimeEntries } from './employee.service.js'
-import { addNewEmployee } from './employee.service.js'
+import { fetchEmployee, fetchEmployeeTimeEntries, addNewEmployee, getEmployees, getRoles, getPermissions } from './employee.service.js'
+//import { editEmployee, getPaginatedEmployees } from './employee.service.js'
 
 export const employeeResolver = {
   Query: {
@@ -10,6 +10,26 @@ export const employeeResolver = {
     employee: async (_, { id }, { sql }) => {
       return await fetchEmployee(id, sql)
     },
+
+    roles: async (_, __, { sql }) => {
+      return await getRoles(sql)
+    },
+
+    permissions: async (_, __, { sql }) => {
+      return await getPermissions(sql)
+    },
+    // employees: async (_, { pagination }, { sql }) => {
+    //   const { pagination: pageInfo, items } = await getPaginatedEmployees(sql, pagination)
+    //   return {
+    //     pagination: {
+    //       page: pageInfo.page,
+    //       perPage: pageInfo.perPage,
+    //       totalCount: pageInfo.totalCount,
+    //     },
+    //     items,
+    //     employees: items,
+    //   }
+    // },
   },
 
   Employee: {
@@ -38,5 +58,18 @@ export const employeeResolver = {
 
       return rows[0]
     },
+
+    // updateEmployee: async (_, { id, updatedEmployee }, { sql }) =>
+    //   await editEmployee(sql, id, updatedEmployee),
+
+    // updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
+    //   return await editEmployee(sql, id, updatedEmployee)
+    // }
   },
+
+  // PaginationResponse: {
+  //   page: (parent) => parent.page,
+  //   perPage: (parent) => parent.perPage,
+  //   totalCount: (parent) => parent.totalCount,
+  // },
 }
