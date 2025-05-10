@@ -19,11 +19,19 @@ export const unixScalar = new GraphQLScalarType({
   },
 
   parseValue(msString) {
-    console.log('Enter parseValue: ', msString)
-    const now = new Date(Number(msString))
-    const timestamp = now.toISOString()
-    console.log('Exit parseValue: ', timestamp)
-    return timestamp
+    const ms = Number(msString)
+    if (Number.isNaN(ms)) return null
+
+    const local = new Date(ms)
+
+    const year = local.getFullYear()
+    const month = local.getMonth() + 1
+    const day = local.getDate()
+    const hours = local.getHours()
+    const minutes = local.getMinutes()
+    const seconds = local.getSeconds()
+
+    return Date.UTC(year, month - 1, day, hours, minutes, seconds)
   },
 
   parseLiteral(ast) {},
