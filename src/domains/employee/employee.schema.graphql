@@ -34,8 +34,8 @@ type CreatedEmployee {
   id: ID!
   firstName: String!
   lastName: String!
-  roleID: ID
-  permissionID: ID
+  roleName: String
+  permissionLevel: String
   email: String!
   phoneNumber: String!
 }
