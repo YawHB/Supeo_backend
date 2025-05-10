@@ -1,3 +1,5 @@
+const DEFAULT_BREAK = parseInt(process.env.PS_DEFAULT_BREAK_MINUTES ?? 30)
+
 export async function findTimeEntryById(id, sql) {
   const rows = await sql`SELECT * FROM time_entry WHERE id = ${id}`
   return rows[0]
@@ -71,8 +73,8 @@ export async function createTimeEntry(sql, newTimeEntry) {
   const notificationResult = notificationResultArr[0]
 
   const timeEntryResultArr =
-    await sql`INSERT INTO time_entry ("start_time", "end_time", "duration", "comment", "start_date", "end_date", "employee_id", "notification_id")
-  VALUES(${startTime}, ${endTime}, ${duration}, ${comment}, ${startDate}, ${endDate}, ${employeeID}, ${notificationID})
+    await sql`INSERT INTO time_entry ("start_time", "end_time", "duration", "break", "comment", "start_date", "end_date", "employee_id", "notification_id")
+  VALUES(${startTime}, ${endTime}, ${duration}, ${DEFAULT_BREAK},  ${comment}, ${startDate}, ${endDate}, ${employeeID}, ${notificationID})
   RETURNING *
   `
 
