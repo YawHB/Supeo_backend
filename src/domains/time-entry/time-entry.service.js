@@ -37,10 +37,3 @@ export async function addNewTimeEntry(sql, newTimeEntry) {
 
   return await createTimeEntry(sql, newTimeEntry)
 }
-
-//1. Tjek existing timeEntries
-//1.1 I servicelaget, kald en funktion existingTimeEntries() til repo der skal tjekke overlappende tider
-//1.2 I repo-laget lav SQL query der returnere et array af alle overlappende vagter
-//1.3 I servicelaget, Tjek længden af returværdien fra repo
-//1.3a hvis hvis længden er >0 send GQL ERROR og undlad at oprette ny tid
-//1.3b ellers send vagt videre til repo-laget og opret som normalt.
