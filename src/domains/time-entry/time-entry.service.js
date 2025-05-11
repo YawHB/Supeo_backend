@@ -1,3 +1,5 @@
+import { OverlappingTimeEntryExist } from '../../custom-errors.js'
+
 import {
   findAllTimeEntries,
   findTimeEntryById,
@@ -29,7 +31,9 @@ export async function addNewTimeEntry(sql, newTimeEntry) {
 
   const overlapingTimeEntries = await findOverlappingTimeEntries(employeeID, startTime, endTime)
 
-  console.log('overlapingTimeEntries: ', overlapingTimeEntries)
+  if (overlapingTimeEntries.length > 0) {
+    throw new OverlappingTimeEntryExist()
+  }
 
   return await createTimeEntry(sql, newTimeEntry)
 }
