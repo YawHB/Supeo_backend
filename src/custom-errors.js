@@ -18,3 +18,12 @@ export class UserGroupDoesNotExist extends GraphQLError {
     })
   }
 }
+export class PermissionLevelDoesNotExist extends GraphQLError {
+  constructor(message = 'Den valgte brugerrettighed er ugyldig') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIG_BRUGERRETTIGHED',
+      },
+    })
+  }
+}

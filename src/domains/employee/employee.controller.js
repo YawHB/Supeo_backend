@@ -1,4 +1,11 @@
-import { fetchEmployee, fetchEmployeeTimeEntries, addNewEmployee, getEmployees, getRoles, getPermissions } from './employee.service.js'
+import {
+  fetchEmployee,
+  fetchEmployeeTimeEntries,
+  addNewEmployee,
+  getEmployees,
+  getRoles,
+  getPermissions,
+} from './employee.service.js'
 //import { editEmployee, getPaginatedEmployees } from './employee.service.js'
 
 export const employeeResolver = {
@@ -40,7 +47,7 @@ export const employeeResolver = {
 
   Mutation: {
     createEmployee: async (_, { newEmployee }, { sql }) => {
-      return await addNewEmployee(sql, newEmployee)
+      return await addNewEmployee(newEmployee)
     },
 
     updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {

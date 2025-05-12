@@ -1,4 +1,4 @@
-import { UserGroupDoesNotExist } from '../../custom-errors.js'
+import { UserGroupDoesNotExist, PermissionLevelDoesNotExist } from '../../custom-errors.js'
 import {
   findAllEmployees,
   getAllEmployees,
@@ -8,7 +8,8 @@ import {
   updateEmployee,
   getAllRoles,
   getAllPermissions,
-  roleIdExists,
+  findRoleIdByName,
+  findPermissionIdByLevel,
   //countEmployees,
   //getEmployeesPaginated,
 } from './employee.repository.js'
@@ -29,14 +30,16 @@ export async function getEmployee(sql, id) {
   return getEmployeeById(sql, id)
 }
 
-export async function addNewEmployee(sql, employee) {
+export async function addNewEmployee(employee) {
   const { roleName, permissionLevel, email } = employee
-  console.log('employee: ', employee)
 
-  let roleID = await roleIdExists(roleName)
+  let roleID = await findRoleIdByName(roleName)
+  let permissionID = await findPermissionIdByLevel(permissionLevel)
 
   if (roleID.length <= 0) throw new UserGroupDoesNotExist()
-  return await createEmployee(employee, roleID[0].id)
+  if (permissionID.length <= 0) throw new PermissionLevelDoesNotExist()
+
+  return await createEmployee(employee, roleID[0].id, permissionID[0].id)
 }
 
 export function editEmployee(sql, id, employee) {
