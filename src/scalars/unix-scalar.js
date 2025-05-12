@@ -7,13 +7,10 @@ export const unixScalar = new GraphQLScalarType({
     'as number of milliseconds from start of UNIX epoch.',
 
   serialize(msString) {
-    console.log('Enter serialize: ', msString)
-
     const result = new Date(Number(msString)).toLocaleTimeString('da-DK', {
       hour: '2-digit',
       minute: '2-digit',
     })
-    console.log('Exit serialize: ', result)
 
     return result
   },
