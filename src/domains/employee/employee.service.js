@@ -33,13 +33,16 @@ export async function getEmployee(sql, id) {
 export async function addNewEmployee(employee) {
   const { roleName, permissionLevel, email } = employee
 
-  let roleID = await findRoleIdByName(roleName)
-  let permissionID = await findPermissionIdByLevel(permissionLevel)
+  let [role] = await findRoleIdByName(roleName)
+  let [permission] = await findPermissionIdByLevel(permissionLevel)
 
-  if (roleID.length <= 0) throw new UserGroupDoesNotExist()
-  if (permissionID.length <= 0) throw new PermissionLevelDoesNotExist()
+  console.log(role)
+  console.log(permission)
 
-  return await createEmployee(employee, roleID[0].id, permissionID[0].id)
+  if (!role) throw new UserGroupDoesNotExist()
+  if (!permission) throw new PermissionLevelDoesNotExist()
+
+  return await createEmployee(employee, role.id, permission.id)
 }
 
 export function editEmployee(sql, id, employee) {
