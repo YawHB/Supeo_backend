@@ -14,7 +14,7 @@ export const timestampScalar = new GraphQLScalarType({
   },
 
   parseValue(dateTimeString) {
-    console.log('INSIDE CALCULATE DATE TIME TO UNIX')
+    console.log('INSIDE dateTimeString: ', dateTimeString)
     if (!dateTimeString || typeof dateTimeString !== 'string') return null
 
     const [date, time] = dateTimeString.split(' ')
