@@ -9,3 +9,12 @@ export class OverlappingTimeEntryExist extends GraphQLError {
     })
   }
 }
+export class UserGroupDoesNotExist extends GraphQLError {
+  constructor(message = 'Den valgte brugergruppe er ugyldig') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIG_BRUGERGRUPPE',
+      },
+    })
+  }
+}

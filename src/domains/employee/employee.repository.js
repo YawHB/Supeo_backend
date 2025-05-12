@@ -1,3 +1,4 @@
+import { sql } from '../../config/db-config.js'
 export async function getAllEmployees(sql) {
   return await sql` SELECT employee.id ,first_name, last_name,email,phone_number, permission_level, role_name
 FROM employee
@@ -19,12 +20,10 @@ export async function getEmployeeById(sql, id) {
   return await sql`SELECT * FROM employee WHERE id = ${id}`
 }
 
-export async function createEmployee(sql, employee) {
-  const { firstName, lastName, email, phoneNumber, roleName, permissionLevel } = employee
-  let roleID = await sql` SELECT id FROM role WHERE "role_name" = ${roleName}`
+export async function createEmployee(employee, roleID) {
+  const { firstName, lastName, email, phoneNumber, permissionLevel } = employee
   let permissionID =
     await sql` SELECT id FROM permission WHERE "permission_level" = ${permissionLevel}`
-  roleID = roleID[0].id
   permissionID = permissionID[0].id
 
   const newEmployeeIDEesult = await sql`
@@ -42,6 +41,10 @@ export async function createEmployee(sql, employee) {
     `
   const newEmployee = employeeWithRoleAndPermission[0]
   return newEmployee
+}
+
+export async function roleIdExists(roleName) {
+  return await sql` SELECT id FROM role WHERE "role_name" = ${roleName}`
 }
 
 export async function updateEmployee(sql, id, employee) {
