@@ -12,3 +12,7 @@ export function convertUnixToTime(msString) {
   const [_, timeWithMs] = date.toISOString().split('T')
   return timeWithMs.split('.')[0]
 }
+
+export function hasCorrectOrder(start, end) {
+  return start <= end
+}
