@@ -1,4 +1,5 @@
-import { OverlappingTimeEntryExist } from '../../custom-errors.js'
+import { OverlappingTimeEntryExist, WorkHoursAreNegative } from '../../custom-errors.js'
+import { hasCorrectOrder } from '../../utils/date-time-helpers.js'
 
 import {
   findAllTimeEntries,
@@ -27,13 +28,14 @@ export async function updateStatus(notification, sql) {
 }
 
 export async function addNewTimeEntry(sql, newTimeEntry) {
-  const { employeeID, startTime, endTime } = newTimeEntry
+  const { employeeID, startTime, endTime, startDate, endDate } = newTimeEntry
+  const datesInOrder = hasCorrectOrder(startDate, endDate)
+  const timesInOrder = hasCorrectOrder(startTime, endTime)
 
   const overlapingTimeEntries = await findOverlappingTimeEntries(employeeID, startTime, endTime)
 
-  if (overlapingTimeEntries.length > 0) {
-    throw new OverlappingTimeEntryExist()
-  }
+  if (overlapingTimeEntries.length > 0) throw new OverlappingTimeEntryExist()
+  if (!datesInOrder || !timesInOrder) throw new WorkHoursAreNegative()
 
   return await createTimeEntry(sql, newTimeEntry)
 }
