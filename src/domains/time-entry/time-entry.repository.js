@@ -7,23 +7,8 @@ export async function findTimeEntryById(id, sql) {
   return rows[0]
 }
 
-export async function findAllTimeEntries(sql) {
-  return await sql`
-  SELECT 
-  te.id,
-  te.start_time,
-  te.end_time,
-  te.duration,
-  te.comment,
-  te.start_date,
-  te.end_date,
-  n.status,
-  e.first_name,
-  e.last_name
-FROM time_entry te
-JOIN notification n ON te.notification_id = n.id
-JOIN employee e     ON te.employee_id     = e.id
-
+export async function findAllTimeEntries() {
+  return await sql` SELECT * FROM time_entry
   `
 }
 
@@ -53,37 +38,24 @@ export async function createTimeEntry(sql, newTimeEntry) {
   }
 }
 
-export async function updateTimeEntryStatus({ notification }, sql) {
-  console.log('inside time-entry repository')
-  console.log('notification', notification)
-  const updatedNotification = await sql`
+export async function updateTimeEntryStatus(notification, sql) {
+  const { status, notificationID } = notification
+
+  const notificationResultArr = await sql`
     UPDATE notification
-    SET status = ${notification.status}
+    SET status = ${status}
     WHERE id = (
       SELECT notification_id
       FROM time_entry
-      WHERE id = ${notification}
+      WHERE id = ${notificationID}
     )
     RETURNING *;
   `
+
+  const updatedNotification = notificationResultArr[0]
   console.log('updatedNotification', updatedNotification)
-  if (notification.length === 0) {
-    throw new Error('Time entry not found')
-  }
 
-  const timeEntry = await sql`
-    SELECT * FROM time_entry
-    WHERE id = ${notification}
-  `
-
-  if (timeEntry.length === 0) {
-    throw new Error('Time entry not found')
-  }
-
-  console.log('timeEntry', timeEntry)
-  return {
-    notification: updatedNotification[0],
-  }
+  return updatedNotification
 }
 
 export async function findOverlappingTimeEntries(employeeID, newStartTime, NewEndTime) {

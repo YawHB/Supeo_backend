@@ -4,6 +4,7 @@ import {
   updateStatus,
   addNewTimeEntry,
 } from './time-entry.service.js'
+import { getEmployee } from '../employee/employee.service.js'
 
 export const timeEntryResolver = {
   Query: {
@@ -20,9 +21,9 @@ export const timeEntryResolver = {
       return await addNewTimeEntry(sql, newTimeEntry)
     },
     updateTimeEntryStatus: async (_, { notification }, { sql }) => {
-      console.log("INSIDE CONTROLLER")
-      console.log("notification", notification)
-      return await updateStatus( notification, sql)
+      console.log('INSIDE CONTROLLER')
+      console.log('notification', notification)
+      return await updateStatus(notification, sql)
     },
   },
 
@@ -33,6 +34,11 @@ export const timeEntryResolver = {
         SELECT * FROM notification WHERE id = ${parent.notification_id}
       `
       return result[0] || null
+    },
+    employee: async (parent, _, __) => {
+      // console.log('INSIDE TIME ENTRY CONTROLLER')
+      // console.log('parent: ', parent)
+      return await getEmployee(parent.employee_id)
     },
   },
 }

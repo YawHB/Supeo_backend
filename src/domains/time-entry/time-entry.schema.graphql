@@ -11,18 +11,9 @@ type TimeEntry {
   comment: String
   startDate: Date!
   endDate: Date
-  status: String!
-  firstName: String
-  lastName: String
+  employee: Employee
   notification: Notification!
-  employeeID: ID
-}
-
-# Type som bliver returneret i updateringen af en notification
-type TimeEntryNotification {
-  id: ID!
-  notification: Notification!
-  employeeID: ID
+  #employeeID: ID
 }
 
 type TimeEntryStatus {
@@ -48,10 +39,9 @@ input CreateTimeEntryInput {
   employeeID: ID!
 }
 
-input NotificationInput {
-  comment: String
-  timestamp: Unix
-  status: String!
+input NotificationStatusInput {
+  id: ID!
+  status: String
 }
 
 # MUTATIONS
@@ -60,5 +50,5 @@ type Mutation {
 }
 
 extend type Mutation {
-  updateTimeEntryStatus(notification: NotificationInput!): TimeEntryNotification!
+  updateTimeEntryStatus(notification: NotificationStatusInput!): Notification!
 }
