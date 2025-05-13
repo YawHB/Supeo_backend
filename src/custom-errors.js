@@ -9,11 +9,20 @@ export class OverlappingTimeEntryExist extends GraphQLError {
     })
   }
 }
-export class WorkHoursAreNegative extends GraphQLError {
-  constructor(message = 'Sluttidspunkt ligger før start tidspunkt i denne vagt  ') {
+export class UserGroupDoesNotExist extends GraphQLError {
+  constructor(message = 'Den valgte brugergruppe er ugyldig') {
     super(message, {
       extensions: {
-        code: 'VAGT_OPRETTELSE_FORBUDT',
+        code: 'UGYLDIG_BRUGERGRUPPE',
+      },
+    })
+  }
+}
+export class PermissionLevelDoesNotExist extends GraphQLError {
+  constructor(message = 'Den valgte brugerrettighed er ugyldig') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIG_BRUGERRETTIGHED',
       },
     })
   }

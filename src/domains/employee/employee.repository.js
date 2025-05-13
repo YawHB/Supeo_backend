@@ -1,3 +1,4 @@
+import { sql } from '../../config/db-config.js'
 export async function getAllEmployees(sql) {
   return await sql` SELECT employee.id ,first_name, last_name,email,phone_number, permission_level, role_name
 FROM employee
@@ -19,13 +20,8 @@ export async function getEmployeeById(sql, id) {
   return await sql`SELECT * FROM employee WHERE id = ${id}`
 }
 
-export async function createEmployee(sql, employee) {
-  const { firstName, lastName, email, phoneNumber, roleName, permissionLevel } = employee
-  let roleID = await sql` SELECT id FROM role WHERE "role_name" = ${roleName}`
-  let permissionID =
-    await sql` SELECT id FROM permission WHERE "permission_level" = ${permissionLevel}`
-  roleID = roleID[0].id
-  permissionID = permissionID[0].id
+export async function createEmployee(employee, roleID, permissionID) {
+  const { firstName, lastName, email, phoneNumber } = employee
 
   const newEmployeeIDEesult = await sql`
     INSERT INTO employee ("first_name", "last_name", "email", "phone_number", "role_id", "permission_id")
@@ -33,6 +29,7 @@ export async function createEmployee(sql, employee) {
     RETURNING id
     `
   const newEmployeeID = newEmployeeIDEesult[0].id
+
   const employeeWithRoleAndPermission = await sql`
     SELECT employee.id ,first_name , last_name ,email,phone_number , permission_level, role_name 
     FROM employee
@@ -61,6 +58,14 @@ export async function getAllRoles(sql) {
 
 export async function getAllPermissions(sql) {
   return await sql`SELECT * FROM permission`
+}
+
+export async function findRoleIdByName(roleName) {
+  return await sql` SELECT id FROM role WHERE "role_name" = ${roleName}`
+}
+
+export async function findPermissionIdByLevel(permissionLevel) {
+  return await sql`SELECT id FROM permission WHERE "permission_level" = ${permissionLevel}`
 }
 
 // export async function countEmployees(sql) {
