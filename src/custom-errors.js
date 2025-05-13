@@ -27,3 +27,13 @@ export class PermissionLevelDoesNotExist extends GraphQLError {
     })
   }
 }
+
+export class WorkHoursAreNegative extends GraphQLError {
+  constructor(message = 'Sluttidspunkt ligger før start tidspunkt i denne vagt  ') {
+    super(message, {
+      extensions: {
+        code: 'VAGT_OPRETTELSE_FORBUDT',
+      },
+    })
+  }
+}
