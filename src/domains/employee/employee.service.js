@@ -26,8 +26,10 @@ export async function fetchEmployeeTimeEntries(employee, sql) {
   return await findAllEmployeeTimeEntries(employee, sql)
 }
 
-export async function getEmployee(sql, id) {
-  return getEmployeeById(sql, id)
+export async function getEmployee(employeeID) {
+  console.log('--SERVICE')
+  console.log('id: ', employeeID)
+  return getEmployeeById(employeeID)
 }
 
 export async function addNewEmployee(employee) {

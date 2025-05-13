@@ -11,12 +11,12 @@ extend type Query {
 
 type Employee {
   id: ID!
-  firstName: String!
-  lastName: String!
+  firstName: String
+  lastName: String
   roleName: String
   permissionLevel: String
-  email: String!
-  phoneNumber: String!
+  email: String
+  phoneNumber: String
   timeEntries: [TimeEntry]!
 }
 

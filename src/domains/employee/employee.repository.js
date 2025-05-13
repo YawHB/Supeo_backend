@@ -16,8 +16,11 @@ export async function findAllEmployeeTimeEntries(employee, sql) {
   return await sql`SELECT * FROM time_entry WHERE employee_id = ${employee.id}`
 }
 
-export async function getEmployeeById(sql, id) {
-  return await sql`SELECT * FROM employee WHERE id = ${id}`
+export async function getEmployeeById(employeeID) {
+  console.log('##REPOSITORY')
+  console.log('id: ', employeeID)
+  const resultArr = await sql`SELECT * FROM employee WHERE id = ${employeeID}`
+  return resultArr[0]
 }
 
 export async function createEmployee(employee, roleID, permissionID) {
