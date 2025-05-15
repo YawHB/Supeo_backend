@@ -45,7 +45,6 @@ input NotificationStatusInput {
 }
 
 input NotificationInput {
-  id: ID!
   comment: String
   timestamp: Unix
   status: String!
