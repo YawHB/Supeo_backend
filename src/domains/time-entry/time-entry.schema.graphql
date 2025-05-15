@@ -11,6 +11,7 @@ type TimeEntry {
   comment: String
   startDate: Date!
   endDate: Date
+  break: String
   employee: Employee
   notification: Notification!
   #employeeID: ID
