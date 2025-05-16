@@ -5,7 +5,7 @@ import { expressMiddleware } from '@apollo/server/express4'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import snakeCase from 'lodash.snakecase'
-import { sql } from './config/db-config.js'
+import { sql } from './db-config.js'
 import { resolvers } from './schema-builder/merge-resolvers.js'
 import { typeDefs } from './schema-builder/merge-type-defs.js'
 

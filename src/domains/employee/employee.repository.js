@@ -1,4 +1,5 @@
-import { sql } from '../../config/db-config.js'
+import { sql } from '../../db-config.js'
+
 export async function getAllEmployees(sql) {
   return await sql` SELECT employee.id ,first_name, last_name,email,phone_number, permission_level, role_name
 FROM employee
