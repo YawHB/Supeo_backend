@@ -45,14 +45,33 @@ export async function createEmployee(employee, roleID, permissionID) {
 }
 
 export async function updateEmployee(sql, id, employee) {
-  const { firstName, lastName, email, phoneNumber } = employee
-  const result = await sql`
-    UPDATE employee
-    SET "first_name" = ${firstName}, "last_name" = ${lastName}, "email" = ${email}, "phone_number" = ${phoneNumber}
+  const { firstName, lastName, email, phoneNumber, roleName, permissionLevel } = employee
+
+  await sql` UPDATE employee
+  SET
+      first_name = ${firstName},
+      last_name = ${lastName},
+      email = ${email},
+      phone_number = ${phoneNumber},
+      role_id = (SELECT id FROM role WHERE role_name = ${roleName}),
+      permission_id = (SELECT id FROM permission WHERE permission_level = ${permissionLevel})
     WHERE id = ${id}
-    RETURNING *
   `
-  return result[0]
+  const updatedEmployee = await sql`
+    SELECT
+      employee.id,
+      employee.first_name,
+      employee.last_name,
+      employee.email,
+      employee.phone_number,
+      role.role_name,
+      permission.permission_level
+    FROM employee
+    INNER JOIN role ON role.id = employee.role_id
+    INNER JOIN permission ON permission.id = employee.permission_id
+    WHERE employee.id = ${id}
+  `
+  return updatedEmployee[0]
 }
 
 export async function getAllRoles(sql) {
