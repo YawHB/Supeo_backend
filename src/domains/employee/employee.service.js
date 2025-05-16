@@ -1,15 +1,15 @@
 import { UserGroupDoesNotExist, PermissionLevelDoesNotExist } from '../../utils/custom-errors.js'
 import {
-  findAllEmployees,
-  getAllEmployees,
-  findAllEmployeeTimeEntries,
-  getEmployeeById,
+  getAllRoles,
   createEmployee,
   updateEmployee,
-  getAllRoles,
-  getAllPermissions,
+  getEmployeeById,
+  getAllEmployees,
   findRoleIdByName,
+  findAllEmployees,
+  getAllPermissions,
   findPermissionIdByLevel,
+  findAllEmployeeTimeEntries,
   //countEmployees,
   //getEmployeesPaginated,
 } from './employee.repository.js'

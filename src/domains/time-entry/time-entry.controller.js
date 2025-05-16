@@ -1,10 +1,10 @@
+import { getEmployee } from '../employee/employee.service.js'
 import {
-  fetchAllTimeEntries,
-  fetchTimeEntryById,
   updateStatus,
   addNewTimeEntry,
+  fetchTimeEntryById,
+  fetchAllTimeEntries,
 } from './time-entry.service.js'
-import { getEmployee } from '../employee/employee.service.js'
 
 export const timeEntryResolver = {
   Query: {
@@ -34,8 +34,6 @@ export const timeEntryResolver = {
       return result[0] || null
     },
     employee: async (parent, _, __) => {
-      // console.log('INSIDE TIME ENTRY CONTROLLER')
-      // console.log('parent: ', parent)
       return await getEmployee(parent.employee_id)
     },
   },

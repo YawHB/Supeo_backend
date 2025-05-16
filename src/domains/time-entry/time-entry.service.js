@@ -1,21 +1,20 @@
 import { OverlappingTimeEntryExist, WorkHoursAreNegative } from '../../utils/custom-errors.js'
 import { hasCorrectOrder } from '../../utils/date-time-helpers.js'
-
 import {
-  findAllTimeEntries,
-  findTimeEntryById,
-  updateTimeEntryStatus,
   createTimeEntry,
+  findTimeEntryById,
+  findAllTimeEntries,
+  updateTimeEntryStatus,
   findOverlappingTimeEntries,
 } from './time-entry.repository.js'
-
-export async function fetchAllTimeEntries(sql) {
-  return await findAllTimeEntries(sql)
-}
 
 export async function fetchTimeEntryById(id, sql) {
   const result = await findTimeEntryById(id, sql)
   return result
+}
+
+export async function fetchAllTimeEntries(sql) {
+  return await findAllTimeEntries(sql)
 }
 
 export async function updateStatus(notification, sql) {

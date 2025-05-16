@@ -31,7 +31,6 @@ export async function createTimeEntry(sql, newTimeEntry) {
   VALUES(${startTime}, ${endTime}, ${duration}, ${DEFAULT_BREAK}, ${comment}, ${startDate}, ${endDate}, ${employeeID}, ${notificationID})
   RETURNING *
   `
-
   return {
     ...timeEntryResultArr[0],
     notification: notificationResult,
@@ -40,13 +39,10 @@ export async function createTimeEntry(sql, newTimeEntry) {
 
 export async function updateTimeEntryStatus(notification, sql) {
   const { status, notificationID, timestamp, comment } = notification
-  console.log('notification: ', notification)
 
   const notificationResultArr = await sql`
     UPDATE notification
-    SET status = ${status},
-     timestamp = ${timestamp},
-     comment = ${comment}
+    SET status = ${status}, timestamp = ${timestamp}, comment = ${comment}
     WHERE id = (
       SELECT notification_id
       FROM time_entry
@@ -54,16 +50,15 @@ export async function updateTimeEntryStatus(notification, sql) {
     )
     RETURNING *;
   `
-
   const updatedNotification = notificationResultArr[0]
-  console.log('updatedNotification', updatedNotification)
 
   return updatedNotification
 }
 
 export async function findOverlappingTimeEntries(employeeID, newStartTime, NewEndTime) {
   return await sql`
-  SELECT * FROM time_entry
+  SELECT *
+  FROM time_entry
   WHERE employee_id = ${employeeID}
   AND start_time < ${NewEndTime}
   AND end_time > ${newStartTime}
