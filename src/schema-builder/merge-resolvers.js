@@ -3,7 +3,7 @@ import { timeEntryResolver } from '../domains/time-entry/time-entry.controller.j
 import { adminResolver } from '../domains/admin/admin.controller.js'
 import { scalaResolver } from '../scalars/merge-scalar.resolver.js'
 import { mergeResolvers } from '@graphql-tools/merge'
-import { userMenuResolver } from '../service/user-menu.resolver.js'
+import { userMenuResolver } from '../services/user-menu.resolver.js'
 import { notificationResolver } from '../domains/notification/notification.controller.js'
 
 export const resolvers = mergeResolvers([
