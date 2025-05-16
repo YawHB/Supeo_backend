@@ -65,13 +65,6 @@ export const employeeResolver = {
   `
       return rows[0]
     },
-
-    // updateEmployee: async (_, { id, updatedEmployee }, { sql }) =>
-    //   await editEmployee(sql, id, updatedEmployee),
-
-    // updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
-    //   return await editEmployee(sql, id, updatedEmployee)
-    // }
   },
 
   // PaginationResponse: {
