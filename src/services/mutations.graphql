@@ -5,6 +5,7 @@ scalar Time
 type Mutation {
   createEmployee(newEmployee: CreateEmployeeInput): CreatedEmployee!
   updateEmployee(id: ID!, updatedEmployee: CreateEmployeeInput): Employee!
+
   createTimeEntry(newTimeEntry: CreateTimeEntryInput): TimeEntry!
 }
 
