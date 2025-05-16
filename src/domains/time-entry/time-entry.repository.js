@@ -39,11 +39,12 @@ export async function createTimeEntry(sql, newTimeEntry) {
 }
 
 export async function updateTimeEntryStatus(notification, sql) {
-  const { status, notificationID } = notification
+  const { status, notificationID, timestamp } = notification
+  console.log('notification timestamp: ', timestamp)
 
   const notificationResultArr = await sql`
     UPDATE notification
-    SET status = ${status}
+    SET status = ${status}, timestamp = ${timestamp}
     WHERE id = (
       SELECT notification_id
       FROM time_entry

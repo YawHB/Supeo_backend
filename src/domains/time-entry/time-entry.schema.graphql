@@ -14,7 +14,6 @@ type TimeEntry {
   break: String
   employee: Employee
   notification: Notification!
-  #employeeID: ID
 }
 
 type TimeEntryStatus {
@@ -43,6 +42,7 @@ input CreateTimeEntryInput {
 input NotificationStatusInput {
   notificationID: ID!
   status: String
+  timestamp: Unix
 }
 
 input NotificationInput {
