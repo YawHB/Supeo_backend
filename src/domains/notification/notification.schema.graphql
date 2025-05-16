@@ -1,6 +1,0 @@
-scalar Unix
-
-extend type Query {
-  notifications: [Notification]!
-  notification(id: ID!): Notification!
-}
