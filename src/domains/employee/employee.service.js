@@ -36,9 +36,6 @@ export async function addNewEmployee(employee) {
   let [role] = await findRoleIdByName(roleName)
   let [permission] = await findPermissionIdByLevel(permissionLevel)
 
-  console.log(role)
-  console.log(permission)
-
   if (!role) throw new UserGroupDoesNotExist()
   if (!permission) throw new PermissionLevelDoesNotExist()
 

@@ -1,6 +1,10 @@
 scalar Date
-scalar Time
 scalar Unix
+scalar Time
+
+type Query {
+  admins: [Admin]!
+}
 
 extend type Query {
   employee(id: ID!): Employee!
@@ -17,8 +21,4 @@ extend type Query {
   permissions: [Permission]!
 
   userMenuLinks(employeeId: Int!): [UserMenuLink!]!
-}
-
-type Query {
-  admins: [Admin]!
 }

@@ -62,7 +62,6 @@ export const employeeResolver = {
     WHERE id = ${id}
     RETURNING *
   `
-
       return rows[0]
     },
 

@@ -1,6 +1,6 @@
 scalar Date
-scalar Time
 scalar Unix
+scalar Time
 
 type Mutation {
   createEmployee(newEmployee: CreateEmployeeInput): CreatedEmployee!
@@ -11,5 +11,3 @@ type Mutation {
 extend type Mutation {
   updateTimeEntryStatus(notification: NotificationStatusInput!): Notification!
 }
-
-

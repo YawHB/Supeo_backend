@@ -1,11 +1,12 @@
 import { sql } from '../../db-config.js'
 
 export async function getAllEmployees(sql) {
-  return await sql` SELECT employee.id ,first_name, last_name,email,phone_number, permission_level, role_name
-FROM employee
-INNER JOIN permission ON employee.permission_id = permission.id
-INNER JOIN role ON employee.role_id = role.id
- `
+  return await sql`
+  SELECT employee.id, first_name, last_name, email, phone_number, permission_level, role_name
+  FROM employee
+  INNER JOIN permission ON employee.permission_id = permission.id
+  INNER JOIN role ON employee.role_id = role.id
+  `
 }
 
 export async function findAllEmployees(employeeID, sql) {
@@ -33,7 +34,7 @@ export async function createEmployee(employee, roleID, permissionID) {
   const newEmployeeID = newEmployeeIDEesult[0].id
 
   const employeeWithRoleAndPermission = await sql`
-    SELECT employee.id ,first_name , last_name ,email,phone_number , permission_level, role_name 
+    SELECT employee.id, first_name, last_name, email, phone_number, permission_level, role_name 
     FROM employee
     INNER JOIN permission ON employee.permission_id = permission.id
     INNER JOIN role ON employee.role_id = role.id
@@ -47,7 +48,7 @@ export async function updateEmployee(sql, id, employee) {
   const { firstName, lastName, email, phoneNumber } = employee
   const result = await sql`
     UPDATE employee
-    SET "first_name" = ${firstName}, "last_name" = ${lastName}, "email" = ${email},  "phone_number" = ${phoneNumber}
+    SET "first_name" = ${firstName}, "last_name" = ${lastName}, "email" = ${email}, "phone_number" = ${phoneNumber}
     WHERE id = ${id}
     RETURNING *
   `
