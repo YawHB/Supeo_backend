@@ -1,4 +1,4 @@
-import { UserGroupDoesNotExist, PermissionLevelDoesNotExist } from '../../custom-errors.js'
+import { UserGroupDoesNotExist, PermissionLevelDoesNotExist } from '../../utils/custom-errors.js'
 import {
   findAllEmployees,
   getAllEmployees,

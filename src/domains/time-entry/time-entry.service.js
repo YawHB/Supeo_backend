@@ -1,4 +1,4 @@
-import { OverlappingTimeEntryExist, WorkHoursAreNegative } from '../../custom-errors.js'
+import { OverlappingTimeEntryExist, WorkHoursAreNegative } from '../../utils/custom-errors.js'
 import { hasCorrectOrder } from '../../utils/date-time-helpers.js'
 
 import {
