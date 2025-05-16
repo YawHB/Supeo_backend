@@ -17,8 +17,6 @@ export async function findAllEmployeeTimeEntries(employee, sql) {
 }
 
 export async function getEmployeeById(employeeID) {
-  console.log('##REPOSITORY')
-  console.log('id: ', employeeID)
   const resultArr = await sql`SELECT * FROM employee WHERE id = ${employeeID}`
   return resultArr[0]
 }

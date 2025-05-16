@@ -21,8 +21,6 @@ export const timeEntryResolver = {
       return await addNewTimeEntry(sql, newTimeEntry)
     },
     updateTimeEntryStatus: async (_, { notification }, { sql }) => {
-      console.log('INSIDE CONTROLLER')
-      console.log('notification', notification)
       return await updateStatus(notification, sql)
     },
   },

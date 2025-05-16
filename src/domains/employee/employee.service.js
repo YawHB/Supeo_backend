@@ -27,8 +27,6 @@ export async function fetchEmployeeTimeEntries(employee, sql) {
 }
 
 export async function getEmployee(employeeID) {
-  console.log('--SERVICE')
-  console.log('id: ', employeeID)
   return getEmployeeById(employeeID)
 }
 

@@ -15,7 +15,6 @@ export async function fetchAllTimeEntries(sql) {
 
 export async function fetchTimeEntryById(id, sql) {
   const result = await findTimeEntryById(id, sql)
-  console.log(result)
   return result
 }
 
