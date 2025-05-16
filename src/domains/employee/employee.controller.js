@@ -5,7 +5,7 @@ import {
   addNewEmployee,
   getPermissions,
   fetchEmployeeTimeEntries,
-  //editEmployee,
+  editEmployee,
   //getPaginatedEmployees,
 } from './employee.service.js'
 
@@ -52,18 +52,7 @@ export const employeeResolver = {
     },
 
     updateEmployee: async (_, { id, updatedEmployee }, { sql }) => {
-      const { firstName, lastName, email, phoneNumber } = updatedEmployee
-
-      const rows = await sql`
-    UPDATE employee SET
-      first_name = ${firstName},
-      last_name = ${lastName},
-      email = ${email},
-      phone_number = ${phoneNumber}
-    WHERE id = ${id}
-    RETURNING *
-  `
-      return rows[0]
+      return await editEmployee(sql, id, updatedEmployee)
     },
 
     // updateEmployee: async (_, { id, updatedEmployee }, { sql }) =>
