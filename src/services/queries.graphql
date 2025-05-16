@@ -1,0 +1,22 @@
+scalar Date
+scalar Time
+scalar Unix
+
+extend type Query {
+  employee(id: ID!): Employee!
+  employees: [Employee]!
+  #employees(pagination: PaginationInput): EmployeesPage!
+
+  notification(id: ID!): Notification!
+  notifications: [Notification]!
+
+  timeEntry(id: ID!): TimeEntry!
+  timeEntries: [TimeEntry]!
+
+  roles: [Role]!
+  permissions: [Permission]!
+}
+
+type Query {
+  admins: [Admin]!
+}

@@ -1,0 +1,15 @@
+scalar Date
+scalar Time
+scalar Unix
+
+type Mutation {
+  createEmployee(newEmployee: CreateEmployeeInput): CreatedEmployee!
+  updateEmployee(id: ID!, updatedEmployee: CreateEmployeeInput): Employee!
+  createTimeEntry(newTimeEntry: CreateTimeEntryInput): TimeEntry!
+}
+
+extend type Mutation {
+  updateTimeEntryStatus(notification: NotificationStatusInput!): Notification!
+}
+
+
