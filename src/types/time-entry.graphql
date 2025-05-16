@@ -1,0 +1,12 @@
+type TimeEntry {
+  id: ID!
+  startTime: Time!
+  endTime: Time
+  duration: String
+  comment: String
+  startDate: Date!
+  endDate: Date
+  break: String
+  employee: Employee
+  notification: Notification!
+}

@@ -1,0 +1,6 @@
+type Notification {
+  id: ID!
+  comment: String
+  timestamp: Unix
+  status: String!
+}

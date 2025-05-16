@@ -1,0 +1,6 @@
+input NotificationStatusInput {
+  notificationID: ID!
+  status: String
+  timestamp: Unix
+  comment: String
+}

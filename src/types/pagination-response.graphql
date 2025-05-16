@@ -1,0 +1,5 @@
+type PaginationResponse {
+  page: Int!
+  perPage: Int!
+  totalCount: Int!
+}

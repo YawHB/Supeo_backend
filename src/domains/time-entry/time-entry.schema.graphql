@@ -2,57 +2,11 @@ scalar Date
 scalar Time
 scalar Unix
 
-# TYPES
-type TimeEntry {
-  id: ID!
-  startTime: Time!
-  endTime: Time
-  duration: String
-  comment: String
-  startDate: Date!
-  endDate: Date
-  break: String
-  employee: Employee
-  notification: Notification!
-}
-
-type TimeEntryStatus {
-  id: ID!
-  notification: Notification!
-}
-
-# Queries - ENTRY POINTS
 extend type Query {
   timeEntries: [TimeEntry]!
   timeEntry(id: ID!): TimeEntry!
 }
 
-# INPUT
-input CreateTimeEntryInput {
-  startTime: Time!
-  endTime: Time
-  duration: String
-  comment: String
-  startDate: Date!
-  endDate: Date
-  notification: NotificationInput!
-  employeeID: ID!
-}
-
-input NotificationStatusInput {
-  notificationID: ID!
-  status: String
-  timestamp: Unix
-  comment: String
-}
-
-input NotificationInput {
-  comment: String
-  timestamp: Unix
-  status: String!
-}
-
-# MUTATIONS
 type Mutation {
   createTimeEntry(newTimeEntry: CreateTimeEntryInput): TimeEntry!
 }

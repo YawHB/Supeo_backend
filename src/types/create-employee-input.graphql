@@ -1,0 +1,8 @@
+input CreateEmployeeInput {
+  firstName: String!
+  lastName: String!
+  roleName: String!
+  permissionLevel: String!
+  email: String!
+  phoneNumber: String!
+}

@@ -1,14 +1,6 @@
 scalar Unix
 
-#Entry points
 extend type Query {
   notifications: [Notification]!
   notification(id: ID!): Notification!
-}
-
-type Notification {
-  id: ID!
-  comment: String
-  timestamp: Unix
-  status: String!
 }

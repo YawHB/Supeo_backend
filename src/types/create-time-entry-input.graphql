@@ -1,0 +1,10 @@
+input CreateTimeEntryInput {
+  startTime: Time!
+  endTime: Time
+  duration: String
+  comment: String
+  startDate: Date!
+  endDate: Date
+  notification: NotificationInput!
+  employeeID: ID!
+}
