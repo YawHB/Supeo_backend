@@ -1,0 +1,4 @@
+type EmployeesPage {
+  pagination: PaginationResponse!
+  employees: [Employee]!
+}
