@@ -1,0 +1,9 @@
+input TimeEntryInput {
+  startTime: Time!
+  endTime: Time
+  duration: String
+  comment: String
+  startDate: Date!
+  endDate: Date
+  employeeID: ID!
+}
