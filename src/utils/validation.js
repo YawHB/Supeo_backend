@@ -1,9 +1,19 @@
-import { InvalidEmailFormat, InvalidNameLength, InvalidPhoneNumberFormat } from './custom-errors.js'
+import {
+  InvalidEmailFormat,
+  InvalidNameLength,
+  InvalidPhoneNumberFormat,
+  InvalidNameValues,
+} from './custom-errors.js'
 
-export function capitalize(name) {
+function capitalize(name) {
   const firstLetter = name[0].toUpperCase()
   const rest = name.slice(1).toLowerCase()
   return firstLetter + rest
+}
+
+function isOnlyLetters(name) {
+  const formatted = /^[A-Za-zÆØÅæøå]+$/
+  if (!formatted.test(name)) throw new InvalidNameValues()
 }
 
 export function validateNameLengths([firstName, lastName]) {
@@ -13,6 +23,7 @@ export function validateNameLengths([firstName, lastName]) {
       throw new InvalidNameLength()
     }
 
+    isOnlyLetters(name)
     const formattedName = capitalize(name)
     name === firstName
       ? (capitalizedFirstName = formattedName)

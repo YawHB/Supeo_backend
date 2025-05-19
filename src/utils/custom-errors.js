@@ -74,3 +74,12 @@ export class InvalidNameLength extends GraphQLError {
     })
   }
 }
+export class InvalidNameValues extends GraphQLError {
+  constructor(message = 'Det indtastede navn må kun indeholde bogstaver') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIGT_NAVN',
+      },
+    })
+  }
+}
