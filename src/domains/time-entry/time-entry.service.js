@@ -6,7 +6,8 @@ import {
   findAllTimeEntries,
   updateTimeEntryStatus,
   findOverlappingTimeEntries,
-  
+  deleteTimeEntryById,
+  updateTimeEntryAndResetStatus,
 } from './time-entry.repository.js'
 
 export async function fetchTimeEntryById(id, sql) {
