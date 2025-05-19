@@ -56,3 +56,21 @@ export class InvalidEmailFormat extends GraphQLError {
     })
   }
 }
+export class InvalidPhoneNumberFormat extends GraphQLError {
+  constructor(message = 'Ugyldig telefonnummer') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIGT_TELEFONNUMMER_FORMAT',
+      },
+    })
+  }
+}
+export class InvalidNameLength extends GraphQLError {
+  constructor(message = 'Det indtastede navn skal være mellem 2-20 tegn ') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIGT_NAVN',
+      },
+    })
+  }
+}

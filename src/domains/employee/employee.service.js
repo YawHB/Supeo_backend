@@ -4,6 +4,8 @@ import {
   PermissionLevelDoesNotExist,
   EmailAlreadyExist,
   InvalidEmailFormat,
+  InvalidPhoneNumberFormat,
+  InvalidNameLength,
 } from '../../utils/custom-errors.js'
 import {
   getAllRoles,
@@ -38,10 +40,13 @@ export async function getEmployee(employeeID) {
 }
 
 export async function addNewEmployee(employee) {
-  const { roleName, permissionLevel, email } = employee
+  const { firstName, lastName, roleName, permissionLevel, email, phoneNumber } = employee
 
+  isValidStringLength(firstName)
+  isValidStringLength(lastName)
   validateEmailFormat(email)
   await ensureEmailIsUnique(email)
+  isValidPhoneNumber(phoneNumber)
   const role = await ensureRoleExists(roleName)
   const permission = await permissionLevelExist(permissionLevel)
 
@@ -68,6 +73,15 @@ async function ensureEmailIsUnique(email) {
 function validateEmailFormat(email) {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailPattern.test(email)) throw new InvalidEmailFormat()
+}
+
+function isValidPhoneNumber(phoneNumber) {
+  const phoneNumberPattern = /^\d{8}$/
+  if (!phoneNumberPattern.test(phoneNumber)) throw new InvalidPhoneNumberFormat()
+}
+
+function isValidStringLength(string) {
+  if (string.length || string.length > 20) throw new InvalidNameLength()
 }
 
 async function ensureRoleExists(roleName) {
