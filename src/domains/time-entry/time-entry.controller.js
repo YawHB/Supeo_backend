@@ -4,6 +4,8 @@ import {
   addNewTimeEntry,
   fetchTimeEntryById,
   fetchAllTimeEntries,
+  removeTimeEntry,
+  updateTimeEntry,
 } from './time-entry.service.js'
 
 export const timeEntryResolver = {
@@ -22,6 +24,12 @@ export const timeEntryResolver = {
     },
     updateTimeEntryStatus: async (_, { notification }, { sql }) => {
       return await updateStatus(notification, sql)
+    },
+    deleteTimeEntry: async (_, { id }, { sql }) => {
+      return await removeTimeEntry(id, sql)
+    },
+    updateTimeEntry: async (_, { id, updatedTimeEntry }, { sql }) => {
+      return await updateTimeEntry(sql, id, updatedTimeEntry)
     },
   },
 
