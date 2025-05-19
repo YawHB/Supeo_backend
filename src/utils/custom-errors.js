@@ -37,3 +37,13 @@ export class WorkHoursAreNegative extends GraphQLError {
     })
   }
 }
+
+export class EmailAlreadyExist extends GraphQLError {
+  constructor(message = 'Den indtastede email er allerede i brug ') {
+    super(message, {
+      extensions: {
+        code: 'DUBLIKERET_EMAIL',
+      },
+    })
+  }
+}

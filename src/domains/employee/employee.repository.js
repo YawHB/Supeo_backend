@@ -90,6 +90,10 @@ export async function findPermissionIdByLevel(permissionLevel) {
   return await sql`SELECT id FROM permission WHERE "permission_level" = ${permissionLevel}`
 }
 
+export async function findEmailIfExist(email) {
+  return await sql`SELECT email FROM employee WHERE "email" = ${email}`
+}
+
 // export async function countEmployees(sql) {
 //   const [{ count }] = await sql`
 //     SELECT COUNT(*)::int AS count
