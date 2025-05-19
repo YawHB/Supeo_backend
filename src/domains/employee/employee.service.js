@@ -1,4 +1,8 @@
-import { validate } from 'graphql'
+import {
+  validateEmailFormat,
+  validateNameLengths,
+  isValidPhoneNumber,
+} from '../../utils/validation.js'
 import {
   UserGroupDoesNotExist,
   PermissionLevelDoesNotExist,
@@ -42,15 +46,20 @@ export async function getEmployee(employeeID) {
 export async function addNewEmployee(employee) {
   const { firstName, lastName, roleName, permissionLevel, email, phoneNumber } = employee
 
-  isValidStringLength(firstName)
-  isValidStringLength(lastName)
+  const [formattedFirstName, formattedLastName] = validateNameLengths([firstName, lastName])
   validateEmailFormat(email)
   await ensureEmailIsUnique(email)
   isValidPhoneNumber(phoneNumber)
   const role = await ensureRoleExists(roleName)
   const permission = await permissionLevelExist(permissionLevel)
 
-  return await createEmployee(employee, role.id, permission.id)
+  const newEmployee = {
+    ...employee,
+    firstName: formattedFirstName,
+    lastName: formattedLastName,
+  }
+
+  return await createEmployee(newEmployee, role.id, permission.id)
 }
 
 export function editEmployee(sql, id, employee) {
@@ -68,20 +77,6 @@ export async function getPermissions(sql) {
 async function ensureEmailIsUnique(email) {
   let [emailExist] = await findEmailIfExist(email)
   if (emailExist) throw new EmailAlreadyExist()
-}
-
-function validateEmailFormat(email) {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailPattern.test(email)) throw new InvalidEmailFormat()
-}
-
-function isValidPhoneNumber(phoneNumber) {
-  const phoneNumberPattern = /^\d{8}$/
-  if (!phoneNumberPattern.test(phoneNumber)) throw new InvalidPhoneNumberFormat()
-}
-
-function isValidStringLength(string) {
-  if (string.length || string.length > 20) throw new InvalidNameLength()
 }
 
 async function ensureRoleExists(roleName) {
