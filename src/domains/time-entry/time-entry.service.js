@@ -8,6 +8,8 @@ import {
   findOverlappingTimeEntries,
   deleteTimeEntryById,
   updateTimeEntryAndResetStatus,
+  getNotificationIdByTimeEntryId,
+  deleteNotificationById,
 } from './time-entry.repository.js'
 
 export async function fetchTimeEntryById(id, sql) {
@@ -37,8 +39,21 @@ export async function addNewTimeEntry(sql, newTimeEntry) {
 }
 
 export async function removeTimeEntry(id, sql) {
-  const deletedTimeEntry = await deleteTimeEntryById(id, sql)
-  return deletedTimeEntry?.id || null
+  return await sql.begin(async (tx) => {
+    const notificationId = await getNotificationIdByTimeEntryId(id, tx)
+
+    const deletedTimeEntry = await deleteTimeEntryById(id, tx)
+
+    if (!deletedTimeEntry) {
+      throw new Error(`Time entry with id ${id} does not exist`)
+    }
+
+    if (notificationId) {
+      await deleteNotificationById(notificationId, tx)
+    }
+
+    return deletedTimeEntry.id
+  })
 }
 
 export async function updateTimeEntry(sql, id, updatedTimeEntry) {

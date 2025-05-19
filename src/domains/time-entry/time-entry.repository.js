@@ -8,8 +8,9 @@ export async function findTimeEntryById(id, sql) {
 }
 
 export async function findAllTimeEntries() {
-  return await sql` SELECT * FROM time_entry
-  `
+  const rows = await sql`SELECT * FROM time_entry`
+  console.log('All time entries:', rows)
+  return rows
 }
 
 export async function createTimeEntry(sql, newTimeEntry) {
@@ -89,7 +90,7 @@ export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
     WHERE id = ${id}
     RETURNING *
   `
-  console.log(timeEntryResultArr[0])
+  console.log("time entry some bliver opdateret",timeEntryResultArr[0])
 
   const timeEntry = timeEntryResultArr[0]
 
@@ -106,4 +107,17 @@ export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
     ...timeEntry,
     notification: updatedNotification,
   }
+}
+
+export async function getNotificationIdByTimeEntryId(id, sql) {
+  const result = await sql`
+    SELECT notification_id FROM time_entry WHERE id = ${id}
+  `
+  return result[0]?.notification_id || null
+}
+
+export async function deleteNotificationById(notificationId, sql) {
+  await sql`
+    DELETE FROM notification WHERE id = ${notificationId}
+  `
 }
