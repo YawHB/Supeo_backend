@@ -1,7 +1,9 @@
+import { validate } from 'graphql'
 import {
   UserGroupDoesNotExist,
   PermissionLevelDoesNotExist,
   EmailAlreadyExist,
+  InvalidEmailFormat,
 } from '../../utils/custom-errors.js'
 import {
   getAllRoles,
@@ -38,13 +40,10 @@ export async function getEmployee(employeeID) {
 export async function addNewEmployee(employee) {
   const { roleName, permissionLevel, email } = employee
 
-  let [emailExist] = await findEmailIfExist(email)
-  let [role] = await findRoleIdByName(roleName)
-  let [permission] = await findPermissionIdByLevel(permissionLevel)
-
-  if (emailExist) throw new EmailAlreadyExist()
-  if (!role) throw new UserGroupDoesNotExist()
-  if (!permission) throw new PermissionLevelDoesNotExist()
+  validateEmailFormat(email)
+  await ensureEmailIsUnique(email)
+  const role = await ensureRoleExists(roleName)
+  const permission = await permissionLevelExist(permissionLevel)
 
   return await createEmployee(employee, role.id, permission.id)
 }
@@ -59,6 +58,27 @@ export async function getRoles(sql) {
 
 export async function getPermissions(sql) {
   return await getAllPermissions(sql)
+}
+
+async function ensureEmailIsUnique(email) {
+  let [emailExist] = await findEmailIfExist(email)
+  if (emailExist) throw new EmailAlreadyExist()
+}
+
+function validateEmailFormat(email) {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailPattern.test(email)) throw new InvalidEmailFormat()
+}
+
+async function ensureRoleExists(roleName) {
+  let [role] = await findRoleIdByName(roleName)
+  if (!role) throw new UserGroupDoesNotExist()
+  return role
+}
+async function permissionLevelExist(permissionLevel) {
+  let [permission] = await findPermissionIdByLevel(permissionLevel)
+  if (!permission) throw new PermissionLevelDoesNotExist()
+  return permission
 }
 
 // export async function getPaginatedEmployees(sql, pagination = {}) {

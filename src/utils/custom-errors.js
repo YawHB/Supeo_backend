@@ -47,3 +47,12 @@ export class EmailAlreadyExist extends GraphQLError {
     })
   }
 }
+export class InvalidEmailFormat extends GraphQLError {
+  constructor(message = 'Ugyldig emailformat') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIGT_EMAIL_FORMAT',
+      },
+    })
+  }
+}
