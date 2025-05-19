@@ -64,3 +64,46 @@ export async function findOverlappingTimeEntries(employeeID, newStartTime, NewEn
   AND end_time > ${newStartTime}
   `
 }
+
+export async function deleteTimeEntryById(id, sql) {
+  const deletedTimeEntry = await sql`
+    DELETE FROM time_entry WHERE id = ${id}
+    RETURNING id
+  `
+  return deletedTimeEntry[0]
+}
+
+export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
+  const { startTime, endTime, duration, comment, startDate, endDate, employeeID } = updatedTimeEntry
+
+  const timeEntryResultArr = await sql`
+    UPDATE time_entry
+    SET 
+      start_time = ${startTime},
+      end_time = ${endTime},
+      duration = ${duration},
+      comment = ${comment},
+      start_date = ${startDate},
+      end_date = ${endDate},
+      employee_id = ${employeeID}
+    WHERE id = ${id}
+    RETURNING *
+  `
+  console.log(timeEntryResultArr[0])
+
+  const timeEntry = timeEntryResultArr[0]
+
+  const notificationResultArr = await sql`
+    UPDATE notification
+    SET status = 'AFVENTER'
+    WHERE id = ${timeEntry.notification_id}
+    RETURNING *
+  `
+
+  const updatedNotification = notificationResultArr[0]
+
+  return {
+    ...timeEntry,
+    notification: updatedNotification,
+  }
+}
