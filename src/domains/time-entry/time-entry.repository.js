@@ -9,7 +9,6 @@ export async function findTimeEntryById(id, sql) {
 
 export async function findAllTimeEntries() {
   const rows = await sql`SELECT * FROM time_entry`
-  console.log('All time entries:', rows)
   return rows
 }
 
@@ -90,7 +89,6 @@ export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
     WHERE id = ${id}
     RETURNING *
   `
-  console.log("time entry some bliver opdateret",timeEntryResultArr[0])
 
   const timeEntry = timeEntryResultArr[0]
 
