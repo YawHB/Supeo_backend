@@ -1,15 +1,13 @@
 import {
   validateEmailFormat,
-  validateNameLengths,
+  validateNameParts,
   isValidPhoneNumber,
+  capitalize,
 } from '../../utils/validation.js'
 import {
   UserGroupDoesNotExist,
   PermissionLevelDoesNotExist,
   EmailAlreadyExist,
-  InvalidEmailFormat,
-  InvalidPhoneNumberFormat,
-  InvalidNameLength,
 } from '../../utils/custom-errors.js'
 import {
   getAllRoles,
@@ -46,7 +44,7 @@ export async function getEmployee(employeeID) {
 export async function addNewEmployee(employee) {
   const { firstName, lastName, roleName, permissionLevel, email, phoneNumber } = employee
 
-  const [formattedFirstName, formattedLastName] = validateNameLengths([firstName, lastName])
+  const [formattedFirstName, formattedLastName] = capitalize(validateNameParts(firstName, lastName))
   validateEmailFormat(email)
   await ensureEmailIsUnique(email)
   isValidPhoneNumber(phoneNumber)

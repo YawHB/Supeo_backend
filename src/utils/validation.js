@@ -5,10 +5,15 @@ import {
   InvalidNameValues,
 } from './custom-errors.js'
 
-function capitalize(name) {
-  const firstLetter = name[0].toUpperCase()
-  const rest = name.slice(1).toLowerCase()
-  return firstLetter + rest
+export function capitalize(names) {
+  const capitalizedNames = []
+  for (const name of names) {
+    const firstLetter = name[0].toUpperCase()
+    const rest = name.slice(1).toLowerCase()
+    capitalizedNames.push(firstLetter + rest)
+  }
+  console.log(capitalizedNames)
+  return capitalizedNames
 }
 
 function isOnlyLetters(name) {
@@ -16,20 +21,17 @@ function isOnlyLetters(name) {
   if (!formatted.test(name)) throw new InvalidNameValues()
 }
 
-export function validateNameLengths([firstName, lastName]) {
-  let capitalizedFirstName, capitalizedLastName
-  for (const name of [firstName, lastName]) {
-    if (name.length < 2 || name.length > 20) {
+export function validateNameParts(...names) {
+  const validNames = []
+
+  for (const name of names) {
+    isOnlyLetters(name)
+    if (name.length < 2 || name.length >= 20) {
       throw new InvalidNameLength()
     }
-
-    isOnlyLetters(name)
-    const formattedName = capitalize(name)
-    name === firstName
-      ? (capitalizedFirstName = formattedName)
-      : (capitalizedLastName = formattedName)
+    validNames.push(name)
   }
-  return [capitalizedFirstName, capitalizedLastName]
+  return validNames
 }
 
 export function validateEmailFormat(email) {
