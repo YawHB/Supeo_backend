@@ -3,10 +3,6 @@ scalar Unix
 scalar Time
 
 type Query {
-  admins: [Admin]!
-}
-
-extend type Query {
   employee(id: ID!): Employee!
   employees: [Employee]!
   #employees(pagination: PaginationInput): EmployeesPage!

@@ -9,8 +9,5 @@ type Mutation {
   createTimeEntry(newTimeEntry: CreateTimeEntryInput): TimeEntry!
   deleteTimeEntry(id: ID!): ID!
   updateTimeEntry(id: ID!, updatedTimeEntry: TimeEntryInput!): TimeEntry
-}
-
-extend type Mutation {
   updateTimeEntryStatus(notification: NotificationStatusInput!): Notification!
 }
