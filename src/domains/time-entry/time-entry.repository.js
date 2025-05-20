@@ -73,8 +73,43 @@ export async function deleteTimeEntryById(id, sql) {
   return deletedTimeEntry[0]
 }
 
+// export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
+//   const { startTime, endTime, duration, comment, startDate, endDate, employeeID } = updatedTimeEntry
+
+//   const timeEntryResultArr = await sql`
+//     UPDATE time_entry
+//     SET 
+//       start_time = ${startTime},
+//       end_time = ${endTime},
+//       duration = ${duration},
+//       comment = ${comment},
+//       start_date = ${startDate},
+//       end_date = ${endDate},
+//       employee_id = ${employeeID}
+//     WHERE id = ${id}
+//     RETURNING *
+//   `
+
+//   const timeEntry = timeEntryResultArr[0]
+
+//   const notificationResultArr = await sql`
+//     UPDATE notification
+//     SET status = 'AFVENTER'
+//     WHERE id = ${timeEntry.notification_id}
+//     RETURNING *
+//   `
+
+//   const updatedNotification = notificationResultArr[0]
+
+//   return {
+//     ...timeEntry,
+//     notification: updatedNotification,
+//   }
+// }
+
 export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
-  const { startTime, endTime, duration, comment, startDate, endDate, employeeID } = updatedTimeEntry
+  const { startTime, endTime, duration, comment, startDate, endDate, employeeID, notification } =
+    updatedTimeEntry
 
   const timeEntryResultArr = await sql`
     UPDATE time_entry
@@ -92,18 +127,34 @@ export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
 
   const timeEntry = timeEntryResultArr[0]
 
-  const notificationResultArr = await sql`
-    UPDATE notification
-    SET status = 'AFVENTER'
-    WHERE id = ${timeEntry.notification_id}
-    RETURNING *
-  `
+  if (notification) {
+    const { status, comment, timestamp } = notification
 
-  const updatedNotification = notificationResultArr[0]
+    const notificationResultArr = await sql`
+      UPDATE notification
+      SET 
+        status = ${status},
+        comment = ${comment},
+        timestamp = ${timestamp}
+      WHERE id = ${timeEntry.notification_id}
+      RETURNING *
+    `
 
-  return {
-    ...timeEntry,
-    notification: updatedNotification,
+    const updatedNotification = notificationResultArr[0]
+
+    return {
+      ...timeEntry,
+      notification: updatedNotification,
+    }
+  } else {
+    // fallback to fetching existing notification
+    const notificationArr = await sql`
+      SELECT * FROM notification WHERE id = ${timeEntry.notification_id}
+    `
+    return {
+      ...timeEntry,
+      notification: notificationArr[0] ?? null,
+    }
   }
 }
 

@@ -7,10 +7,12 @@ export const timestampScalar = new GraphQLScalarType({
     'as number of milliseconds from start of UNIX epoch.',
 
   serialize(msString) {
-    return new Date(Number(msString)).toLocaleTimeString('da-DK', {
+    let time = new Date(Number(msString)).toLocaleTimeString('da-DK', {
       hour: '2-digit',
       minute: '2-digit',
     })
+    time = time.replace('.', ':')
+    return time
   },
 
   parseValue(dateTimeString) {

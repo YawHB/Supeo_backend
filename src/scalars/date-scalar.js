@@ -8,10 +8,16 @@ export const dateScalar = new GraphQLScalarType({
   serialize(value) {
     const isoDate = new Date(value)
     const result = isoDate.toLocaleDateString('da-DK')
-    return result.split('.').join('-')
-    // if (value instanceof Date) {
-    //   return value.toLocaleDateString('da-DK')
-    // }
+    let updatedDate = []
+    for(const part of result.split('.')) {
+      if (part.length > 1) {
+        updatedDate.push(part)
+      } else {
+        updatedDate.push(part.padStart(2, '0'))
+      }
+    }
+    updatedDate = updatedDate.join('-')
+    return updatedDate
   },
 
   //Modtager en værdi fra klienten
