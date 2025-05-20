@@ -37,3 +37,49 @@ export class WorkHoursAreNegative extends GraphQLError {
     })
   }
 }
+
+export class EmailAlreadyExist extends GraphQLError {
+  constructor(message = 'Den indtastede email er allerede i brug ') {
+    super(message, {
+      extensions: {
+        code: 'DUBLIKERET_EMAIL',
+      },
+    })
+  }
+}
+export class InvalidEmailFormat extends GraphQLError {
+  constructor(message = 'Ugyldig emailformat') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIGT_EMAIL_FORMAT',
+      },
+    })
+  }
+}
+export class InvalidPhoneNumberFormat extends GraphQLError {
+  constructor(message = 'Ugyldig telefonnummer') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIGT_TELEFONNUMMER_FORMAT',
+      },
+    })
+  }
+}
+export class InvalidNameLength extends GraphQLError {
+  constructor(message = 'Det indtastede navn skal være mellem 2-20 tegn ') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIGT_NAVN',
+      },
+    })
+  }
+}
+export class InvalidNameValues extends GraphQLError {
+  constructor(message = 'Det indtastede navn må kun indeholde bogstaver') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIGT_NAVN',
+      },
+    })
+  }
+}
