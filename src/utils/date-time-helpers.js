@@ -14,5 +14,6 @@ export function convertUnixToTime(msString) {
 }
 
 export function hasCorrectOrder(start, end) {
+  if (end === null) return true
   return start <= end
 }
