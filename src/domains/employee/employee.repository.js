@@ -44,8 +44,8 @@ export async function createEmployee(employee, roleID, permissionID) {
   return newEmployee
 }
 
-export async function updateEmployee(sql, id, employee) {
-  const { firstName, lastName, email, phoneNumber, roleName, permissionLevel } = employee
+export async function updateEmployee(employee, employeeID, roleID, permissionID) {
+  const { firstName, lastName, email, phoneNumber } = employee
 
   await sql` UPDATE employee
   SET
@@ -53,9 +53,11 @@ export async function updateEmployee(sql, id, employee) {
       last_name = ${lastName},
       email = ${email},
       phone_number = ${phoneNumber},
-      role_id = (SELECT id FROM role WHERE role_name = ${roleName}),
-      permission_id = (SELECT id FROM permission WHERE permission_level = ${permissionLevel})
-    WHERE id = ${id}
+      role_id =  ${roleID},
+      permission_id =${permissionID}
+    WHERE id = ${employeeID}
+
+ 
   `
   const updatedEmployee = await sql`
     SELECT
@@ -69,7 +71,7 @@ export async function updateEmployee(sql, id, employee) {
     FROM employee
     INNER JOIN role ON role.id = employee.role_id
     INNER JOIN permission ON permission.id = employee.permission_id
-    WHERE employee.id = ${id}
+    WHERE employee.id = ${employeeID}
   `
   return updatedEmployee[0]
 }

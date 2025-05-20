@@ -25,6 +25,8 @@ import {
   //getEmployeesPaginated,
 } from './employee.repository.js'
 
+import { sql } from '../../db-config.js'
+
 export function getEmployees(sql) {
   return getAllEmployees(sql)
 }
@@ -60,8 +62,23 @@ export async function addNewEmployee(employee) {
   return await createEmployee(newEmployee, role.id, permission.id)
 }
 
-export function editEmployee(sql, id, employee) {
-  return updateEmployee(sql, id, employee)
+export async function editEmployee(employee, id) {
+  const { firstName, lastName, roleName, permissionLevel, email, phoneNumber } = employee
+
+  const [formattedFirstName, formattedLastName] = capitalize(validateNameParts(firstName, lastName))
+  validateEmailFormat(email)
+  await ensureEmailIsUnique(email)
+  isValidPhoneNumber(phoneNumber)
+  const role = await ensureRoleExists(roleName)
+  const permission = await permissionLevelExist(permissionLevel)
+
+  const newEmployee = {
+    ...employee,
+    firstName: formattedFirstName,
+    lastName: formattedLastName,
+  }
+
+  return updateEmployee(newEmployee, id, role.id, permission.id)
 }
 
 export async function getRoles(sql) {
