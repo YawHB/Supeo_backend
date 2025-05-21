@@ -35,7 +35,6 @@ export const timestampScalar = new GraphQLScalarType({
       return null
     }
 
-    console.log(Date.UTC(year, month - 1, day, hours, minutes))
     return Date.UTC(year, month - 1, day, hours, minutes)
   },
 

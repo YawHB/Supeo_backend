@@ -12,7 +12,6 @@ export function capitalize(names) {
     const rest = name.slice(1).toLowerCase()
     capitalizedNames.push(firstLetter + rest)
   }
-  console.log(capitalizedNames)
   return capitalizedNames
 }
 
