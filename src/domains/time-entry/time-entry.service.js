@@ -56,14 +56,19 @@ export async function removeTimeEntry(id, sql) {
   })
 }
 
-export async function updateTimeEntry(sql, id, updatedTimeEntry) {
+export async function updateTimeEntry(sql, timeEntryID, updatedTimeEntry) {
   const { employeeID, startTime, endTime, startDate, endDate } = updatedTimeEntry
   const datesInOrder = hasCorrectOrder(startDate, endDate)
   const timesInOrder = hasCorrectOrder(startTime, endTime)
 
-  const [overlappingTimeEntries] = await findOverlappingTimeEntries(employeeID, startTime, endTime)
+  const [overlappingTimeEntries] = await findOverlappingTimeEntries(
+    employeeID,
+    startTime,
+    endTime,
+    timeEntryID,
+  )
   if (overlappingTimeEntries) throw new OverlappingTimeEntryExist()
   if (!datesInOrder || !timesInOrder) throw new WorkHoursAreNegative()
 
-  return await updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry)
+  return await updateTimeEntryAndResetStatus(sql, timeEntryID, updatedTimeEntry)
 }

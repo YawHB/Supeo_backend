@@ -7,5 +7,4 @@ input TimeEntryInput {
   endDate: Date
   employeeID: ID!
   notification: NotificationInput
-  # ovenstående input skal måske ikke bruges
 }
