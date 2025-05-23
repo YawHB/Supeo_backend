@@ -11,8 +11,8 @@ import {
 
 export const employeeResolver = {
   Query: {
-    employees: async (_, __, { sql }) => {
-      return await getEmployees(sql)
+    employees: async (_, { sort, filter }, { sql }) => {
+      return await getEmployees(sql, sort, filter)
     },
 
     employee: async (_, { id }, { sql }) => {
