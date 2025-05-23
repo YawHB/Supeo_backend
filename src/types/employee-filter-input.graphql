@@ -1,0 +1,10 @@
+input EmployeeFilterInput {
+  firstName: String
+  lastName: String
+  email: String
+  #roleName: String
+  #permissionLevel: String
+
+  roleNames: [String!]
+  permissionLevels: [String!]
+}
