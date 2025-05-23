@@ -67,7 +67,7 @@ export async function editEmployee(employee, id) {
 
   const [formattedFirstName, formattedLastName] = capitalize(validateNameParts(firstName, lastName))
   validateEmailFormat(email)
-  await ensureEmailIsUnique(email)
+  await ensureEmailIsUnique(email, id)
   isValidPhoneNumber(phoneNumber)
   const role = await ensureRoleExists(roleName)
   const permission = await permissionLevelExist(permissionLevel)
@@ -89,8 +89,8 @@ export async function getPermissions(sql) {
   return await getAllPermissions(sql)
 }
 
-async function ensureEmailIsUnique(email) {
-  let [emailExist] = await findEmailIfExist(email)
+async function ensureEmailIsUnique(email, employeeID) {
+  let [emailExist] = await findEmailIfExist(email, employeeID)
   if (emailExist) throw new EmailAlreadyExist()
 }
 
