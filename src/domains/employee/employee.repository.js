@@ -1,12 +1,71 @@
 import { sql } from '../../db-config.js'
 
-export async function getAllEmployees(sql) {
-  return await sql`
-  SELECT employee.id, first_name, last_name, email, phone_number, permission_level, role_name
-  FROM employee
-  INNER JOIN permission ON employee.permission_id = permission.id
-  INNER JOIN role ON employee.role_id = role.id
+export async function getAllEmployees(sql, sort, filter) {
+  const validSortFields = new Set([
+    'first_name',
+    'last_name',
+    'email',
+    'role_name',
+    'permission_level',
+  ])
+
+  const whereClauses = []
+  const values = []
+
+  if (filter?.firstName) {
+    whereClauses.push(`first_name ILIKE $${values.length + 1}`)
+    values.push(`%${filter.firstName}%`)
+  }
+  if (filter?.lastName) {
+    whereClauses.push(`last_name ILIKE $${values.length + 1}`)
+    values.push(`%${filter.lastName}%`)
+  }
+  if (filter?.email) {
+    whereClauses.push(`email ILIKE $${values.length + 1}`)
+    values.push(`%${filter.email}%`)
+  }
+
+  // Ændring: Håndter array af rolle-navne
+  if (filter?.roleNames && filter.roleNames.length > 0) {
+    const rolePlaceholders = filter.roleNames.map((_, i) => `$${values.length + i + 1}`).join(', ')
+    whereClauses.push(`role_name IN (${rolePlaceholders})`)
+    values.push(...filter.roleNames)
+  }
+
+  // Ændring: Håndter array af permissions
+  if (filter?.permissionLevels && filter.permissionLevels.length > 0) {
+    const permissionPlaceholders = filter.permissionLevels
+      .map((_, i) => `$${values.length + i + 1}`)
+      .join(', ')
+    whereClauses.push(`permission_level IN (${permissionPlaceholders})`)
+    values.push(...filter.permissionLevels)
+  }
+
+  let query = `
+    SELECT
+      employee.id,
+      first_name,
+      last_name,
+      email,
+      phone_number,
+      permission_level,
+      role_name
+    FROM employee
+    INNER JOIN permission ON employee.permission_id = permission.id
+    INNER JOIN role ON employee.role_id = role.id
   `
+
+  if (whereClauses.length > 0) {
+    query += ` WHERE ${whereClauses.join(' AND ')}`
+  }
+
+  if (sort?.orderBy && validSortFields.has(sort.orderBy)) {
+    const direction = sort.orderDirection === 'DESC' ? 'DESC' : 'ASC'
+    query += ` ORDER BY ${sort.orderBy} ${direction}`
+  }
+
+  const result = await sql.unsafe(query, values)
+  return result
 }
 
 export async function findAllEmployees(employeeID, sql) {
