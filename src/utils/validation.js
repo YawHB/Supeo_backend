@@ -34,7 +34,7 @@ export function validateNameParts(...names) {
 }
 
 export function validateEmailFormat(email) {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/
   if (!emailPattern.test(email)) throw new InvalidEmailFormat()
 }
 
