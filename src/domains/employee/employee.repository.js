@@ -93,9 +93,15 @@ export async function findPermissionIdByLevel(permissionLevel) {
 }
 
 export async function findEmailIfExist(email, employeeID) {
-  return await sql`SELECT email FROM 
-  employee WHERE "email" = ${email}
-  AND NOT id = ${employeeID}`
+  if (employeeID) {
+    return await sql`SELECT email FROM 
+    employee WHERE "email" = ${email}
+    AND NOT id = ${employeeID}`
+  } else {
+    return await sql`SELECT email FROM 
+    employee WHERE "email" = ${email}
+    `
+  }
 }
 
 // export async function countEmployees(sql) {
