@@ -27,8 +27,8 @@ import {
 
 import { sql } from '../../db-config.js'
 
-export function getEmployees(sql) {
-  return getAllEmployees(sql)
+export function getEmployees(sql, sort, filter) {
+  return getAllEmployees(sql, sort, filter)
 }
 
 export async function fetchEmployee(employeeID, sql) {
