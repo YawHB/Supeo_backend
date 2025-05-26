@@ -14,6 +14,7 @@ import {
   createEmployee,
   updateEmployee,
   getEmployeeById,
+  getAllFilteredEmployees,
   getAllEmployees,
   findRoleIdByName,
   findAllEmployees,
@@ -25,10 +26,12 @@ import {
   //getEmployeesPaginated,
 } from './employee.repository.js'
 
-import { sql } from '../../db-config.js'
+export function getEmployees() {
+  return getAllEmployees()
+}
 
-export function getEmployees(sql, filter) {
-  return getAllEmployees(sql, filter)
+export async function getFilteredEmployees(filter) {
+  return await getAllFilteredEmployees(filter)
 }
 
 export async function fetchEmployee(employeeID, sql) {

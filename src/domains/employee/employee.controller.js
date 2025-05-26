@@ -1,6 +1,7 @@
 import {
   getRoles,
   getEmployees,
+  getFilteredEmployees,
   fetchEmployee,
   addNewEmployee,
   getPermissions,
@@ -11,8 +12,11 @@ import {
 
 export const employeeResolver = {
   Query: {
-    employees: async (_, { filter }, { sql }) => {
-      return await getEmployees(sql, filter)
+    employees: async () => {
+      return await getEmployees()
+    },
+    filteredEmployees: async (_, { filter }) => {
+      return await getFilteredEmployees(filter)
     },
 
     employee: async (_, { id }, { sql }) => {

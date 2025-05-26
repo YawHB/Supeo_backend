@@ -1,6 +1,6 @@
 import { sql } from '../../db-config.js'
 
-export async function getAllEmployees(sql, sort, filter) {
+export async function getAllFilteredEmployees(filter, sort) {
   const validSortFields = new Set([
     'first_name',
     'last_name',
@@ -68,14 +68,14 @@ export async function getAllEmployees(sql, sort, filter) {
   return result
 }
 
-// export async function getAllEmployees(sql) {
-//   return await sql`
-//   SELECT employee.id, first_name, last_name, email, phone_number, permission_level, role_name
-//   FROM employee
-//   INNER JOIN permission ON employee.permission_id = permission.id
-//   INNER JOIN role ON employee.role_id = role.id
-//   `
-// }
+export async function getAllEmployees() {
+  return await sql`
+  SELECT employee.id, first_name, last_name, email, phone_number, permission_level, role_name
+  FROM employee
+  INNER JOIN permission ON employee.permission_id = permission.id
+  INNER JOIN role ON employee.role_id = role.id
+  `
+}
 
 export async function findAllEmployees(employeeID, sql) {
   const rows = await sql`SELECT * FROM employee WHERE id = ${employeeID}`
