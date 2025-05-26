@@ -11,21 +11,6 @@ export async function getAllFilteredEmployees(filter, sort) {
 
   const whereClauses = []
   const values = []
-
-  if (filter?.firstName) {
-    whereClauses.push(`first_name ILIKE $${values.length + 1}`)
-    values.push(`%${filter.firstName}%`)
-  }
-  if (filter?.lastName) {
-    whereClauses.push(`last_name ILIKE $${values.length + 1}`)
-    values.push(`%${filter.lastName}%`)
-  }
-  if (filter?.email) {
-    whereClauses.push(`email ILIKE $${values.length + 1}`)
-    values.push(`%${filter.email}%`)
-  }
-
-  // Ændring: Håndter array af rolle-navne
   if (filter?.roleNames && filter.roleNames.length > 0) {
     const rolePlaceholders = filter.roleNames.map((_, i) => `$${values.length + i + 1}`).join(', ')
     whereClauses.push(`role_name IN (${rolePlaceholders})`)
