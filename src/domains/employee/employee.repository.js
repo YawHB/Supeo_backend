@@ -1,9 +1,9 @@
 import { sql } from '../../db-config.js'
 
-export async function getAllFilteredEmployees(filter, sort, searchTerm) {
+export async function getAllFilteredEmployees(filter, sort, search) {
 
-  if (searchTerm) {
-    const like = `%${searchTerm}%`
+  if (search) {
+    const like = `%${search}%`
 
     return await sql`
     SELECT
