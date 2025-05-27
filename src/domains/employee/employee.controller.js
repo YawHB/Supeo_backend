@@ -8,6 +8,7 @@ import {
   fetchEmployeeTimeEntries,
   editEmployee,
   searchEmployees,
+  searchEmployees,
   //getPaginatedEmployees,
 } from './employee.service.js'
 
