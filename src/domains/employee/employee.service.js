@@ -30,8 +30,8 @@ export function getEmployees() {
   return getAllEmployees()
 }
 
-export async function getFilteredEmployees(filter) {
-  return await getAllFilteredEmployees(filter)
+export async function getFilteredEmployees(filter, searchTerm) {
+  return await getAllFilteredEmployees(filter, searchTerm)
 }
 
 export async function fetchEmployee(employeeID, sql) {
