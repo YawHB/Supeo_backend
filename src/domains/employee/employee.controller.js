@@ -16,8 +16,8 @@ export const employeeResolver = {
       return await getEmployees()
     },
     
-    filteredEmployees: async (_, { filter }, { search }) => {
-      return await getFilteredEmployees(filter, search)
+    filteredEmployees: async (_, { filter, sort, search }) => {
+      return await getFilteredEmployees(filter, sort, search)
     },
 
     employee: async (_, { id }, { sql }) => {
