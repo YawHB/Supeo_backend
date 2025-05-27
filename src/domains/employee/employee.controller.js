@@ -7,13 +7,21 @@ import {
   getPermissions,
   fetchEmployeeTimeEntries,
   editEmployee,
+  searchEmployees,
   //getPaginatedEmployees,
 } from './employee.service.js'
 
 export const employeeResolver = {
   Query: {
-    employees: async () => {
-      return await getEmployees()
+    // employees: async () => {
+    //   return await getEmployees()
+    // },
+
+     employees: async (_, { search }, { sql }) => {
+      if (search) {
+        return await searchEmployees(search, sql)
+      }
+      return await getEmployees(sql)
     },
     
     filteredEmployees: async (_, { filter, sort, search }) => {

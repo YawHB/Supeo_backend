@@ -22,6 +22,7 @@ import {
   findPermissionIdByLevel,
   findAllEmployeeTimeEntries,
   findEmailIfExist,
+  searchEmployeesRepo,
   //countEmployees,
   //getEmployeesPaginated,
 } from './employee.repository.js'
@@ -123,3 +124,7 @@ async function permissionLevelExist(permissionLevel) {
 //     items,
 //   }
 // }
+
+export async function searchEmployees(searchTerm, sql) {
+  return await searchEmployeesRepo(searchTerm, sql)
+}
