@@ -5,7 +5,7 @@ scalar Time
 type Query {
   employee(id: ID!): Employee!
   employees: [Employee]!
-  filteredEmployees(filter: EmployeeFilterInput, search: SearchInput): [Employee]!
+  filteredEmployees(filter: EmployeeFilterInput, search: String): [Employee]!
   # employees(
   #   orderBy: String
   #   order: OrderDirection
