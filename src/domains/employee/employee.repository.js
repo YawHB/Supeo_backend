@@ -181,30 +181,30 @@ export async function findEmailIfExist(email, employeeID) {
   }
 }
 
-export async function searchEmployeesRepo(searchTerm, sql) {
-  const like = `%${searchTerm}%`
+// export async function searchEmployeesRepo(searchTerm, sql) {
+//   const like = `%${searchTerm}%`
 
-  return await sql`
-    SELECT
-      e.id,
-      e.first_name,
-      e.last_name,
-      e.email,
-      e.phone_number,
-      r.role_name,
-      p.permission_level
-    FROM employee e
-    INNER JOIN role r        ON e.role_id       = r.id
-    INNER JOIN permission p  ON e.permission_id = p.id
-    WHERE
-      e.first_name   ILIKE ${like} OR
-      e.last_name    ILIKE ${like} OR
-      e.email        ILIKE ${like} OR
-      e.phone_number ILIKE ${like} OR
-      r.role_name    ILIKE ${like} OR
-      p.permission_level ILIKE ${like}
-  `
-}
+//   return await sql`
+//     SELECT
+//       e.id,
+//       e.first_name,
+//       e.last_name,
+//       e.email,
+//       e.phone_number,
+//       r.role_name,
+//       p.permission_level
+//     FROM employee e
+//     INNER JOIN role r        ON e.role_id       = r.id
+//     INNER JOIN permission p  ON e.permission_id = p.id
+//     WHERE
+//       e.first_name   ILIKE ${like} OR
+//       e.last_name    ILIKE ${like} OR
+//       e.email        ILIKE ${like} OR
+//       e.phone_number ILIKE ${like} OR
+//       r.role_name    ILIKE ${like} OR
+//       p.permission_level ILIKE ${like}
+//   `
+// }
 
 // export async function countEmployees(sql) {
 //   const [{ count }] = await sql`
