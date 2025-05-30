@@ -56,6 +56,17 @@ export class InvalidEmailFormat extends GraphQLError {
     })
   }
 }
+
+export class InCorrectEmailOrPassword extends GraphQLError {
+  constructor(message = 'Email eller password er ikke korrekt. prøv igen') {
+    super(message, {
+      extensions: {
+        code: 'UKENDT_EMAIL_ELLER_PASSOWRD',
+      },
+    })
+  }
+}
+
 export class InvalidPhoneNumberFormat extends GraphQLError {
   constructor(message = 'Ugyldig telefonnummer') {
     super(message, {
