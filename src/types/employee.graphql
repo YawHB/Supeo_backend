@@ -6,5 +6,6 @@ type Employee {
   permissionLevel: String
   email: String
   phoneNumber: String
+  token: String
   timeEntries: [TimeEntry]!
 }
