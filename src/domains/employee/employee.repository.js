@@ -153,6 +153,23 @@ export async function findEmailIfExist(email, employeeID) {
   }
 }
 
+export async function findEmployeeByEmail(email) {
+  const [employee] = await sql`SELECT * FROM employee WHERE email = ${email} `
+  return employee
+}
+
+export async function findRoleByEmployeeRoleID(employeeRoleID) {
+  const [role] = await sql`SELECT * FROM role WHERE id = ${employeeRoleID}`
+  console.log('role ', role)
+  return role
+}
+
+export async function findPermissionByEmployeePermissionID(employeePermissionID) {
+  const [permission] = await sql`SELECT * FROM permission WHERE id  = ${employeePermissionID}`
+  console.log('permission ', permission)
+  return permission
+}
+
 export async function searchEmployeesRepo(search, sql) {
   const like = `%${search}%`
 

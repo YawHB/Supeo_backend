@@ -8,6 +8,7 @@ import {
   UserGroupDoesNotExist,
   PermissionLevelDoesNotExist,
   EmailAlreadyExist,
+  InCorrectEmailOrPassword,
 } from '../../utils/custom-errors.js'
 import {
   getAllRoles,
@@ -23,7 +24,13 @@ import {
   findAllEmployeeTimeEntries,
   findEmailIfExist,
   searchEmployeesRepo,
+  findEmployeeByEmail,
+  findRoleByEmployeeRoleID,
+  findPermissionByEmployeePermissionID,
 } from './employee.repository.js'
+
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 export function getEmployees() {
   return getAllEmployees()
@@ -83,6 +90,31 @@ export async function editEmployee(employee, id) {
   return updateEmployee(newEmployee, id, role.id, permission.id)
 }
 
+export async function authenticateEmployee(email, password) {
+  const employee = await findEmployeeByEmail(email)
+  if (!employee) throw new InCorrectEmailOrPassword(email)
+
+  const role = await findRoleByEmployeeRoleID(employee.role_id)
+  const permission = await findPermissionByEmployeePermissionID(employee.permission_id)
+
+  const validPassword = await isPasswordValid(password, employee.password)
+  if (!validPassword) throw new InCorrectEmailOrPassword()
+
+  const token = jwt.sign(
+    {
+      employee_id: employee.id,
+      email: employee.email,
+      roleName: role.role_name,
+      permissionLevel: permission.permission_level,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '2h' },
+  )
+  employee.token = token
+  console.log('employee: ', employee)
+  return employee
+}
+
 export async function getRoles(sql) {
   return await getAllRoles(sql)
 }
@@ -109,4 +141,8 @@ async function permissionLevelExist(permissionLevel) {
 
 export async function searchEmployees(search, sql) {
   return await searchEmployeesRepo(search, sql)
+}
+
+async function isPasswordValid(inputPassword, storedHashedPassword) {
+  return bcrypt.compare(inputPassword, storedHashedPassword)
 }
