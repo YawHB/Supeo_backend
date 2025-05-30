@@ -23,6 +23,8 @@ import {
   findAllEmployeeTimeEntries,
   findEmailIfExist,
   searchEmployeesRepo,
+  countEmployees,
+  getEmployeesPaginated,
 } from './employee.repository.js'
 
 export function getEmployees() {
@@ -109,4 +111,21 @@ async function permissionLevelExist(permissionLevel) {
 
 export async function searchEmployees(search, sql) {
   return await searchEmployeesRepo(search, sql)
+}
+
+export async function getPaginatedEmployees(sql, pagination = {}) {
+  const page = pagination?.page ?? 1
+  const perPage = pagination?.perPage ?? 10
+
+  const totalCount = await countEmployees(sql)
+  const employees = await getEmployeesPaginated(sql, { page, perPage })
+
+  return {
+    pagination: {
+      page: Number(page),
+      perPage: Number(perPage),
+      totalCount: Number(totalCount),
+    },
+    employees,
+  }
 }
