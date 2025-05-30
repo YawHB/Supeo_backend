@@ -1,32 +1,6 @@
 import { sql } from '../../db-config.js'
 
-export async function getAllFilteredEmployees(filter, sort, search) {
-
-  if (search) {
-    const like = `%${search}%`
-
-    return await sql`
-    SELECT
-      e.id,
-      e.first_name,
-      e.last_name,
-      e.email,
-      e.phone_number,
-      r.role_name,
-      p.permission_level
-    FROM employee e
-    INNER JOIN role r        ON e.role_id       = r.id
-    INNER JOIN permission p  ON e.permission_id = p.id
-    WHERE
-      e.first_name   ILIKE ${like} OR
-      e.last_name    ILIKE ${like} OR
-      e.email        ILIKE ${like} OR
-      e.phone_number ILIKE ${like} OR
-      r.role_name    ILIKE ${like} OR
-      p.permission_level ILIKE ${like}
-  `
-  }
-
+export async function getAllFilteredEmployees(filter, sort) {
   const validSortFields = new Set([
     'first_name',
     'last_name',
@@ -43,7 +17,6 @@ export async function getAllFilteredEmployees(filter, sort, search) {
     values.push(...filter.roleNames)
   }
 
-  // Ændring: Håndter array af permissions
   if (filter?.permissionLevels && filter.permissionLevels.length > 0) {
     const permissionPlaceholders = filter.permissionLevels
       .map((_, i) => `$${values.length + i + 1}`)
@@ -65,7 +38,6 @@ export async function getAllFilteredEmployees(filter, sort, search) {
     INNER JOIN permission ON employee.permission_id = permission.id
     INNER JOIN role ON employee.role_id = role.id
   `
-
   if (whereClauses.length > 0) {
     query += ` WHERE ${whereClauses.join(' AND ')}`
   }
@@ -181,45 +153,27 @@ export async function findEmailIfExist(email, employeeID) {
   }
 }
 
-// export async function searchEmployeesRepo(searchTerm, sql) {
-//   const like = `%${searchTerm}%`
+export async function searchEmployeesRepo(search, sql) {
+  const like = `%${search}%`
 
-//   return await sql`
-//     SELECT
-//       e.id,
-//       e.first_name,
-//       e.last_name,
-//       e.email,
-//       e.phone_number,
-//       r.role_name,
-//       p.permission_level
-//     FROM employee e
-//     INNER JOIN role r        ON e.role_id       = r.id
-//     INNER JOIN permission p  ON e.permission_id = p.id
-//     WHERE
-//       e.first_name   ILIKE ${like} OR
-//       e.last_name    ILIKE ${like} OR
-//       e.email        ILIKE ${like} OR
-//       e.phone_number ILIKE ${like} OR
-//       r.role_name    ILIKE ${like} OR
-//       p.permission_level ILIKE ${like}
-//   `
-// }
-
-// export async function countEmployees(sql) {
-//   const [{ count }] = await sql`
-//     SELECT COUNT(*)::int AS count
-//     FROM employee
-//   `
-//   return count
-// }
-
-// export async function getEmployeesPaginated(sql, { page, perPage }) {
-//   const offset = (page - 1) * perPage
-//   return await sql`
-//     SELECT *
-//     FROM employee
-//     LIMIT ${perPage}
-//     OFFSET ${offset}
-//   `
-// }
+  return await sql`
+    SELECT
+      e.id,
+      e.first_name,
+      e.last_name,
+      e.email,
+      e.phone_number,
+      r.role_name,
+      p.permission_level
+    FROM employee e
+    INNER JOIN role r        ON e.role_id       = r.id
+    INNER JOIN permission p  ON e.permission_id = p.id
+    WHERE
+      e.first_name   ILIKE ${like} OR
+      e.last_name    ILIKE ${like} OR
+      e.email        ILIKE ${like} OR
+      e.phone_number ILIKE ${like} OR
+      r.role_name    ILIKE ${like} OR
+      p.permission_level ILIKE ${like}
+  `
+}

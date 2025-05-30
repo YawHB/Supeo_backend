@@ -22,17 +22,15 @@ import {
   findPermissionIdByLevel,
   findAllEmployeeTimeEntries,
   findEmailIfExist,
-  //searchEmployeesRepo,
-  //countEmployees,
-  //getEmployeesPaginated,
+  searchEmployeesRepo,
 } from './employee.repository.js'
 
 export function getEmployees() {
   return getAllEmployees()
 }
 
-export async function getFilteredEmployees(filter, sort, search) {
-  return await getAllFilteredEmployees(filter, sort, search)
+export async function getFilteredEmployees(filter, sort) {
+  return await getAllFilteredEmployees(filter, sort)
 }
 
 export async function fetchEmployee(employeeID, sql) {
@@ -109,22 +107,6 @@ async function permissionLevelExist(permissionLevel) {
   return permission
 }
 
-// export async function getPaginatedEmployees(sql, pagination = {}) {
-//   const page = pagination?.page ?? 1
-//   const perPage = pagination?.perPage ?? 10
-//   const totalCount = await countEmployees(sql)
-//   const items = await getEmployeesPaginated(sql, { page, perPage })
-
-//   return {
-//     pagination: {
-//       page: Number(page),
-//       perPage: Number(perPage),
-//       totalCount: Number(totalCount),
-//     },
-//     items,
-//   }
-// }
-
-// export async function searchEmployees(searchTerm, sql) {
-//   return await searchEmployeesRepo(searchTerm, sql)
-// }
+export async function searchEmployees(search, sql) {
+  return await searchEmployeesRepo(search, sql)
+}

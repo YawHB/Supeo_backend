@@ -4,17 +4,8 @@ scalar Time
 
 type Query {
   employee(id: ID!): Employee!
-  employees: [Employee]!
-  #employees(search: String): [Employee]!
-  filteredEmployees(filter: EmployeeFilterInput, search: String): [Employee]!
-  # employees(
-  #   orderBy: String
-  #   order: OrderDirection
-  #   employeeRole: [String!]
-  #   employeePermission: [String!]
-  # ): [Employee!]!
-
-  #employees(pagination: PaginationInput): EmployeesPage!
+  employees(search: String): [Employee]!
+  filteredEmployees(filter: EmployeeFilterInput): [Employee]!
 
   notification(id: ID!): Notification!
   notifications: [Notification]!
