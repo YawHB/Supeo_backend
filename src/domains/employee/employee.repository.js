@@ -75,11 +75,11 @@ export async function getEmployeeById(employeeID) {
 }
 
 export async function createEmployee(employee, roleID, permissionID) {
-  const { firstName, lastName, email, phoneNumber } = employee
+  const { firstName, lastName, email, phoneNumber, password } = employee
 
   const newEmployeeIDEesult = await sql`
-    INSERT INTO employee ("first_name", "last_name", "email", "phone_number", "role_id", "permission_id")
-    VALUES (${firstName}, ${lastName}, ${email}, ${phoneNumber}, ${roleID}, ${permissionID})
+    INSERT INTO employee ("first_name", "last_name", "email", "phone_number", "password", "role_id", "permission_id")
+    VALUES (${firstName}, ${lastName}, ${email}, ${phoneNumber}, ${password}, ${roleID}, ${permissionID})
     RETURNING id
     `
   const newEmployeeID = newEmployeeIDEesult[0].id
@@ -160,13 +160,11 @@ export async function findEmployeeByEmail(email) {
 
 export async function findRoleByEmployeeRoleID(employeeRoleID) {
   const [role] = await sql`SELECT * FROM role WHERE id = ${employeeRoleID}`
-  console.log('role ', role)
   return role
 }
 
 export async function findPermissionByEmployeePermissionID(employeePermissionID) {
   const [permission] = await sql`SELECT * FROM permission WHERE id  = ${employeePermissionID}`
-  console.log('permission ', permission)
   return permission
 }
 

@@ -46,7 +46,7 @@ export const employeeResolver = {
   },
 
   Mutation: {
-    createEmployee: async (_, { newEmployee }, { sql }) => {
+    createEmployee: async (_, { newEmployee }) => {
       return await addNewEmployee(newEmployee)
     },
 
@@ -54,17 +54,11 @@ export const employeeResolver = {
       return await editEmployee(updatedEmployee, id)
     },
     handleEmployeeLogin: async (_, { loginInput }) => {
-      const hash = await bcrypt.hash('password', 10)
+      const hash = await bcrypt.hash('supeo123', 10)
       const { email, password } = loginInput
       //console.log('mit hash: ', hash)
 
       return authenticateEmployee(email, password)
     },
   },
-
-  // Employee: {
-  //   roleName: async (parent, _) => {
-  //     return await getRoleByEmployeeID(Number(parent.role_id))
-  //   },
-  // },
 }

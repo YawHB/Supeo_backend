@@ -53,10 +53,12 @@ export async function getEmployee(employeeID) {
 }
 
 export async function addNewEmployee(employee) {
-  const { firstName, lastName, roleName, permissionLevel, email, phoneNumber } = employee
+  const { firstName, lastName, roleName, permissionLevel, email, phoneNumber, password } = employee
 
   const [formattedFirstName, formattedLastName] = capitalize(validateNameParts(firstName, lastName))
   validateEmailFormat(email)
+  const hashedPassword = await bcrypt.hash(password, 10)
+
   await ensureEmailIsUnique(email)
   isValidPhoneNumber(phoneNumber)
   const role = await ensureRoleExists(roleName)
@@ -66,6 +68,7 @@ export async function addNewEmployee(employee) {
     ...employee,
     firstName: formattedFirstName,
     lastName: formattedLastName,
+    password: hashedPassword,
   }
 
   return await createEmployee(newEmployee, role.id, permission.id)
@@ -111,7 +114,6 @@ export async function authenticateEmployee(email, password) {
     { expiresIn: '2h' },
   )
   employee.token = token
-  console.log('employee: ', employee)
   return employee
 }
 
