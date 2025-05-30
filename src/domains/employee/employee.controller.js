@@ -12,13 +12,13 @@ import {
 
 export const employeeResolver = {
   Query: {
-     employees: async (_, { search }, { sql }) => {
+    employees: async (_, { search }, { sql }) => {
       if (search) {
         return await searchEmployees(search, sql)
       }
       return await getEmployees(sql)
     },
-    
+
     filteredEmployees: async (_, { filter, sort }) => {
       return await getFilteredEmployees(filter, sort)
     },
@@ -62,5 +62,11 @@ export const employeeResolver = {
     updateEmployee: async (_, { id, updatedEmployee }) => {
       return await editEmployee(updatedEmployee, id)
     },
+  },
+
+  PaginationResponse: {
+    page: (parent) => parent.page,
+    perPage: (parent) => parent.perPage,
+    totalCount: (parent) => parent.totalCount,
   },
 }
