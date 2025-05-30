@@ -34,6 +34,18 @@ export const employeeResolver = {
     permissions: async (_, __, { sql }) => {
       return await getPermissions(sql)
     },
+
+    paginatedEmployees: async (_, { pagination }, { sql }) => {
+      const { pagination: pageInfo, employees } = await getPaginatedEmployees(sql, pagination)
+      return {
+        pagination: {
+          page: pageInfo.page,
+          perPage: pageInfo.perPage,
+          totalCount: pageInfo.totalCount,
+        },
+        employees,
+      }
+    },
   },
 
   Employee: {
