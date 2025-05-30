@@ -8,6 +8,7 @@ import {
   fetchEmployeeTimeEntries,
   editEmployee,
   searchEmployees,
+  getPaginatedEmployees,
 } from './employee.service.js'
 
 export const employeeResolver = {
