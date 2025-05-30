@@ -177,3 +177,18 @@ export async function searchEmployeesRepo(search, sql) {
       p.permission_level ILIKE ${like}
   `
 }
+
+export async function countEmployees(sql) {
+  const result = await sql`SELECT COUNT(*) FROM employee`
+  return result[0].count
+}
+
+export async function getEmployeesPaginated(sql, { page, perPage }) {
+  const offset = (page - 1) * perPage
+  return await sql`
+    SELECT * FROM employee
+    ORDER BY id
+    LIMIT ${perPage}
+    OFFSET ${offset}
+  `
+}
