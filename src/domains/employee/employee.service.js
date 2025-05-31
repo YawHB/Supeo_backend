@@ -25,6 +25,7 @@ import {
   searchEmployeesRepo,
   countEmployees,
   getEmployeesPaginated,
+  countFilteredEmployees,
 } from './employee.repository.js'
 
 export function getEmployees() {
@@ -113,12 +114,14 @@ export async function searchEmployees(search, sql) {
   return await searchEmployeesRepo(search, sql)
 }
 
-export async function getPaginatedEmployees(sql, pagination = {}) {
+export async function getPaginatedEmployees(sql, { pagination = {}, search, roles, permissions }) {
   const page = pagination?.page ?? 1
   const perPage = pagination?.perPage ?? 10
 
-  const totalCount = await countEmployees(sql)
-  const employees = await getEmployeesPaginated(sql, { page, perPage })
+  const [totalCount, employees] = await Promise.all([
+    countFilteredEmployees(sql, { search, roles, permissions }),
+    getEmployeesPaginated(sql, { page, perPage, search, roles, permissions }),
+  ])
 
   return {
     pagination: {

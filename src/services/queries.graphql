@@ -5,10 +5,15 @@ scalar Time
 type Query {
   employee(id: ID!): Employee!
   employees(search: String): [Employee]!
+  
   filteredEmployees(filter: EmployeeFilterInput): [Employee]!
+
   paginatedEmployees(
-    pagination: PaginationInput
-  ): PaginatedEmployeesResponse!
+  pagination: PaginationInput!
+  search: String
+  roles: [String!]
+  permissions: [String!]
+): PaginatedEmployeesResponse!
 
   notification(id: ID!): Notification!
   notifications: [Notification]!
