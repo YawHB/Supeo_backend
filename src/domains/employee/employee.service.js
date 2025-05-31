@@ -114,13 +114,16 @@ export async function searchEmployees(search, sql) {
   return await searchEmployeesRepo(search, sql)
 }
 
-export async function getPaginatedEmployees(sql, { pagination = {}, search, roles, permissions }) {
+export async function getPaginatedEmployees(
+  sql,
+  { pagination = {}, search, roles, permissions, sort },
+) {
   const page = pagination?.page ?? 1
   const perPage = pagination?.perPage ?? 10
 
   const [totalCount, employees] = await Promise.all([
     countFilteredEmployees(sql, { search, roles, permissions }),
-    getEmployeesPaginated(sql, { page, perPage, search, roles, permissions }),
+    getEmployeesPaginated(sql, { page, perPage, search, roles, permissions, sort }),
   ])
 
   return {

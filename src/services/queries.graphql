@@ -13,6 +13,7 @@ type Query {
   search: String
   roles: [String!]
   permissions: [String!]
+  sort: SortInput
 ): PaginatedEmployeesResponse!
 
   notification(id: ID!): Notification!

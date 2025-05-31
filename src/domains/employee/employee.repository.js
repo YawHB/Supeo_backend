@@ -183,24 +183,48 @@ export async function countEmployees(sql) {
   return result[0].count
 }
 
-export async function getEmployeesPaginated(sql, { page, perPage, search, roles, permissions }) {
+export async function getEmployeesPaginated(
+  sql,
+  { page, perPage, search, roles, permissions, sort },
+) {
   const offset = (page - 1) * perPage
   const { whereClause, values } = buildWhereClause({ search, roles, permissions })
 
+  let orderByClause = ''
+  const validSortFields = new Set([
+    'first_name',
+    'last_name',
+    'email',
+    'role_name',
+    'permission_level',
+  ])
+  if (sort?.orderBy && validSortFields.has(sort.orderBy)) {
+    const dir = sort.orderDirection === 'DESC' ? 'DESC' : 'ASC'
+    const prefix =
+      sort.orderBy === 'role_name'
+        ? 'role.'
+        : sort.orderBy === 'permission_level'
+        ? 'permission.'
+        : 'employee.'
+    orderByClause = ` ORDER BY ${prefix}${sort.orderBy} ${dir}`
+  } else {
+    orderByClause = ` ORDER BY employee.last_name ASC`
+  }
+
   const query = `
     SELECT
-      e.id,
-      e.first_name,
-      e.last_name,
-      e.email,
-      e.phone_number,
-      r.role_name,
-      p.permission_level
-    FROM employee e
-    INNER JOIN role r ON e.role_id = r.id
-    INNER JOIN permission p ON e.permission_id = p.id
+      employee.id,
+      employee.first_name,
+      employee.last_name,
+      employee.email,
+      employee.phone_number,
+      role.role_name,
+      permission.permission_level
+    FROM employee AS employee
+    INNER JOIN role AS role        ON role.id = employee.role_id
+    INNER JOIN permission AS permission  ON permission.id = employee.permission_id
     ${whereClause}
-    ORDER BY e.last_name ASC
+    ${orderByClause}
     LIMIT $${values.length + 1}
     OFFSET $${values.length + 2}
   `
@@ -211,48 +235,47 @@ export async function getEmployeesPaginated(sql, { page, perPage, search, roles,
 export async function countFilteredEmployees(sql, { search, roles, permissions }) {
   const { whereClause, values } = buildWhereClause({ search, roles, permissions })
 
-  const result = await sql.unsafe(
-    `
-    SELECT COUNT(*) FROM employee
-    INNER JOIN role ON role.id = employee.role_id
-    INNER JOIN permission ON permission.id = employee.permission_id
+  const query = `
+    SELECT COUNT(*) AS count
+    FROM employee AS employee
+    INNER JOIN role AS role        ON role.id = employee.role_id
+    INNER JOIN permission AS permission  ON permission.id = employee.permission_id
     ${whereClause}
-  `,
-    values,
-  )
+  `
 
-  return result[0].count
+  const result = await sql.unsafe(query, values)
+  return parseInt(result[0].count, 10)
 }
 
 function buildWhereClause({ search, roles, permissions }) {
-  const conditions = []
-  const values = []
+  const conditions = [];
+  const values = [];
 
   if (search) {
-    const searchValue = `%${search}%`
+    const searchValue = `%${search}%`;
     conditions.push(`
       (
-        e.first_name ILIKE $${values.length + 1}
-        OR e.last_name ILIKE $${values.length + 1}
-        OR e.email ILIKE $${values.length + 1}
-        OR e.phone_number ILIKE $${values.length + 1}
-        OR r.role_name ILIKE $${values.length + 1}
-        OR p.permission_level ILIKE $${values.length + 1}
+        employee.first_name ILIKE $${values.length + 1}
+        OR employee.last_name ILIKE $${values.length + 1}
+        OR employee.email ILIKE $${values.length + 1}
+        OR employee.phone_number ILIKE $${values.length + 1}
+        OR role.role_name ILIKE $${values.length + 1}
+        OR permission.permission_level ILIKE $${values.length + 1}
       )
-    `)
-    values.push(searchValue)
+    `);
+    values.push(searchValue);
   }
 
   if (roles?.length) {
-    conditions.push(`r.role_name = ANY($${values.length + 1})`)
-    values.push(roles)
+    conditions.push(`role.role_name = ANY($${values.length + 1})`);
+    values.push(roles);
   }
 
   if (permissions?.length) {
-    conditions.push(`p.permission_level = ANY($${values.length + 1})`)
-    values.push(permissions)
+    conditions.push(`permission.permission_level = ANY($${values.length + 1})`);
+    values.push(permissions);
   }
 
-  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
-  return { whereClause, values }
+  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+  return { whereClause, values };
 }
