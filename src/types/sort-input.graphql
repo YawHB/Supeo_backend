@@ -1,0 +1,9 @@
+input SortInput {
+  orderBy: String!
+  orderDirection: OrderDirection!
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
