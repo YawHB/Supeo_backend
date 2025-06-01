@@ -112,26 +112,9 @@ export async function findEmailIfExist(email, employeeID) {
   }
 }
 
-export async function getAllFilteredEmployees(filter, sort) {
-  const { whereClause, values } = employeeFilters(filter)
-  const orderBy = orderByClauses(sort, 'ORDER BY employee.last_name ASC')
-
-  const query = `
-    SELECT
-      employee.id,
-      employee.first_name,
-      employee.last_name,
-      employee.email,
-      employee.phone_number,
-      permission.permission_level,
-      role.role_name
-    FROM employee
-    INNER JOIN permission ON employee.permission_id = permission.id
-    INNER JOIN role       ON employee.role_id       = role.id
-    ${whereClause}
-    ${orderBy}
-  `
-  return await sql.unsafe(query, values)
+export async function countEmployees(sql) {
+  const result = await sql`SELECT COUNT(*) FROM employee`
+  return Number(result[0].count)
 }
 
 export async function searchAllEmployees(sql, search) {
@@ -158,9 +141,26 @@ export async function searchAllEmployees(sql, search) {
   `
 }
 
-export async function countEmployees(sql) {
-  const result = await sql`SELECT COUNT(*) FROM employee`
-  return Number(result[0].count)
+export async function getAllFilteredEmployees(filter, sort) {
+  const { whereClause, values } = employeeFilters(filter)
+  const orderBy = orderByClauses(sort, 'ORDER BY employee.last_name ASC')
+
+  const query = `
+    SELECT
+      employee.id,
+      employee.first_name,
+      employee.last_name,
+      employee.email,
+      employee.phone_number,
+      permission.permission_level,
+      role.role_name
+    FROM employee
+    INNER JOIN permission ON employee.permission_id = permission.id
+    INNER JOIN role       ON employee.role_id       = role.id
+    ${whereClause}
+    ${orderBy}
+  `
+  return await sql.unsafe(query, values)
 }
 
 export async function getEmployeesPaginated(sql, { page, perPage, search, roles, permissions, sort }) {
