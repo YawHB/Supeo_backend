@@ -112,6 +112,8 @@ export async function findEmailIfExist(email, employeeID) {
   }
 }
 
+// --- Main query functions ---
+
 export async function getAllFilteredEmployees(filter, sort) {
   const { whereClause, values } = buildDynamicFilters(filter)
   const orderBy = buildOrderByClause(sort, 'ORDER BY employee.last_name ASC')
@@ -119,12 +121,12 @@ export async function getAllFilteredEmployees(filter, sort) {
   const query = `
     SELECT
       employee.id,
-      first_name,
-      last_name,
-      email,
-      phone_number,
-      permission_level,
-      role_name
+      employee.first_name,
+      employee.last_name,
+      employee.email,
+      employee.phone_number,
+      permission.permission_level,
+      role.role_name
     FROM employee
     INNER JOIN permission ON employee.permission_id = permission.id
     INNER JOIN role       ON employee.role_id       = role.id
@@ -135,7 +137,7 @@ export async function getAllFilteredEmployees(filter, sort) {
   return await sql.unsafe(query, values)
 }
 
-export async function searchEmployeesRepo(search, sql) {
+export async function searchEmployeesRepo(sql, search) {
   const like = `%${search}%`
   return await sql`
     SELECT
@@ -147,7 +149,7 @@ export async function searchEmployeesRepo(search, sql) {
       r.role_name,
       p.permission_level
     FROM employee e
-    INNER JOIN role r        ON e.role_id       = r.id
+    INNER JOIN role r        ON e.role_id = r.id
     INNER JOIN permission p  ON e.permission_id = p.id
     WHERE
       e.first_name   ILIKE ${like} OR
@@ -179,7 +181,7 @@ export async function getEmployeesPaginated(sql, { page, perPage, search, roles,
       role.role_name,
       permission.permission_level
     FROM employee
-    INNER JOIN role       ON role.id       = employee.role_id
+    INNER JOIN role       ON role.id = employee.role_id
     INNER JOIN permission ON permission.id = employee.permission_id
     ${whereClause}
     ${orderBy}
@@ -194,7 +196,7 @@ export async function countFilteredEmployees(sql, { search, roles, permissions }
   const query = `
     SELECT COUNT(*) AS count
     FROM employee
-    INNER JOIN role       ON role.id       = employee.role_id
+    INNER JOIN role       ON role.id = employee.role_id
     INNER JOIN permission ON permission.id = employee.permission_id
     ${whereClause}
   `
@@ -206,13 +208,13 @@ function buildDynamicFilters(filter = {}) {
   const clauses = []
   const values = []
 
-  if (Array.isArray(filter.roleNames) && filter.roleNames.length > 0) {
-    clauses.push(`role_name = ANY($${values.length + 1})`)
+  if (filter.roleNames?.length) {
+    clauses.push(`role.role_name = ANY($${values.length + 1})`)
     values.push(filter.roleNames)
   }
 
-  if (Array.isArray(filter.permissionLevels) && filter.permissionLevels.length > 0) {
-    clauses.push(`permission_level = ANY($${values.length + 1})`)
+  if (filter.permissionLevels?.length) {
+    clauses.push(`permission.permission_level = ANY($${values.length + 1})`)
     values.push(filter.permissionLevels)
   }
 
@@ -257,9 +259,7 @@ function buildWhereClause({ search, roles, permissions }) {
 }
 
 function buildOrderByClause(sort, fallbackClause = '') {
-  if (!sort?.orderBy || !employeeSortFields.has(sort.orderBy)) {
-    return fallbackClause
-  }
+  if (!sort?.orderBy || !employeeSortFields.has(sort.orderBy)) return fallbackClause
 
   const mapPrefix = {
     role_name: 'role.',
