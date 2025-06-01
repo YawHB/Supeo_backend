@@ -112,10 +112,12 @@ export async function findEmailIfExist(email, employeeID) {
   }
 }
 
-// --- Main query functions ---
-
 export async function getAllFilteredEmployees(filter, sort) {
-  const { whereClause, values } = filters(filter)
+  const { whereClause, values } = whereClauses({
+    search: null,
+    roles: filter.roleNames,
+    permissions: filter.permissionLevels,
+  })
   const orderBy = orderByClauses(sort, 'ORDER BY employee.last_name ASC')
 
   const query = `
@@ -133,7 +135,6 @@ export async function getAllFilteredEmployees(filter, sort) {
     ${whereClause}
     ${orderBy}
   `
-
   return await sql.unsafe(query, values)
 }
 
@@ -204,24 +205,6 @@ export async function countFilteredEmployees(sql, { search, roles, permissions }
   return Number(result[0].count)
 }
 
-export function filters(filter = {}) {
-  const clauses = []
-  const values = []
-
-  if (filter.roleNames?.length) {
-    clauses.push(`role.role_name = ANY($${values.length + 1})`)
-    values.push(filter.roleNames)
-  }
-
-  if (filter.permissionLevels?.length) {
-    clauses.push(`permission.permission_level = ANY($${values.length + 1})`)
-    values.push(filter.permissionLevels)
-  }
-
-  const whereClause = clauses.length ? `WHERE ${clauses.join(' AND ')}` : ''
-  return { whereClause, values }
-}
-
 export function whereClauses({ search, roles, permissions }) {
   const conditions = []
   const values = []
@@ -258,8 +241,8 @@ export function whereClauses({ search, roles, permissions }) {
   return { whereClause, values }
 }
 
-export function orderByClauses(sort, fallbackClause = '') {
-  if (!sort?.orderBy || !employeeSortFields.has(sort.orderBy)) return fallbackClause
+export function orderByClauses(sort, fallback = '') {
+  if (!sort?.orderBy || !employeeSortFields.has(sort.orderBy)) return fallback
 
   const mapPrefix = {
     role_name: 'role.',
