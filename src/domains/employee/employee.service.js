@@ -104,6 +104,7 @@ async function ensureRoleExists(roleName) {
   if (!role) throw new UserGroupDoesNotExist()
   return role
 }
+
 async function permissionLevelExist(permissionLevel) {
   let [permission] = await findPermissionIdByLevel(permissionLevel)
   if (!permission) throw new PermissionLevelDoesNotExist()
