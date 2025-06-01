@@ -18,7 +18,7 @@ export function capitalize(names) {
 
 function isOnlyLetters(name) {
   const formatted = /^[A-Za-zÆØÅæøå]+$/
-  if (!formatted.test(name)) throw new InvalidNameValues()
+  if (!formatted.test(name.trim())) throw new InvalidNameValues()
 }
 
 export function validateNameParts(...names) {
