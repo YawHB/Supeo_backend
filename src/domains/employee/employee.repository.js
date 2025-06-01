@@ -115,8 +115,8 @@ export async function findEmailIfExist(email, employeeID) {
 // --- Main query functions ---
 
 export async function getAllFilteredEmployees(filter, sort) {
-  const { whereClause, values } = buildDynamicFilters(filter)
-  const orderBy = buildOrderByClause(sort, 'ORDER BY employee.last_name ASC')
+  const { whereClause, values } = filters(filter)
+  const orderBy = orderByClauses(sort, 'ORDER BY employee.last_name ASC')
 
   const query = `
     SELECT
@@ -168,8 +168,8 @@ export async function countEmployees(sql) {
 
 export async function getEmployeesPaginated(sql, { page, perPage, search, roles, permissions, sort }) {
   const offset = (page - 1) * perPage
-  const { whereClause, values } = buildWhereClause({ search, roles, permissions })
-  const orderBy = buildOrderByClause(sort, 'ORDER BY employee.last_name ASC')
+  const { whereClause, values } = whereClauses({ search, roles, permissions })
+  const orderBy = orderByClauses(sort, 'ORDER BY employee.last_name ASC')
 
   const query = `
     SELECT
@@ -192,7 +192,7 @@ export async function getEmployeesPaginated(sql, { page, perPage, search, roles,
 }
 
 export async function countFilteredEmployees(sql, { search, roles, permissions }) {
-  const { whereClause, values } = buildWhereClause({ search, roles, permissions })
+  const { whereClause, values } = whereClauses({ search, roles, permissions })
   const query = `
     SELECT COUNT(*) AS count
     FROM employee
@@ -204,7 +204,7 @@ export async function countFilteredEmployees(sql, { search, roles, permissions }
   return Number(result[0].count)
 }
 
-function buildDynamicFilters(filter = {}) {
+export function filters(filter = {}) {
   const clauses = []
   const values = []
 
@@ -222,7 +222,7 @@ function buildDynamicFilters(filter = {}) {
   return { whereClause, values }
 }
 
-function buildWhereClause({ search, roles, permissions }) {
+export function whereClauses({ search, roles, permissions }) {
   const conditions = []
   const values = []
   let idx = 1
@@ -258,7 +258,7 @@ function buildWhereClause({ search, roles, permissions }) {
   return { whereClause, values }
 }
 
-function buildOrderByClause(sort, fallbackClause = '') {
+export function orderByClauses(sort, fallbackClause = '') {
   if (!sort?.orderBy || !employeeSortFields.has(sort.orderBy)) return fallbackClause
 
   const mapPrefix = {
