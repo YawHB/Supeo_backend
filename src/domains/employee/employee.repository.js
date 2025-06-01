@@ -113,11 +113,7 @@ export async function findEmailIfExist(email, employeeID) {
 }
 
 export async function getAllFilteredEmployees(filter, sort) {
-  const { whereClause, values } = whereClauses({
-    search: null,
-    roles: filter.roleNames,
-    permissions: filter.permissionLevels,
-  })
+  const { whereClause, values } = employeeFilters(filter)
   const orderBy = orderByClauses(sort, 'ORDER BY employee.last_name ASC')
 
   const query = `
@@ -138,7 +134,7 @@ export async function getAllFilteredEmployees(filter, sort) {
   return await sql.unsafe(query, values)
 }
 
-export async function searchEmployeesRepo(sql, search) {
+export async function searchAllEmployees(sql, search) {
   const like = `%${search}%`
   return await sql`
     SELECT
@@ -203,6 +199,24 @@ export async function countFilteredEmployees(sql, { search, roles, permissions }
   `
   const result = await sql.unsafe(query, values)
   return Number(result[0].count)
+}
+
+export function employeeFilters(filter = {}) {
+  const clauses = []
+  const values = []
+
+  if (filter.roleNames?.length) {
+    clauses.push(`role.role_name = ANY($${values.length + 1})`)
+    values.push(filter.roleNames)
+  }
+
+  if (filter.permissionLevels?.length) {
+    clauses.push(`permission.permission_level = ANY($${values.length + 1})`)
+    values.push(filter.permissionLevels)
+  }
+
+  const whereClause = clauses.length ? `WHERE ${clauses.join(' AND ')}` : ''
+  return { whereClause, values }
 }
 
 export function whereClauses({ search, roles, permissions }) {
