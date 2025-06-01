@@ -22,7 +22,7 @@ import {
   findPermissionIdByLevel,
   findAllEmployeeTimeEntries,
   findEmailIfExist,
-  searchEmployeesRepo,
+  searchAllEmployees,
   countEmployees,
   getEmployeesPaginated,
   countFilteredEmployees,
@@ -104,6 +104,7 @@ async function ensureRoleExists(roleName) {
   if (!role) throw new UserGroupDoesNotExist()
   return role
 }
+
 async function permissionLevelExist(permissionLevel) {
   let [permission] = await findPermissionIdByLevel(permissionLevel)
   if (!permission) throw new PermissionLevelDoesNotExist()
@@ -111,16 +112,19 @@ async function permissionLevelExist(permissionLevel) {
 }
 
 export async function searchEmployees(search, sql) {
-  return await searchEmployeesRepo(search, sql)
+  return await searchAllEmployees(search, sql)
 }
 
-export async function getPaginatedEmployees(sql, { pagination = {}, search, roles, permissions }) {
+export async function getPaginatedEmployees(
+  sql,
+  { pagination = {}, search, roles, permissions, sort },
+) {
   const page = pagination?.page ?? 1
   const perPage = pagination?.perPage ?? 10
 
   const [totalCount, employees] = await Promise.all([
     countFilteredEmployees(sql, { search, roles, permissions }),
-    getEmployeesPaginated(sql, { page, perPage, search, roles, permissions }),
+    getEmployeesPaginated(sql, { page, perPage, search, roles, permissions, sort }),
   ])
 
   return {

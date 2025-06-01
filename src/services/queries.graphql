@@ -6,13 +6,14 @@ type Query {
   employee(id: ID!): Employee!
   employees(search: String): [Employee]!
   
-  filteredEmployees(filter: EmployeeFilterInput): [Employee]!
+  filteredEmployees(filter: EmployeeFilterInput, sort: SortInput): [Employee]!
 
   paginatedEmployees(
   pagination: PaginationInput!
   search: String
   roles: [String!]
   permissions: [String!]
+  sort: SortInput
 ): PaginatedEmployeesResponse!
 
   notification(id: ID!): Notification!

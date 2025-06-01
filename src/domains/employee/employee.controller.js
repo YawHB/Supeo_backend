@@ -20,7 +20,7 @@ export const employeeResolver = {
       return await getEmployees(sql)
     },
 
-    filteredEmployees: async (_, { filter, sort }) => {
+    filteredEmployees: async (_, { filter, sort }, { sql }) => {
       return await getFilteredEmployees(filter, sort)
     },
 
@@ -36,14 +36,14 @@ export const employeeResolver = {
       return await getPermissions(sql)
     },
 
-    paginatedEmployees: async (_, { pagination, search, roles, permissions }, { sql }) => {
+    paginatedEmployees: async (_, { pagination, search, roles, permissions, sort }, { sql }) => {
       const { pagination: pageInfo, employees } = await getPaginatedEmployees(sql, {
         pagination,
         search,
         roles,
         permissions,
-      })
-
+        sort,
+      });
       return {
         pagination: {
           page: pageInfo.page,
@@ -51,7 +51,7 @@ export const employeeResolver = {
           totalCount: pageInfo.totalCount,
         },
         employees,
-      }
+      };
     },
   },
 
