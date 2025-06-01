@@ -113,10 +113,10 @@ export async function findEmailIfExist(email, employeeID) {
 }
 
 export async function getAllFilteredEmployees(filter, sort) {
-  const whereClauses = []
-  const values = []
+  const { whereClause, values } = buildDynamicFilters(filter)
+  const orderBy = buildOrderByClause(sort, 'ORDER BY employee.last_name ASC')
 
-  let query = `
+  const query = `
     SELECT
       employee.id,
       first_name,
@@ -128,38 +128,15 @@ export async function getAllFilteredEmployees(filter, sort) {
     FROM employee
     INNER JOIN permission ON employee.permission_id = permission.id
     INNER JOIN role       ON employee.role_id       = role.id
+    ${whereClause}
+    ${orderBy}
   `
 
-  if (filter?.roleNames && filter.roleNames.length > 0) {
-    const placeholders = filter.roleNames.map((_, i) => `$${values.length + i + 1}`).join(', ')
-    whereClauses.push(`role_name IN (${placeholders})`)
-    values.push(...filter.roleNames)
-  }
-
-  if (filter?.permissionLevels && filter.permissionLevels.length > 0) {
-    const placeholders = filter.permissionLevels
-      .map((_, i) => `$${values.length + i + 1}`)
-      .join(', ')
-    whereClauses.push(`permission_level IN (${placeholders})`)
-    values.push(...filter.permissionLevels)
-  }
-
-  if (whereClauses.length > 0) {
-    query += ` WHERE ${whereClauses.join(' AND ')}`
-  }
-
-  const orderBy = buildOrderByClause(sort, 'ORDER BY employee.last_name ASC')
-  if (orderBy) {
-    query += ` ${orderBy}`
-  }
-
-  const result = await sql.unsafe(query, values)
-  return result
+  return await sql.unsafe(query, values)
 }
 
 export async function searchEmployeesRepo(search, sql) {
   const like = `%${search}%`
-
   return await sql`
     SELECT
       e.id,
@@ -184,7 +161,7 @@ export async function searchEmployeesRepo(search, sql) {
 
 export async function countEmployees(sql) {
   const result = await sql`SELECT COUNT(*) FROM employee`
-  return result[0].count
+  return Number(result[0].count)
 }
 
 export async function getEmployeesPaginated(sql, { page, perPage, search, roles, permissions, sort }) {
@@ -201,9 +178,9 @@ export async function getEmployeesPaginated(sql, { page, perPage, search, roles,
       employee.phone_number,
       role.role_name,
       permission.permission_level
-    FROM employee AS employee
-    INNER JOIN role       AS role       ON role.id       = employee.role_id
-    INNER JOIN permission AS permission ON permission.id = employee.permission_id
+    FROM employee
+    INNER JOIN role       ON role.id       = employee.role_id
+    INNER JOIN permission ON permission.id = employee.permission_id
     ${whereClause}
     ${orderBy}
     LIMIT $${values.length + 1}
@@ -216,13 +193,31 @@ export async function countFilteredEmployees(sql, { search, roles, permissions }
   const { whereClause, values } = buildWhereClause({ search, roles, permissions })
   const query = `
     SELECT COUNT(*) AS count
-    FROM employee AS employee
-    INNER JOIN role AS role ON role.id = employee.role_id
-    INNER JOIN permission AS permission ON permission.id = employee.permission_id
+    FROM employee
+    INNER JOIN role       ON role.id       = employee.role_id
+    INNER JOIN permission ON permission.id = employee.permission_id
     ${whereClause}
   `
   const result = await sql.unsafe(query, values)
-  return parseInt(result[0].count, 10)
+  return Number(result[0].count)
+}
+
+function buildDynamicFilters(filter = {}) {
+  const clauses = []
+  const values = []
+
+  if (Array.isArray(filter.roleNames) && filter.roleNames.length > 0) {
+    clauses.push(`role_name = ANY($${values.length + 1})`)
+    values.push(filter.roleNames)
+  }
+
+  if (Array.isArray(filter.permissionLevels) && filter.permissionLevels.length > 0) {
+    clauses.push(`permission_level = ANY($${values.length + 1})`)
+    values.push(filter.permissionLevels)
+  }
+
+  const whereClause = clauses.length ? `WHERE ${clauses.join(' AND ')}` : ''
+  return { whereClause, values }
 }
 
 function buildWhereClause({ search, roles, permissions }) {
@@ -246,16 +241,15 @@ function buildWhereClause({ search, roles, permissions }) {
     idx++
   }
 
-  if (Array.isArray(roles) && roles.length > 0) {
+  if (roles?.length) {
     conditions.push(`role.role_name = ANY($${idx})`)
     values.push(roles)
     idx++
   }
 
-  if (Array.isArray(permissions) && permissions.length > 0) {
+  if (permissions?.length) {
     conditions.push(`permission.permission_level = ANY($${idx})`)
     values.push(permissions)
-    idx++
   }
 
   const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
@@ -267,15 +261,13 @@ function buildOrderByClause(sort, fallbackClause = '') {
     return fallbackClause
   }
 
-  let prefix
-  if (sort.orderBy === 'role_name') {
-    prefix = 'role.'
-  } else if (sort.orderBy === 'permission_level') {
-    prefix = 'permission.'
-  } else {
-    prefix = 'employee.'
+  const mapPrefix = {
+    role_name: 'role.',
+    permission_level: 'permission.',
   }
 
+  const prefix = mapPrefix[sort.orderBy] || 'employee.'
   const direction = sort.orderDirection === 'DESC' ? 'DESC' : 'ASC'
+
   return `ORDER BY ${prefix}${sort.orderBy} ${direction}`
 }
