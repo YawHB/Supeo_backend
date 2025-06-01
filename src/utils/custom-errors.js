@@ -94,3 +94,23 @@ export class InvalidNameValues extends GraphQLError {
     })
   }
 }
+
+export class MissingOrMalformedAuthHeader extends GraphQLError {
+  constructor(message = 'Authorization-header mangler eller er forkert formatteret') {
+    super(message, {
+      extensions: {
+        code: 'MANGELFULDT_AUTH_HEADER',
+      },
+    })
+  }
+}
+
+export class InvalidOrExpiredToken extends GraphQLError {
+  constructor(message = 'Token er ugyldig eller udløbet – log venligst ind igen.') {
+    super(message, {
+      extensions: {
+        code: 'UGYLDIG_TOKEN',
+      },
+    })
+  }
+}

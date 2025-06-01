@@ -70,7 +70,6 @@ export async function addNewEmployee(employee) {
     lastName: formattedLastName,
     password: hashedPassword,
   }
-
   return await createEmployee(newEmployee, role.id, permission.id)
 }
 
