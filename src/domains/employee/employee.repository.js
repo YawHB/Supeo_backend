@@ -2,9 +2,11 @@ import { sql } from '../../db-config.js'
 
 export async function getAllFilteredEmployees(filter, sort) {
   const validSortFields = new Set([
+    'id',
     'first_name',
     'last_name',
     'email',
+    'phone_number',
     'role_name',
     'permission_level',
   ])
@@ -190,14 +192,17 @@ export async function getEmployeesPaginated(
   const offset = (page - 1) * perPage
   const { whereClause, values } = buildWhereClause({ search, roles, permissions })
 
-  let orderByClause = ''
   const validSortFields = new Set([
+    'id',
     'first_name',
     'last_name',
     'email',
+    'phone_number',
     'role_name',
     'permission_level',
   ])
+
+  let orderByClause = ''
   if (sort?.orderBy && validSortFields.has(sort.orderBy)) {
     const dir = sort.orderDirection === 'DESC' ? 'DESC' : 'ASC'
     const prefix =
@@ -221,8 +226,8 @@ export async function getEmployeesPaginated(
       role.role_name,
       permission.permission_level
     FROM employee AS employee
-    INNER JOIN role AS role        ON role.id = employee.role_id
-    INNER JOIN permission AS permission  ON permission.id = employee.permission_id
+    INNER JOIN role       AS role       ON role.id       = employee.role_id
+    INNER JOIN permission AS permission ON permission.id = employee.permission_id
     ${whereClause}
     ${orderByClause}
     LIMIT $${values.length + 1}
@@ -232,9 +237,9 @@ export async function getEmployeesPaginated(
   return await sql.unsafe(query, [...values, perPage, offset])
 }
 
+
 export async function countFilteredEmployees(sql, { search, roles, permissions }) {
   const { whereClause, values } = buildWhereClause({ search, roles, permissions })
-
   const query = `
     SELECT COUNT(*) AS count
     FROM employee AS employee
@@ -242,7 +247,6 @@ export async function countFilteredEmployees(sql, { search, roles, permissions }
     INNER JOIN permission AS permission  ON permission.id = employee.permission_id
     ${whereClause}
   `
-
   const result = await sql.unsafe(query, values)
   return parseInt(result[0].count, 10)
 }
