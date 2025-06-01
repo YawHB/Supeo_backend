@@ -8,6 +8,7 @@ import { ApolloServer } from '@apollo/server'
 import { expressMiddleware } from '@apollo/server/express4'
 import { typeDefs } from './schema-builder/merge-type-defs.js'
 import { resolvers } from './schema-builder/merge-resolvers.js'
+import { MissingOrMalformedAuthHeader, InvalidOrExpiredToken } from './utils/custom-errors.js'
 
 const PORT = 4000
 
@@ -15,6 +16,12 @@ const app = express()
 
 const snakeCaseFieldResolver = (source, args, contextValue, info) => {
   return source[snakeCase(info.fieldName)]
+}
+
+//TODO Kan først aktiveres når vi har sat login op på frontenden. ellers er der ingen JWT sendt til vores endpoint
+const context = async ({ req }) => {
+  if (req.body.operationName === 'login') return { sql }
+  return getVerifiedPayload(req)
 }
 
 export const server = new ApolloServer({
@@ -31,7 +38,25 @@ app.use(
   bodyParser.json(),
   expressMiddleware(server, {
     context: async () => ({ sql }),
+    //context,
   }),
 )
 
 app.listen(PORT, () => console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`))
+
+function getVerifiedPayload(req) {
+  const token = req.headers.authorization
+  console.log('headers:', req.headers)
+  console.log('token:', token)
+  if (!token) {
+    throw new MissingOrMalformedAuthHeader()
+  }
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET)
+    console.log('user :', user)
+    return { sql, req, user }
+  } catch (err) {
+    console.error('Verificeringsfejl:', err.message)
+    throw new InvalidOrExpiredToken()
+  }
+}
