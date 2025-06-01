@@ -177,3 +177,82 @@ export async function searchEmployeesRepo(search, sql) {
       p.permission_level ILIKE ${like}
   `
 }
+
+export async function countEmployees(sql) {
+  const result = await sql`SELECT COUNT(*) FROM employee`
+  return result[0].count
+}
+
+export async function getEmployeesPaginated(sql, { page, perPage, search, roles, permissions }) {
+  const offset = (page - 1) * perPage
+  const { whereClause, values } = buildWhereClause({ search, roles, permissions })
+
+  const query = `
+    SELECT
+      e.id,
+      e.first_name,
+      e.last_name,
+      e.email,
+      e.phone_number,
+      r.role_name,
+      p.permission_level
+    FROM employee e
+    INNER JOIN role r ON e.role_id = r.id
+    INNER JOIN permission p ON e.permission_id = p.id
+    ${whereClause}
+    ORDER BY e.last_name ASC
+    LIMIT $${values.length + 1}
+    OFFSET $${values.length + 2}
+  `
+
+  return await sql.unsafe(query, [...values, perPage, offset])
+}
+
+export async function countFilteredEmployees(sql, { search, roles, permissions }) {
+  const { whereClause, values } = buildWhereClause({ search, roles, permissions })
+
+  const result = await sql.unsafe(
+    `
+    SELECT COUNT(*) FROM employee
+    INNER JOIN role ON role.id = employee.role_id
+    INNER JOIN permission ON permission.id = employee.permission_id
+    ${whereClause}
+  `,
+    values,
+  )
+
+  return result[0].count
+}
+
+function buildWhereClause({ search, roles, permissions }) {
+  const conditions = []
+  const values = []
+
+  if (search) {
+    const searchValue = `%${search}%`
+    conditions.push(`
+      (
+        e.first_name ILIKE $${values.length + 1}
+        OR e.last_name ILIKE $${values.length + 1}
+        OR e.email ILIKE $${values.length + 1}
+        OR e.phone_number ILIKE $${values.length + 1}
+        OR r.role_name ILIKE $${values.length + 1}
+        OR p.permission_level ILIKE $${values.length + 1}
+      )
+    `)
+    values.push(searchValue)
+  }
+
+  if (roles?.length) {
+    conditions.push(`r.role_name = ANY($${values.length + 1})`)
+    values.push(roles)
+  }
+
+  if (permissions?.length) {
+    conditions.push(`p.permission_level = ANY($${values.length + 1})`)
+    values.push(permissions)
+  }
+
+  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+  return { whereClause, values }
+}

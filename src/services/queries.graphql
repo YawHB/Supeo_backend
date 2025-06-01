@@ -5,7 +5,15 @@ scalar Time
 type Query {
   employee(id: ID!): Employee!
   employees(search: String): [Employee]!
+  
   filteredEmployees(filter: EmployeeFilterInput): [Employee]!
+
+  paginatedEmployees(
+  pagination: PaginationInput!
+  search: String
+  roles: [String!]
+  permissions: [String!]
+): PaginatedEmployeesResponse!
 
   notification(id: ID!): Notification!
   notifications: [Notification]!
@@ -17,4 +25,24 @@ type Query {
   permissions: [Permission]!
 
   userMenuLinks(employeeId: Int!): [UserMenuLink!]!
+
+  # employees(
+  #   search: String
+  #   order: String
+  #   orderBy: String
+  #   limit: Int
+  #   offset: Int
+  #   pagination: PaginationInput!
+  #   roleName: [Int!]
+  #   permissionLevel: [Int!]
+  #   ):[Employee]!
+
+  # paginatedEmployees(
+  #   search: String
+  #   orderBy: String
+  #   order: String
+  #   pagination: PaginationInput!
+  #   employee: [Int]
+  # ): PaginatedEmployeesResponse!
+
 }
