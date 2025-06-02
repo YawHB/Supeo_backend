@@ -2,7 +2,8 @@ import { sql } from '../../db-config.js'
 
 const DEFAULT_BREAK = parseInt(process.env.PS_DEFAULT_BREAK_MINUTES ?? 30)
 
-const validSortFields = [
+const validSortFieldsForEmployee = [
+  'id',
   'start_date',
   'start_time',
   'end_date',
@@ -10,7 +11,18 @@ const validSortFields = [
   'duration',
   'break',
   'comment',
-  'status',
+]
+
+const validFieldsForAdminsTimeEntries = [
+  'id',
+  'first_name',
+  'last_name',
+  'start_date',
+  'start_time',
+  'end_date',
+  'end_time',
+  'duration',
+  'comment',
 ]
 
 export async function findTimeEntryById(id, sql) {
@@ -32,25 +44,10 @@ export async function findAllTimeEntries(sort) {
 }
 
 function getOrderClause(sort) {
-  const validFields = [
-    'start_date',
-    'end_date',
-    'start_time',
-    'end_time',
-    'duration',
-    'break',
-    'comment',
-    'first_name',
-    'last_name',
-    'email',
-    'phone_number',
-    'status',
-    'timestamp',
-  ]
   const direction = sort?.orderDirection?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'
   const field = sort?.orderBy
 
-  if (validFields.includes(field)) {
+  if (validFieldsForAdminsTimeEntries.includes(field)) {
     return `ORDER BY ${field} ${direction}`
   }
   return ''
@@ -354,7 +351,7 @@ export async function findTimeEntriesByEmployee(employeeId, sort) {
     const field = sort.orderBy
     const direction = sort.orderDirection
 
-    if (validSortFields.includes(field)) {
+    if (validSortFieldsForEmployee.includes(field)) {
       orderBy = `t.${field}`
     }
 
