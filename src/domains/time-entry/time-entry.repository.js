@@ -234,7 +234,7 @@ export async function searchAllTimeEntries(search, sql) {
   `
 }
 
-export async function searchTimeEntriesByEmployee(employeeId, search, sql) {
+export async function searchTimeEntriesByEmployee(employeeId, search) {
   const like = `%${search}%`
   return await sql`
     SELECT
@@ -265,7 +265,7 @@ export async function searchTimeEntriesByEmployee(employeeId, search, sql) {
   `
 }
 
-export async function findTimeEntriesByEmployee(employeeId, sort, sql) {
+export async function findTimeEntriesByEmployee(employeeId, sort) {
   const validSortFields = [
     'start_date',
     'start_time',

@@ -23,8 +23,8 @@ export const timeEntryResolver = {
       return await fetchTimeEntryById(id, sql)
     },
 
-    timeEntriesForEmployee: async (_, { employeeId, search, sort }, { sql }) => {
-      return await fetchTimeEntriesForEmployee(employeeId, search, sort, sql)
+    timeEntriesForEmployee: async (_, { employeeId, search, sort }) => {
+      return await fetchTimeEntriesForEmployee(employeeId, search, sort)
     },
   },
 
