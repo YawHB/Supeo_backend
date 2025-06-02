@@ -9,6 +9,7 @@ import { expressMiddleware } from '@apollo/server/express4'
 import { typeDefs } from './schema-builder/merge-type-defs.js'
 import { resolvers } from './schema-builder/merge-resolvers.js'
 import { MissingOrMalformedAuthHeader, InvalidOrExpiredToken } from './utils/custom-errors.js'
+import jwt from 'jsonwebtoken'
 
 const PORT = 4000
 
@@ -37,8 +38,8 @@ app.use(
   cors(),
   bodyParser.json(),
   expressMiddleware(server, {
-    context: async () => ({ sql }),
-    //context,
+    //context: async () => ({ sql }),
+    context,
   }),
 )
 
@@ -46,14 +47,11 @@ app.listen(PORT, () => console.log(`🚀 Server ready at http://localhost:${PORT
 
 function getVerifiedPayload(req) {
   const token = req.headers.authorization
-  console.log('headers:', req.headers)
-  console.log('token:', token)
   if (!token) {
     throw new MissingOrMalformedAuthHeader()
   }
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET)
-    console.log('user :', user)
     return { sql, req, user }
   } catch (err) {
     console.error('Verificeringsfejl:', err.message)
