@@ -147,3 +147,29 @@ async function permissionLevelExist(permissionLevel) {
 export async function searchEmployees(search, sql) {
   return await searchAllEmployees(search, sql)
 }
+
+export async function getPaginatedEmployees(
+  sql,
+  { pagination = {}, search, roles, permissions, sort },
+) {
+  const page = pagination?.page ?? 1
+  const perPage = pagination?.perPage ?? 10
+
+  const [totalCount, employees] = await Promise.all([
+    countFilteredEmployees(sql, { search, roles, permissions }),
+    getEmployeesPaginated(sql, { page, perPage, search, roles, permissions, sort }),
+  ])
+
+  return {
+    pagination: {
+      page: Number(page),
+      perPage: Number(perPage),
+      totalCount: Number(totalCount),
+    },
+    employees,
+  }
+}
+
+function isPasswordValid(password, hashedPassword) {
+  return bcrypt.compare(password, hashedPassword)
+}
