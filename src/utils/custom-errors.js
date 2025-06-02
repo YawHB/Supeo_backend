@@ -27,6 +27,15 @@ export class PermissionLevelDoesNotExist extends GraphQLError {
     })
   }
 }
+export class UnauthorizedAccess extends GraphQLError {
+  constructor(message = 'Adgang nægtet: Du har ikke de nødvendige rettigheder.') {
+    super(message, {
+      extensions: {
+        code: 'IKKE_AUTENTIFICERET',
+      },
+    })
+  }
+}
 
 export class WorkHoursAreNegative extends GraphQLError {
   constructor(message = 'Sluttidspunkt ligger før start tidspunkt i denne vagt  ') {
