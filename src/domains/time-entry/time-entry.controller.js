@@ -8,16 +8,20 @@ import {
   updateTimeEntry,
   searchTimeEntries,
 } from './time-entry.service.js'
+import { requirePermission } from '../../utils/authHelpers.js'
+import { ADMIN_OR_MANAGER } from '../../utils/authHelpers.js'
 
 export const timeEntryResolver = {
   Query: {
-    timeEntries: async (_, { search }, { sql }) => {
+    timeEntries: async (_, { search }, { sql, user }) => {
+      requirePermission(user, ADMIN_OR_MANAGER)
+
       if (search) {
         return await searchTimeEntries(search, sql)
       }
       return await fetchAllTimeEntries(sql)
     },
-    
+
     timeEntry: async (_, { id }, { sql }) => {
       return await fetchTimeEntryById(id, sql)
     },
