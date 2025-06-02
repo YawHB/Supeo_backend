@@ -6,6 +6,7 @@ import {
   fetchAllTimeEntries,
   removeTimeEntry,
   updateTimeEntry,
+  searchTimeEntries,
 } from './time-entry.service.js'
 
 export const timeEntryResolver = {
