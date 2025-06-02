@@ -72,3 +72,7 @@ export async function updateTimeEntry(sql, timeEntryID, updatedTimeEntry) {
 
   return await updateTimeEntryAndResetStatus(sql, timeEntryID, updatedTimeEntry)
 }
+
+export async function searchTimeEntries(search, sql) {
+  return await searchAllTimeEntries(search, sql)
+}
