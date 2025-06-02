@@ -21,7 +21,7 @@ type Query {
 
   timeEntry(id: ID!): TimeEntry!
   timeEntries(search: String): [TimeEntry]!
-  timeEntriesForEmployee(employeeId: ID!, search: String): [TimeEntry]!
+  timeEntriesForEmployee(employeeId: ID!, search: String, sort: SortInput): [TimeEntry]!
 
   roles: [Role]!
   permissions: [Permission]!

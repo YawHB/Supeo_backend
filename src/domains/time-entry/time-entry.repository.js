@@ -265,8 +265,39 @@ export async function searchTimeEntriesByEmployee(employeeId, search, sql) {
   `
 }
 
-export async function findTimeEntriesByEmployee(employeeId, sql) {
-  return await sql`
+export async function findTimeEntriesByEmployee(employeeId, sort, sql) {
+
+  const validSortFields = [
+    'start_date',
+    'start_time',
+    'end_date',
+    'end_time',
+    'duration',
+    'break',
+    'comment',
+    'status',
+  ]
+
+  let orderBy = 't.start_date'
+  let orderDirection = 'ASC'
+  console.log('Order By:', orderBy)
+  console.log('Order Direction:', orderDirection)
+
+
+  if (sort) {
+    const field = sort.orderBy
+    const direction = sort.orderDirection
+
+    if (validSortFields.includes(field)) {
+      orderBy = `t.${field}`
+    }
+
+    if (direction === 'ASC' || direction === 'DESC') {
+      orderDirection = direction
+    }
+  }
+
+  const query = `
     SELECT
       t.id,
       t.start_time,
@@ -282,6 +313,13 @@ export async function findTimeEntriesByEmployee(employeeId, sql) {
       n.status
     FROM time_entry t
     LEFT JOIN notification n ON t.notification_id = n.id
-    WHERE t.employee_id = ${employeeId}
+    WHERE t.employee_id = $1
+    ORDER BY ${orderBy} ${orderDirection}
   `
+  console.log('Sorting:', sort?.orderBy, sort?.orderDirection)
+
+
+  const rows = await sql.unsafe(query, [employeeId])
+
+  return rows
 }
