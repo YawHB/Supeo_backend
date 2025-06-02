@@ -188,3 +188,48 @@ export async function deleteNotificationById(notificationId, sql) {
     DELETE FROM notification WHERE id = ${notificationId}
   `
 }
+
+export async function searchAllTimeEntries(search, sql) {
+  const like = `%${search}%`
+  return await sql`
+    SELECT
+      t.id,
+      t.start_time,
+      t.end_time,
+      t.duration,
+      t.comment,
+      t.start_date,
+      t.end_date,
+      t.break,
+      e.id AS employee_id,
+      e.first_name,
+      e.last_name,
+      e.email,
+      e.phone_number,
+      r.role_name,
+      p.permission_level,
+      n.id AS notification_id,
+      n.comment AS notification_comment,
+      n.timestamp,
+      n.status
+    FROM time_entry t
+    LEFT JOIN employee e      ON t.employee_id = e.id
+    LEFT JOIN role r          ON e.role_id = r.id
+    LEFT JOIN permission p    ON e.permission_id = p.id
+    LEFT JOIN notification n  ON t.notification_id = n.id
+    WHERE
+      t.start_time::text ILIKE ${like} OR
+      t.end_time::text ILIKE ${like} OR
+      t.comment ILIKE ${like} OR
+      t.duration::text ILIKE ${like} OR
+      t.break::text ILIKE ${like} OR
+      e.first_name ILIKE ${like} OR
+      e.last_name ILIKE ${like} OR
+      e.email ILIKE ${like} OR
+      e.phone_number ILIKE ${like} OR
+      r.role_name ILIKE ${like} OR
+      p.permission_level ILIKE ${like} OR
+      n.comment ILIKE ${like} OR
+      n.status::text ILIKE ${like}
+  `
+}
