@@ -81,7 +81,6 @@ export async function searchTimeEntries(search, sql) {
 }
 
 export async function fetchTimeEntriesForEmployee(employeeId, search, sort, sql) {
-  console.log('fetchTimeEntriesForEmployee sort:', sort)
   if (search) {
     return await searchTimeEntriesByEmployee(employeeId, search, sort, sql)
   }

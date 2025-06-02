@@ -24,7 +24,6 @@ export const timeEntryResolver = {
     },
 
     timeEntriesForEmployee: async (_, { employeeId, search, sort }, { sql }) => {
-      console.log('Resolver sort:', sort)
       return await fetchTimeEntriesForEmployee(employeeId, search, sort, sql)
     },
   },

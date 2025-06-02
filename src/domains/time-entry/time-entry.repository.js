@@ -266,7 +266,6 @@ export async function searchTimeEntriesByEmployee(employeeId, search, sql) {
 }
 
 export async function findTimeEntriesByEmployee(employeeId, sort, sql) {
-
   const validSortFields = [
     'start_date',
     'start_time',
@@ -280,9 +279,6 @@ export async function findTimeEntriesByEmployee(employeeId, sort, sql) {
 
   let orderBy = 't.start_date'
   let orderDirection = 'ASC'
-  console.log('Order By:', orderBy)
-  console.log('Order Direction:', orderDirection)
-
 
   if (sort) {
     const field = sort.orderBy
@@ -316,10 +312,6 @@ export async function findTimeEntriesByEmployee(employeeId, sort, sql) {
     WHERE t.employee_id = $1
     ORDER BY ${orderBy} ${orderDirection}
   `
-  console.log('Sorting:', sort?.orderBy, sort?.orderDirection)
-
-
   const rows = await sql.unsafe(query, [employeeId])
-
   return rows
 }
