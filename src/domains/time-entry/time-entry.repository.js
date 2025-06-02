@@ -2,6 +2,17 @@ import { sql } from '../../db-config.js'
 
 const DEFAULT_BREAK = parseInt(process.env.PS_DEFAULT_BREAK_MINUTES ?? 30)
 
+const validSortFields = [
+  'start_date',
+  'start_time',
+  'end_date',
+  'end_time',
+  'duration',
+  'break',
+  'comment',
+  'status',
+]
+
 export async function findTimeEntryById(id, sql) {
   const rows = await sql`SELECT * FROM time_entry WHERE id = ${id}`
   return rows[0]
@@ -266,16 +277,6 @@ export async function searchTimeEntriesByEmployee(employeeId, search) {
 }
 
 export async function findTimeEntriesByEmployee(employeeId, sort) {
-  const validSortFields = [
-    'start_date',
-    'start_time',
-    'end_date',
-    'end_time',
-    'duration',
-    'break',
-    'comment',
-    'status',
-  ]
 
   let orderBy = 't.start_date'
   let orderDirection = 'ASC'
