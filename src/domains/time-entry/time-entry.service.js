@@ -10,6 +10,7 @@ import {
   updateTimeEntryAndResetStatus,
   getNotificationIdByTimeEntryId,
   deleteNotificationById,
+  searchAllTimeEntries,
 } from './time-entry.repository.js'
 
 export async function fetchTimeEntryById(id, sql) {
