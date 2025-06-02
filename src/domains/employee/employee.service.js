@@ -23,7 +23,10 @@ import {
   findPermissionIdByLevel,
   findAllEmployeeTimeEntries,
   findEmailIfExist,
-  searchEmployeesRepo,
+  searchAllEmployees,
+  countEmployees,
+  getEmployeesPaginated,
+  countFilteredEmployees,
   findEmployeeByEmail,
   findRoleByEmployeeRoleID,
   findPermissionByEmployeePermissionID,
@@ -134,6 +137,7 @@ async function ensureRoleExists(roleName) {
   if (!role) throw new UserGroupDoesNotExist()
   return role
 }
+
 async function permissionLevelExist(permissionLevel) {
   let [permission] = await findPermissionIdByLevel(permissionLevel)
   if (!permission) throw new PermissionLevelDoesNotExist()
@@ -142,8 +146,4 @@ async function permissionLevelExist(permissionLevel) {
 
 export async function searchEmployees(search, sql) {
   return await searchEmployeesRepo(search, sql)
-}
-
-async function isPasswordValid(inputPassword, storedHashedPassword) {
-  return bcrypt.compare(inputPassword, storedHashedPassword)
 }

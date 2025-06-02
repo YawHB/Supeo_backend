@@ -1,55 +1,14 @@
 import { sql } from '../../db-config.js'
 
-export async function getAllFilteredEmployees(filter, sort) {
-  const validSortFields = new Set([
-    'first_name',
-    'last_name',
-    'email',
-    'role_name',
-    'permission_level',
-  ])
-
-  const whereClauses = []
-  const values = []
-  if (filter?.roleNames && filter.roleNames.length > 0) {
-    const rolePlaceholders = filter.roleNames.map((_, i) => `$${values.length + i + 1}`).join(', ')
-    whereClauses.push(`role_name IN (${rolePlaceholders})`)
-    values.push(...filter.roleNames)
-  }
-
-  if (filter?.permissionLevels && filter.permissionLevels.length > 0) {
-    const permissionPlaceholders = filter.permissionLevels
-      .map((_, i) => `$${values.length + i + 1}`)
-      .join(', ')
-    whereClauses.push(`permission_level IN (${permissionPlaceholders})`)
-    values.push(...filter.permissionLevels)
-  }
-
-  let query = `
-    SELECT
-      employee.id,
-      first_name,
-      last_name,
-      email,
-      phone_number,
-      permission_level,
-      role_name
-    FROM employee
-    INNER JOIN permission ON employee.permission_id = permission.id
-    INNER JOIN role ON employee.role_id = role.id
-  `
-  if (whereClauses.length > 0) {
-    query += ` WHERE ${whereClauses.join(' AND ')}`
-  }
-
-  if (sort?.orderBy && validSortFields.has(sort.orderBy)) {
-    const direction = sort.orderDirection === 'DESC' ? 'DESC' : 'ASC'
-    query += ` ORDER BY ${sort.orderBy} ${direction}`
-  }
-
-  const result = await sql.unsafe(query, values)
-  return result
-}
+const employeeSortFields = new Set([
+  'id',
+  'first_name',
+  'last_name',
+  'email',
+  'phone_number',
+  'role_name',
+  'permission_level',
+])
 
 export async function getAllEmployees() {
   return await sql`
@@ -168,9 +127,28 @@ export async function findPermissionByEmployeePermissionID(employeePermissionID)
   return permission
 }
 
-export async function searchEmployeesRepo(search, sql) {
-  const like = `%${search}%`
+export async function findEmployeeByEmail(email) {
+  const [employee] = await sql`SELECT * FROM employee WHERE email = ${email} `
+  return employee
+}
 
+export async function findRoleByEmployeeRoleID(employeeRoleID) {
+  const [role] = await sql`SELECT * FROM role WHERE id = ${employeeRoleID}`
+  return role
+}
+
+export async function findPermissionByEmployeePermissionID(employeePermissionID) {
+  const [permission] = await sql`SELECT * FROM permission WHERE id  = ${employeePermissionID}`
+  return permission
+}
+
+export async function countEmployees(sql) {
+  const result = await sql`SELECT COUNT(*) FROM employee`
+  return Number(result[0].count)
+}
+
+export async function searchAllEmployees(sql, search) {
+  const like = `%${search}%`
   return await sql`
     SELECT
       e.id,
@@ -181,7 +159,7 @@ export async function searchEmployeesRepo(search, sql) {
       r.role_name,
       p.permission_level
     FROM employee e
-    INNER JOIN role r        ON e.role_id       = r.id
+    INNER JOIN role r        ON e.role_id = r.id
     INNER JOIN permission p  ON e.permission_id = p.id
     WHERE
       e.first_name   ILIKE ${like} OR
@@ -191,4 +169,135 @@ export async function searchEmployeesRepo(search, sql) {
       r.role_name    ILIKE ${like} OR
       p.permission_level ILIKE ${like}
   `
+}
+
+export async function getAllFilteredEmployees(filter, sort) {
+  const { whereClause, values } = employeeFilters(filter)
+  const orderBy = orderByClauses(sort, 'ORDER BY employee.last_name ASC')
+
+  const query = `
+    SELECT
+      employee.id,
+      employee.first_name,
+      employee.last_name,
+      employee.email,
+      employee.phone_number,
+      permission.permission_level,
+      role.role_name
+    FROM employee
+    INNER JOIN permission ON employee.permission_id = permission.id
+    INNER JOIN role       ON employee.role_id       = role.id
+    ${whereClause}
+    ${orderBy}
+  `
+  return await sql.unsafe(query, values)
+}
+
+export async function getEmployeesPaginated(
+  sql,
+  { page, perPage, search, roles, permissions, sort },
+) {
+  const offset = (page - 1) * perPage
+  const { whereClause, values } = whereClauses({ search, roles, permissions })
+  const orderBy = orderByClauses(sort, 'ORDER BY employee.last_name ASC')
+
+  const query = `
+    SELECT
+      employee.id,
+      employee.first_name,
+      employee.last_name,
+      employee.email,
+      employee.phone_number,
+      role.role_name,
+      permission.permission_level
+    FROM employee
+    INNER JOIN role       ON role.id = employee.role_id
+    INNER JOIN permission ON permission.id = employee.permission_id
+    ${whereClause}
+    ${orderBy}
+    LIMIT $${values.length + 1}
+    OFFSET $${values.length + 2}
+  `
+  return await sql.unsafe(query, [...values, perPage, offset])
+}
+
+export async function countFilteredEmployees(sql, { search, roles, permissions }) {
+  const { whereClause, values } = whereClauses({ search, roles, permissions })
+  const query = `
+    SELECT COUNT(*) AS count
+    FROM employee
+    INNER JOIN role       ON role.id = employee.role_id
+    INNER JOIN permission ON permission.id = employee.permission_id
+    ${whereClause}
+  `
+  const result = await sql.unsafe(query, values)
+  return Number(result[0].count)
+}
+
+export function employeeFilters(filter = {}) {
+  const clauses = []
+  const values = []
+
+  if (filter.roleNames?.length) {
+    clauses.push(`role.role_name = ANY($${values.length + 1})`)
+    values.push(filter.roleNames)
+  }
+
+  if (filter.permissionLevels?.length) {
+    clauses.push(`permission.permission_level = ANY($${values.length + 1})`)
+    values.push(filter.permissionLevels)
+  }
+
+  const whereClause = clauses.length ? `WHERE ${clauses.join(' AND ')}` : ''
+  return { whereClause, values }
+}
+
+export function whereClauses({ search, roles, permissions }) {
+  const conditions = []
+  const values = []
+  let idx = 1
+
+  if (search) {
+    const like = `%${search}%`
+    conditions.push(`
+      (
+        employee.first_name   ILIKE $${idx} OR
+        employee.last_name    ILIKE $${idx} OR
+        employee.email        ILIKE $${idx} OR
+        employee.phone_number ILIKE $${idx} OR
+        role.role_name        ILIKE $${idx} OR
+        permission.permission_level ILIKE $${idx}
+      )
+    `)
+    values.push(like)
+    idx++
+  }
+
+  if (roles?.length) {
+    conditions.push(`role.role_name = ANY($${idx})`)
+    values.push(roles)
+    idx++
+  }
+
+  if (permissions?.length) {
+    conditions.push(`permission.permission_level = ANY($${idx})`)
+    values.push(permissions)
+  }
+
+  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+  return { whereClause, values }
+}
+
+export function orderByClauses(sort, fallback = '') {
+  if (!sort?.orderBy || !employeeSortFields.has(sort.orderBy)) return fallback
+
+  const mapPrefix = {
+    role_name: 'role.',
+    permission_level: 'permission.',
+  }
+
+  const prefix = mapPrefix[sort.orderBy] || 'employee.'
+  const direction = sort.orderDirection === 'DESC' ? 'DESC' : 'ASC'
+
+  return `ORDER BY ${prefix}${sort.orderBy} ${direction}`
 }

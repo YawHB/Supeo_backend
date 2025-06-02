@@ -9,6 +9,7 @@ import {
   editEmployee,
   searchEmployees,
   authenticateEmployee,
+  getPaginatedEmployees,
 } from './employee.service.js'
 
 import bcrypt from 'bcryptjs'
@@ -22,7 +23,7 @@ export const employeeResolver = {
       return await getEmployees(sql)
     },
 
-    filteredEmployees: async (_, { filter, sort }) => {
+    filteredEmployees: async (_, { filter, sort }, { sql }) => {
       return await getFilteredEmployees(filter, sort)
     },
 
@@ -36,6 +37,24 @@ export const employeeResolver = {
 
     permissions: async (_, __, { sql }) => {
       return await getPermissions(sql)
+    },
+
+    paginatedEmployees: async (_, { pagination, search, roles, permissions, sort }, { sql }) => {
+      const { pagination: pageInfo, employees } = await getPaginatedEmployees(sql, {
+        pagination,
+        search,
+        roles,
+        permissions,
+        sort,
+      })
+      return {
+        pagination: {
+          page: pageInfo.page,
+          perPage: pageInfo.perPage,
+          totalCount: pageInfo.totalCount,
+        },
+        employees,
+      }
     },
   },
 
@@ -60,5 +79,17 @@ export const employeeResolver = {
 
       return authenticateEmployee(email, password)
     },
+  },
+
+  PaginationResponse: {
+    page: (parent) => parent.page,
+    perPage: (parent) => parent.perPage,
+    totalCount: (parent) => parent.totalCount,
+  },
+
+  PaginationResponse: {
+    page: (parent) => parent.page,
+    perPage: (parent) => parent.perPage,
+    totalCount: (parent) => parent.totalCount,
   },
 }
