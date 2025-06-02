@@ -127,21 +127,6 @@ export async function findPermissionByEmployeePermissionID(employeePermissionID)
   return permission
 }
 
-export async function findEmployeeByEmail(email) {
-  const [employee] = await sql`SELECT * FROM employee WHERE email = ${email} `
-  return employee
-}
-
-export async function findRoleByEmployeeRoleID(employeeRoleID) {
-  const [role] = await sql`SELECT * FROM role WHERE id = ${employeeRoleID}`
-  return role
-}
-
-export async function findPermissionByEmployeePermissionID(employeePermissionID) {
-  const [permission] = await sql`SELECT * FROM permission WHERE id  = ${employeePermissionID}`
-  return permission
-}
-
 export async function countEmployees(sql) {
   const result = await sql`SELECT COUNT(*) FROM employee`
   return Number(result[0].count)

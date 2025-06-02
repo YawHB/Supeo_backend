@@ -145,5 +145,5 @@ async function permissionLevelExist(permissionLevel) {
 }
 
 export async function searchEmployees(search, sql) {
-  return await searchEmployeesRepo(search, sql)
+  return await searchAllEmployees(search, sql)
 }

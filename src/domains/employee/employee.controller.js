@@ -86,10 +86,4 @@ export const employeeResolver = {
     perPage: (parent) => parent.perPage,
     totalCount: (parent) => parent.totalCount,
   },
-
-  PaginationResponse: {
-    page: (parent) => parent.page,
-    perPage: (parent) => parent.perPage,
-    totalCount: (parent) => parent.totalCount,
-  },
 }
