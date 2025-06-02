@@ -11,6 +11,8 @@ import {
   getNotificationIdByTimeEntryId,
   deleteNotificationById,
   searchAllTimeEntries,
+  searchTimeEntriesByEmployee,
+  findTimeEntriesByEmployee,
 } from './time-entry.repository.js'
 
 export async function fetchTimeEntryById(id, sql) {
@@ -76,4 +78,11 @@ export async function updateTimeEntry(sql, timeEntryID, updatedTimeEntry) {
 
 export async function searchTimeEntries(search, sql) {
   return await searchAllTimeEntries(search, sql)
+}
+
+export async function fetchTimeEntriesForEmployee(employeeId, search, sql) {
+  if (search) {
+    return await searchTimeEntriesByEmployee(employeeId, search, sql)
+  }
+  return await findTimeEntriesByEmployee(employeeId, sql)
 }

@@ -7,6 +7,7 @@ import {
   removeTimeEntry,
   updateTimeEntry,
   searchTimeEntries,
+  fetchTimeEntriesForEmployee,
 } from './time-entry.service.js'
 
 export const timeEntryResolver = {
@@ -17,9 +18,13 @@ export const timeEntryResolver = {
       }
       return await fetchAllTimeEntries(sql)
     },
-    
+
     timeEntry: async (_, { id }, { sql }) => {
       return await fetchTimeEntryById(id, sql)
+    },
+
+    timeEntriesForEmployee: async (_, { employeeId, search }, { sql }) => {
+      return await fetchTimeEntriesForEmployee(employeeId, search, sql)
     },
   },
 

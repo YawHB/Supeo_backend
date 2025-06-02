@@ -233,3 +233,55 @@ export async function searchAllTimeEntries(search, sql) {
       n.status::text ILIKE ${like}
   `
 }
+
+export async function searchTimeEntriesByEmployee(employeeId, search, sql) {
+  const like = `%${search}%`
+  return await sql`
+    SELECT
+      t.id,
+      t.start_time,
+      t.end_time,
+      t.duration,
+      t.comment,
+      t.start_date,
+      t.end_date,
+      t.break,
+      n.id AS notification_id,
+      n.comment AS notification_comment,
+      n.timestamp,
+      n.status
+    FROM time_entry t
+    LEFT JOIN notification n ON t.notification_id = n.id
+    WHERE t.employee_id = ${employeeId}
+      AND (
+        t.start_time::text ILIKE ${like} OR
+        t.end_time::text ILIKE ${like} OR
+        t.comment ILIKE ${like} OR
+        t.duration::text ILIKE ${like} OR
+        t.break::text ILIKE ${like} OR
+        n.comment ILIKE ${like} OR
+        n.status::text ILIKE ${like}
+      )
+  `
+}
+
+export async function findTimeEntriesByEmployee(employeeId, sql) {
+  return await sql`
+    SELECT
+      t.id,
+      t.start_time,
+      t.end_time,
+      t.duration,
+      t.comment,
+      t.start_date,
+      t.end_date,
+      t.break,
+      n.id AS notification_id,
+      n.comment AS notification_comment,
+      n.timestamp,
+      n.status
+    FROM time_entry t
+    LEFT JOIN notification n ON t.notification_id = n.id
+    WHERE t.employee_id = ${employeeId}
+  `
+}

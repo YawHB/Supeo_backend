@@ -21,29 +21,10 @@ type Query {
 
   timeEntry(id: ID!): TimeEntry!
   timeEntries(search: String): [TimeEntry]!
+  timeEntriesForEmployee(employeeId: ID!, search: String): [TimeEntry]!
 
   roles: [Role]!
   permissions: [Permission]!
 
   userMenuLinks(employeeId: Int!): [UserMenuLink!]!
-
-  # employees(
-  #   search: String
-  #   order: String
-  #   orderBy: String
-  #   limit: Int
-  #   offset: Int
-  #   pagination: PaginationInput!
-  #   roleName: [Int!]
-  #   permissionLevel: [Int!]
-  #   ):[Employee]!
-
-  # paginatedEmployees(
-  #   search: String
-  #   orderBy: String
-  #   order: String
-  #   pagination: PaginationInput!
-  #   employee: [Int]
-  # ): PaginatedEmployeesResponse!
-
 }
