@@ -20,7 +20,8 @@ type Query {
   notifications: [Notification]!
 
   timeEntry(id: ID!): TimeEntry!
-  timeEntries(search: String): [TimeEntry]!
+  timeEntries(search: String, sort: SortInput): [TimeEntry]
+
   timeEntriesForEmployee(employeeId: ID!, search: String, sort: SortInput): [TimeEntry]!
 
   roles: [Role]!

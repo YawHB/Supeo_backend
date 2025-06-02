@@ -20,8 +20,8 @@ export async function fetchTimeEntryById(id, sql) {
   return result
 }
 
-export async function fetchAllTimeEntries(sql) {
-  return await findAllTimeEntries(sql)
+export async function fetchAllTimeEntries(sort) {
+  return await findAllTimeEntries(sort)
 }
 
 export async function updateStatus(notification, sql) {
@@ -76,8 +76,8 @@ export async function updateTimeEntry(sql, timeEntryID, updatedTimeEntry) {
   return await updateTimeEntryAndResetStatus(sql, timeEntryID, updatedTimeEntry)
 }
 
-export async function searchTimeEntries(search) {
-  return await searchAllTimeEntries(search)
+export async function searchTimeEntries(search, sort) {
+  return await searchAllTimeEntries(search, sort)
 }
 
 export async function fetchTimeEntriesForEmployee(employeeId, search, sort) {

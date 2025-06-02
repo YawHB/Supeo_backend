@@ -18,9 +18,42 @@ export async function findTimeEntryById(id, sql) {
   return rows[0]
 }
 
-export async function findAllTimeEntries() {
-  const rows = await sql`SELECT * FROM time_entry`
-  return rows
+export async function findAllTimeEntries(sort) {
+  const orderClause = getOrderClause(sort)
+  return await sql.unsafe(`
+    SELECT
+      t.*,
+      e.first_name,
+      e.last_name
+    FROM time_entry t
+    LEFT JOIN employee e ON t.employee_id = e.id
+    ${orderClause}
+  `)
+}
+
+function getOrderClause(sort) {
+  const validFields = [
+    'start_date',
+    'end_date',
+    'start_time',
+    'end_time',
+    'duration',
+    'break',
+    'comment',
+    'first_name',
+    'last_name',
+    'email',
+    'phone_number',
+    'status',
+    'timestamp',
+  ]
+  const direction = sort?.orderDirection?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'
+  const field = sort?.orderBy
+
+  if (validFields.includes(field)) {
+    return `ORDER BY ${field} ${direction}`
+  }
+  return ''
 }
 
 export async function createTimeEntry(sql, newTimeEntry) {
@@ -200,9 +233,40 @@ export async function deleteNotificationById(notificationId, sql) {
   `
 }
 
-export async function searchAllTimeEntries(search, sql) {
+export async function searchAllTimeEntries(search, sort) {
   const like = `%${search}%`
-  return await sql`
+
+  const validFields = [
+    'start_date',
+    'end_date',
+    'start_time',
+    'end_time',
+    'duration',
+    'break',
+    'comment',
+    'first_name',
+    'last_name',
+    'email',
+    'phone_number',
+    'status',
+    'timestamp',
+  ]
+
+  let orderBy = 't.start_date'
+  let orderDirection = 'ASC'
+
+  if (sort) {
+    if (validFields.includes(sort.orderBy)) {
+      orderBy = sort.orderBy.includes('.') ? sort.orderBy : `t.${sort.orderBy}`
+    }
+    if (sort.orderDirection?.toUpperCase() === 'DESC') {
+      orderDirection = 'DESC'
+    } else {
+      orderDirection = 'ASC'
+    }
+  }
+
+  const query = `
     SELECT
       t.id,
       t.start_time,
@@ -224,26 +288,31 @@ export async function searchAllTimeEntries(search, sql) {
       n.timestamp,
       n.status
     FROM time_entry t
-    LEFT JOIN employee e      ON t.employee_id = e.id
-    LEFT JOIN role r          ON e.role_id = r.id
-    LEFT JOIN permission p    ON e.permission_id = p.id
-    LEFT JOIN notification n  ON t.notification_id = n.id
+    LEFT JOIN employee e ON t.employee_id = e.id
+    LEFT JOIN role r ON e.role_id = r.id
+    LEFT JOIN permission p ON e.permission_id = p.id
+    LEFT JOIN notification n ON t.notification_id = n.id
     WHERE
-      t.start_time::text ILIKE ${like} OR
-      t.end_time::text ILIKE ${like} OR
-      t.comment ILIKE ${like} OR
-      t.duration::text ILIKE ${like} OR
-      t.break::text ILIKE ${like} OR
-      e.first_name ILIKE ${like} OR
-      e.last_name ILIKE ${like} OR
-      e.email ILIKE ${like} OR
-      e.phone_number ILIKE ${like} OR
-      r.role_name ILIKE ${like} OR
-      p.permission_level ILIKE ${like} OR
-      n.comment ILIKE ${like} OR
-      n.status::text ILIKE ${like}
+      t.start_time::text ILIKE $1 OR
+      t.end_time::text ILIKE $1 OR
+      t.comment ILIKE $1 OR
+      t.duration::text ILIKE $1 OR
+      t.break::text ILIKE $1 OR
+      e.first_name ILIKE $1 OR
+      e.last_name ILIKE $1 OR
+      e.email ILIKE $1 OR
+      e.phone_number ILIKE $1 OR
+      r.role_name ILIKE $1 OR
+      p.permission_level ILIKE $1 OR
+      n.comment ILIKE $1 OR
+      n.status::text ILIKE $1
+    ORDER BY ${orderBy} ${orderDirection}
   `
+
+  const rows = await sql.unsafe(query, [like])
+  return rows
 }
+
 
 export async function searchTimeEntriesByEmployee(employeeId, search) {
   const like = `%${search}%`

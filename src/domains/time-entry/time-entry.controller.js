@@ -12,11 +12,11 @@ import {
 
 export const timeEntryResolver = {
   Query: {
-    timeEntries: async (_, { search }, { sql }) => {
+    timeEntries: async (_, { search, sort }) => {
       if (search) {
-        return await searchTimeEntries(search, sql)
+        return await searchTimeEntries(search, sort)
       }
-      return await fetchAllTimeEntries(sql)
+      return await fetchAllTimeEntries(sort)
     },
 
     timeEntry: async (_, { id }, { sql }) => {
