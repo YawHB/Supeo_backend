@@ -75,6 +75,15 @@ export class InCorrectEmailOrPassword extends GraphQLError {
     })
   }
 }
+export class PasswordsDoNotMatchError extends GraphQLError {
+  constructor(message = 'Dit password skal være identisk i begge password felter') {
+    super(message, {
+      extensions: {
+        code: 'IKKE_IDENTISK_PASSOWRD',
+      },
+    })
+  }
+}
 
 export class InvalidPhoneNumberFormat extends GraphQLError {
   constructor(message = 'Ugyldig telefonnummer') {
