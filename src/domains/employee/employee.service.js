@@ -3,12 +3,12 @@ import {
   validateNameParts,
   isValidPhoneNumber,
   capitalize,
+  arePasswordsEqual,
 } from '../../utils/validation.js'
 import {
   UserGroupDoesNotExist,
   PermissionLevelDoesNotExist,
   EmailAlreadyExist,
-  InCorrectEmailOrPassword,
 } from '../../utils/custom-errors.js'
 import {
   getAllRoles,
@@ -56,10 +56,21 @@ export async function getEmployee(employeeID) {
 }
 
 export async function addNewEmployee(employee) {
-  const { firstName, lastName, roleName, permissionLevel, email, phoneNumber, password } = employee
+  const {
+    firstName,
+    lastName,
+    roleName,
+    permissionLevel,
+    email,
+    phoneNumber,
+    password,
+    confirmPassword,
+  } = employee
 
   const [formattedFirstName, formattedLastName] = capitalize(validateNameParts(firstName, lastName))
   validateEmailFormat(email)
+
+  const result = arePasswordsEqual(password, confirmPassword)
   const hashedPassword = await bcrypt.hash(password, 10)
 
   await ensureEmailIsUnique(email)

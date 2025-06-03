@@ -83,9 +83,7 @@ export const employeeResolver = {
       return await editEmployee(updatedEmployee, id)
     },
     handleEmployeeLogin: async (_, { loginInput }) => {
-      const hash = await bcrypt.hash('supeo123', 10)
       const { email, password } = loginInput
-      //console.log('mit hash: ', hash)
 
       return authenticateEmployee(email, password)
     },
