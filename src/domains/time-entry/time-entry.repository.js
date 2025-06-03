@@ -347,13 +347,11 @@ export async function findTimeEntriesByEmployee(employeeId, sort) {
 }
 
 export async function getAllFilteredTimeEntries(filter) {
-  const { employeeId, startDate, endDate } = filter
-
+  const { startDate, endDate } = filter
   const rows = await sql`
     SELECT * FROM time_entry
-    WHERE employee_id = ${employeeId}
-    AND start_date
+    WHERE start_date
     BETWEEN ${startDate} AND ${endDate}
     `
-    return rows
+  return rows
 }

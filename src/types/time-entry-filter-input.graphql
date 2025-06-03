@@ -1,5 +1,4 @@
 input TimeEntryFilterInput {
-  employeeId: ID!
   startDate: Date!
   endDate: Date!
 }
