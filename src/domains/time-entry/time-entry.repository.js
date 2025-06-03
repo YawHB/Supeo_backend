@@ -307,7 +307,6 @@ export async function searchTimeEntriesByEmployee(employeeId, search) {
 }
 
 export async function findTimeEntriesByEmployee(employeeId, sort) {
-
   let orderBy = 't.start_date'
   let orderDirection = 'ASC'
 
@@ -350,25 +349,11 @@ export async function findTimeEntriesByEmployee(employeeId, sort) {
 export async function getAllFilteredTimeEntries(filter) {
   const { employeeId, startDate, endDate } = filter
 
-  const query = `
-    SELECT
-      t.id,
-      t.start_time,
-      t.end_time,
-      t.duration,
-      t.comment,
-      t.start_date,
-      t.end_date,
-      t.break,
-      n.id AS notification_id,
-      n.comment AS notification_comment,
-      n.timestamp,
-      n.status
-    FROM time_entry t
-    LEFT JOIN notification n ON t.notification_id = n.id
-    WHERE t.employee_id = $1
-      AND t.end_time BETWEEN $2 AND $3
-  `
-  const rows = await sql.unsafe(query, [employeeId, startDate, endDate])
-  return rows
+  const rows = await sql`
+    SELECT * FROM time_entry
+    WHERE employee_id = ${employeeId}
+    AND start_date
+    BETWEEN ${startDate} AND ${endDate}
+    `
+    return rows
 }
