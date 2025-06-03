@@ -15,6 +15,7 @@ import { ADMIN_OR_MANAGER } from '../../utils/authHelpers.js'
 export const timeEntryResolver = {
   Query: {
     timeEntries: async (_, { search, sort }, { sql, user }) => {
+      requirePermission(user, ADMIN_OR_MANAGER)
       if (search) {
         return await searchTimeEntries(search, sort)
       }
