@@ -1,0 +1,4 @@
+input TimeEntryFilterInput {
+  startDate: Date
+  endDate: Date
+}

@@ -370,4 +370,6 @@ export async function getAllFilteredTimeEntries(filter) {
       AND t.start_date >= $2
       AND t.end_date <= $3
   `
+  const rows = await sql.unsafe(query, [employeeId, startDate, endDate])
+  return rows
 }
