@@ -132,40 +132,6 @@ export async function deleteTimeEntryById(id, sql) {
   return deletedTimeEntry[0]
 }
 
-// export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
-//   const { startTime, endTime, duration, comment, startDate, endDate, employeeID } = updatedTimeEntry
-
-//   const timeEntryResultArr = await sql`
-//     UPDATE time_entry
-//     SET
-//       start_time = ${startTime},
-//       end_time = ${endTime},
-//       duration = ${duration},
-//       comment = ${comment},
-//       start_date = ${startDate},
-//       end_date = ${endDate},
-//       employee_id = ${employeeID}
-//     WHERE id = ${id}
-//     RETURNING *
-//   `
-
-//   const timeEntry = timeEntryResultArr[0]
-
-//   const notificationResultArr = await sql`
-//     UPDATE notification
-//     SET status = 'AFVENTER'
-//     WHERE id = ${timeEntry.notification_id}
-//     RETURNING *
-//   `
-
-//   const updatedNotification = notificationResultArr[0]
-
-//   return {
-//     ...timeEntry,
-//     notification: updatedNotification,
-//   }
-// }
-
 export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
   const { startTime, endTime, duration, comment, startDate, endDate, employeeID, notification } =
     updatedTimeEntry
@@ -206,7 +172,6 @@ export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
       notification: updatedNotification,
     }
   } else {
-    // fallback to fetching existing notification
     const notificationArr = await sql`
       SELECT * FROM notification WHERE id = ${timeEntry.notification_id}
     `
@@ -310,7 +275,6 @@ export async function searchAllTimeEntries(search, sort) {
   return rows
 }
 
-
 export async function searchTimeEntriesByEmployee(employeeId, search) {
   const like = `%${search}%`
   return await sql`
@@ -381,4 +345,29 @@ export async function findTimeEntriesByEmployee(employeeId, sort) {
   `
   const rows = await sql.unsafe(query, [employeeId])
   return rows
+}
+
+export async function getAllFilteredTimeEntries(filter) {
+  const { employeeId, startDate, endDate } = filter
+
+  const query = `
+    SELECT
+      t.id,
+      t.start_time,
+      t.end_time,
+      t.duration,
+      t.comment,
+      t.start_date,
+      t.end_date,
+      t.break,
+      n.id AS notification_id,
+      n.comment AS notification_comment,
+      n.timestamp,
+      n.status
+    FROM time_entry t
+    LEFT JOIN notification n ON t.notification_id = n.id
+    WHERE t.employee_id = $1
+      AND t.start_date >= $2
+      AND t.end_date <= $3
+  `
 }

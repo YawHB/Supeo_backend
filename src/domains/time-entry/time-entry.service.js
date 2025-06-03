@@ -13,6 +13,7 @@ import {
   searchAllTimeEntries,
   searchTimeEntriesByEmployee,
   findTimeEntriesByEmployee,
+  getAllFilteredTimeEntries,
 } from './time-entry.repository.js'
 
 export async function fetchTimeEntryById(id, sql) {
@@ -85,4 +86,8 @@ export async function fetchTimeEntriesForEmployee(employeeId, search, sort) {
     return await searchTimeEntriesByEmployee(employeeId, search, sort)
   }
   return await findTimeEntriesByEmployee(employeeId, sort)
+}
+
+export async function getFilteredTimeEntries(filter) {
+  return await getAllFilteredTimeEntries(filter)
 }
