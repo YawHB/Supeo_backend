@@ -19,7 +19,6 @@ const snakeCaseFieldResolver = (source, args, contextValue, info) => {
   return source[snakeCase(info.fieldName)]
 }
 
-//TODO Kan først aktiveres når vi har sat login op på frontenden. ellers er der ingen JWT sendt til vores endpoint
 const context = async ({ req }) => {
   if (req.body.operationName === 'login') return { sql }
   return getVerifiedPayload(req)
@@ -52,7 +51,7 @@ function getVerifiedPayload(req) {
   }
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET)
-    return { sql, req, user }
+    return { sql, user }
   } catch (err) {
     console.error('Verificeringsfejl:', err.message)
     throw new InvalidOrExpiredToken()
