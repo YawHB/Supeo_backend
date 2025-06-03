@@ -70,7 +70,7 @@ export async function addNewEmployee(employee) {
   const [formattedFirstName, formattedLastName] = capitalize(validateNameParts(firstName, lastName))
   validateEmailFormat(email)
 
-  const result = arePasswordsEqual(password, confirmPassword)
+  arePasswordsEqual(password, confirmPassword)
   const hashedPassword = await bcrypt.hash(password, 10)
 
   await ensureEmailIsUnique(email)
