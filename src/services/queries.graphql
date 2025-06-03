@@ -16,7 +16,7 @@ type Query {
     sort: SortInput
   ): PaginatedEmployeesResponse!
 
-  filteredTimeEntries(filter: TimeEntryFilterInput): [TimeEntry]!
+  filteredTimeEntries(filter: TimeEntryFilterInput!): [TimeEntry]!
 
   notification(id: ID!): Notification!
   notifications: [Notification]!

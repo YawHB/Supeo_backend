@@ -367,8 +367,7 @@ export async function getAllFilteredTimeEntries(filter) {
     FROM time_entry t
     LEFT JOIN notification n ON t.notification_id = n.id
     WHERE t.employee_id = $1
-      AND t.start_date >= $2
-      AND t.end_date <= $3
+      AND t.end_time BETWEEN $2 AND $3
   `
   const rows = await sql.unsafe(query, [employeeId, startDate, endDate])
   return rows
