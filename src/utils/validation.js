@@ -3,6 +3,7 @@ import {
   InvalidNameLength,
   InvalidPhoneNumberFormat,
   InvalidNameValues,
+  PasswordsDoNotMatchError,
 } from './custom-errors.js'
 
 export function capitalize(names) {
@@ -42,4 +43,8 @@ export function validateEmailFormat(email) {
 export function isValidPhoneNumber(phoneNumber) {
   const phoneNumberPattern = /^\d{8}$/
   if (!phoneNumberPattern.test(phoneNumber)) throw new InvalidPhoneNumberFormat()
+}
+
+export function arePasswordsEqual(password1, password2) {
+  if (password1 !== password2) throw new PasswordsDoNotMatchError()
 }
