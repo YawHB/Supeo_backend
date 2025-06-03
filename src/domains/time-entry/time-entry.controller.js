@@ -9,10 +9,12 @@ import {
   searchTimeEntries,
   fetchTimeEntriesForEmployee,
 } from './time-entry.service.js'
+import { requirePermission } from '../../utils/authHelpers.js'
+import { ADMIN_OR_MANAGER } from '../../utils/authHelpers.js'
 
 export const timeEntryResolver = {
   Query: {
-    timeEntries: async (_, { search, sort }) => {
+    timeEntries: async (_, { search, sort }, { sql, user }) => {
       if (search) {
         return await searchTimeEntries(search, sort)
       }

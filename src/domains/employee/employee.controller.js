@@ -1,3 +1,4 @@
+import { ALL_ROLES, ADMIN_OR_MANAGER, requirePermission } from '../../utils/authHelpers.js'
 import {
   getRoles,
   getEmployees,
@@ -16,30 +17,38 @@ import bcrypt from 'bcryptjs'
 
 export const employeeResolver = {
   Query: {
-    employees: async (_, { search }, { sql }) => {
+    employees: async (_, { search }, { sql, user }) => {
+      console.log('Inside employees resolver')
+
+      requirePermission(user, ADMIN_OR_MANAGER)
       if (search) {
         return await searchEmployees(search, sql)
       }
       return await getEmployees(sql)
     },
 
-    filteredEmployees: async (_, { filter, sort }, { sql }) => {
+    filteredEmployees: async (_, { filter, sort }, { sql, user }) => {
       return await getFilteredEmployees(filter, sort)
     },
 
-    employee: async (_, { id }, { sql }) => {
+    employee: async (_, { id }, { sql, user }) => {
+      requirePermission(user, ALL_ROLES)
       return await fetchEmployee(id, sql)
     },
 
-    roles: async (_, __, { sql }) => {
+    roles: async (_, __, { sql, user }) => {
       return await getRoles(sql)
     },
 
-    permissions: async (_, __, { sql }) => {
+    permissions: async (_, __, { sql, user }) => {
       return await getPermissions(sql)
     },
 
-    paginatedEmployees: async (_, { pagination, search, roles, permissions, sort }, { sql }) => {
+    paginatedEmployees: async (
+      _,
+      { pagination, search, roles, permissions, sort },
+      { sql, user },
+    ) => {
       const { pagination: pageInfo, employees } = await getPaginatedEmployees(sql, {
         pagination,
         search,
@@ -59,17 +68,18 @@ export const employeeResolver = {
   },
 
   Employee: {
-    timeEntries: async (parent, _, { sql }) => {
+    timeEntries: async (parent, _, { sql, user }) => {
+      requirePermission(user, ALL_ROLES)
       return await fetchEmployeeTimeEntries(parent, sql)
     },
   },
 
   Mutation: {
-    createEmployee: async (_, { newEmployee }) => {
+    createEmployee: async (_, { newEmployee, user }) => {
       return await addNewEmployee(newEmployee)
     },
 
-    updateEmployee: async (_, { id, updatedEmployee }) => {
+    updateEmployee: async (_, { id, updatedEmployee, user }) => {
       return await editEmployee(updatedEmployee, id)
     },
     handleEmployeeLogin: async (_, { loginInput }) => {

@@ -9,6 +9,7 @@ import { expressMiddleware } from '@apollo/server/express4'
 import { typeDefs } from './schema-builder/merge-type-defs.js'
 import { resolvers } from './schema-builder/merge-resolvers.js'
 import { MissingOrMalformedAuthHeader, InvalidOrExpiredToken } from './utils/custom-errors.js'
+import jwt from 'jsonwebtoken'
 
 const PORT = 4000
 
@@ -18,7 +19,6 @@ const snakeCaseFieldResolver = (source, args, contextValue, info) => {
   return source[snakeCase(info.fieldName)]
 }
 
-//TODO Kan først aktiveres når vi har sat login op på frontenden. ellers er der ingen JWT sendt til vores endpoint
 const context = async ({ req }) => {
   if (req.body.operationName === 'login') return { sql }
   return getVerifiedPayload(req)
@@ -37,8 +37,8 @@ app.use(
   cors(),
   bodyParser.json(),
   expressMiddleware(server, {
-    context: async () => ({ sql }),
-    //context,
+    //context: async () => ({ sql }),
+    context,
   }),
 )
 
@@ -46,15 +46,12 @@ app.listen(PORT, () => console.log(`🚀 Server ready at http://localhost:${PORT
 
 function getVerifiedPayload(req) {
   const token = req.headers.authorization
-  console.log('headers:', req.headers)
-  console.log('token:', token)
   if (!token) {
     throw new MissingOrMalformedAuthHeader()
   }
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET)
-    console.log('user :', user)
-    return { sql, req, user }
+    return { sql, user }
   } catch (err) {
     console.error('Verificeringsfejl:', err.message)
     throw new InvalidOrExpiredToken()
