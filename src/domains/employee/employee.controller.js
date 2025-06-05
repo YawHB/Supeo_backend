@@ -18,7 +18,6 @@ import bcrypt from 'bcryptjs'
 export const employeeResolver = {
   Query: {
     employees: async (_, { search }, { sql, user }) => {
-
       requirePermission(user, ADMIN_OR_MANAGER)
       if (search) {
         return await searchEmployees(search, sql)
@@ -36,10 +35,12 @@ export const employeeResolver = {
     },
 
     roles: async (_, __, { sql, user }) => {
+      requirePermission(user, ADMIN_OR_MANAGER)
       return await getRoles(sql)
     },
 
     permissions: async (_, __, { sql, user }) => {
+      requirePermission(user, ADMIN_OR_MANAGER)
       return await getPermissions(sql)
     },
 
@@ -48,6 +49,7 @@ export const employeeResolver = {
       { pagination, search, roles, permissions, sort },
       { sql, user },
     ) => {
+      requirePermission(user, ADMIN_OR_MANAGER)
       const { pagination: pageInfo, employees } = await getPaginatedEmployees(sql, {
         pagination,
         search,

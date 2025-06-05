@@ -88,22 +88,44 @@ export async function addNewEmployee(employee) {
 }
 
 export async function editEmployee(employee, id) {
-  const { firstName, lastName, roleName, permissionLevel, email, phoneNumber } = employee
+  let role, permission, hashedPassword
+
+  const {
+    firstName,
+    lastName,
+    roleName,
+    permissionLevel,
+    email,
+    phoneNumber,
+    password,
+    confirmPassword,
+  } = employee
 
   const [formattedFirstName, formattedLastName] = capitalize(validateNameParts(firstName, lastName))
   validateEmailFormat(email)
   await ensureEmailIsUnique(email, id)
   isValidPhoneNumber(phoneNumber)
-  const role = await ensureRoleExists(roleName)
-  const permission = await permissionLevelExist(permissionLevel)
 
-  const newEmployee = {
+  if (roleName && permissionLevel) {
+    role = await ensureRoleExists(roleName)
+    permission = await permissionLevelExist(permissionLevel)
+  }
+
+  if (password && confirmPassword) {
+    arePasswordsEqual(password, confirmPassword)
+    hashedPassword = await bcrypt.hash(password, 10)
+  }
+
+  const employeeToUpdate = {
     ...employee,
     firstName: formattedFirstName,
     lastName: formattedLastName,
+    roleID: roleName ? role.id : null,
+    permissionID: permissionLevel ? permission.id : null,
+    password: password ? hashedPassword : null,
   }
 
-  return updateEmployee(newEmployee, id, role.id, permission.id)
+  return updateEmployee(employeeToUpdate, id)
 }
 
 export async function authenticateEmployee(email, password) {

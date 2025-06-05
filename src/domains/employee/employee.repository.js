@@ -54,20 +54,38 @@ export async function createEmployee(employee, roleID, permissionID) {
   return newEmployee
 }
 
-export async function updateEmployee(employee, employeeID, roleID, permissionID) {
-  const { firstName, lastName, email, phoneNumber } = employee
+export async function updateEmployee(employee, employeeID) {
+  const { firstName, lastName, email, phoneNumber, roleID, permissionID, password } = employee
 
-  await sql` UPDATE employee
-  SET
-      first_name = ${firstName},
-      last_name = ${lastName},
-      email = ${email},
-      phone_number = ${phoneNumber},
-      role_id =  ${roleID},
-      permission_id =${permissionID}
-    WHERE id = ${employeeID}
-  `
-  const updatedEmployee = await sql`
+  const updates = [
+    { key: 'first_name', value: firstName },
+    { key: 'last_name', value: lastName },
+    { key: 'email', value: email },
+    { key: 'phone_number', value: phoneNumber },
+  ]
+
+  if (roleID !== null) {
+    updates.push({ key: 'role_id', value: roleID })
+  }
+
+  if (permissionID !== null) {
+    updates.push({ key: 'permission_id', value: permissionID })
+  }
+
+  if (password !== null) {
+    updates.push({ key: 'password', value: password })
+  }
+
+  const setClause = updates.map((property, i) => `${property.key} = $${i + 1}`).join(', ')
+
+  const values = updates.map((property) => property.value)
+
+  await sql.unsafe(`UPDATE employee SET ${setClause} WHERE id = $${values.length + 1}`, [
+    ...values,
+    employeeID,
+  ])
+
+  const [updatedEmployee] = await sql`
     SELECT
       employee.id,
       employee.first_name,
@@ -81,7 +99,8 @@ export async function updateEmployee(employee, employeeID, roleID, permissionID)
     INNER JOIN permission ON permission.id = employee.permission_id
     WHERE employee.id = ${employeeID}
   `
-  return updatedEmployee[0]
+
+  return updatedEmployee
 }
 
 export async function getAllRoles(sql) {
