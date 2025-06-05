@@ -6,4 +6,6 @@ type CreatedEmployee {
   permissionLevel: String
   email: String!
   phoneNumber: String!
+  password: String
+  confirmPassword: String
 }
