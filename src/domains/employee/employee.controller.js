@@ -18,7 +18,6 @@ import bcrypt from 'bcryptjs'
 export const employeeResolver = {
   Query: {
     employees: async (_, { search }, { sql, user }) => {
-      console.log('Inside employees resolver')
 
       requirePermission(user, ADMIN_OR_MANAGER)
       if (search) {

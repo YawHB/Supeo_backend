@@ -132,40 +132,6 @@ export async function deleteTimeEntryById(id, sql) {
   return deletedTimeEntry[0]
 }
 
-// export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
-//   const { startTime, endTime, duration, comment, startDate, endDate, employeeID } = updatedTimeEntry
-
-//   const timeEntryResultArr = await sql`
-//     UPDATE time_entry
-//     SET
-//       start_time = ${startTime},
-//       end_time = ${endTime},
-//       duration = ${duration},
-//       comment = ${comment},
-//       start_date = ${startDate},
-//       end_date = ${endDate},
-//       employee_id = ${employeeID}
-//     WHERE id = ${id}
-//     RETURNING *
-//   `
-
-//   const timeEntry = timeEntryResultArr[0]
-
-//   const notificationResultArr = await sql`
-//     UPDATE notification
-//     SET status = 'AFVENTER'
-//     WHERE id = ${timeEntry.notification_id}
-//     RETURNING *
-//   `
-
-//   const updatedNotification = notificationResultArr[0]
-
-//   return {
-//     ...timeEntry,
-//     notification: updatedNotification,
-//   }
-// }
-
 export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
   const { startTime, endTime, duration, comment, startDate, endDate, employeeID, notification } =
     updatedTimeEntry
@@ -206,7 +172,6 @@ export async function updateTimeEntryAndResetStatus(sql, id, updatedTimeEntry) {
       notification: updatedNotification,
     }
   } else {
-    // fallback to fetching existing notification
     const notificationArr = await sql`
       SELECT * FROM notification WHERE id = ${timeEntry.notification_id}
     `
@@ -310,7 +275,6 @@ export async function searchAllTimeEntries(search, sort) {
   return rows
 }
 
-
 export async function searchTimeEntriesByEmployee(employeeId, search) {
   const like = `%${search}%`
   return await sql`
@@ -343,7 +307,6 @@ export async function searchTimeEntriesByEmployee(employeeId, search) {
 }
 
 export async function findTimeEntriesByEmployee(employeeId, sort) {
-
   let orderBy = 't.start_date'
   let orderDirection = 'ASC'
 
@@ -380,5 +343,15 @@ export async function findTimeEntriesByEmployee(employeeId, sort) {
     ORDER BY ${orderBy} ${orderDirection}
   `
   const rows = await sql.unsafe(query, [employeeId])
+  return rows
+}
+
+export async function getAllFilteredTimeEntries(filter) {
+  const { startDate, endDate } = filter
+  const rows = await sql`
+    SELECT * FROM time_entry
+    WHERE start_date
+    BETWEEN ${startDate} AND ${endDate}
+    `
   return rows
 }

@@ -8,6 +8,7 @@ import {
   updateTimeEntry,
   searchTimeEntries,
   fetchTimeEntriesForEmployee,
+  getFilteredTimeEntries,
 } from './time-entry.service.js'
 import { requirePermission } from '../../utils/authHelpers.js'
 import { ADMIN_OR_MANAGER } from '../../utils/authHelpers.js'
@@ -28,6 +29,10 @@ export const timeEntryResolver = {
 
     timeEntriesForEmployee: async (_, { employeeId, search, sort }) => {
       return await fetchTimeEntriesForEmployee(employeeId, search, sort)
+    },
+
+    filteredTimeEntries: async (_, { filter }, { user }) => {
+      return await getFilteredTimeEntries(filter)
     },
   },
 
