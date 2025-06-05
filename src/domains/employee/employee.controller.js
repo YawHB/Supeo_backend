@@ -11,6 +11,7 @@ import {
   searchEmployees,
   authenticateEmployee,
   getPaginatedEmployees,
+  getEmployeeByID,
 } from './employee.service.js'
 
 import bcrypt from 'bcryptjs'
@@ -23,6 +24,10 @@ export const employeeResolver = {
         return await searchEmployees(search, sql)
       }
       return await getEmployees(sql)
+    },
+
+    employeeByID: async (_, { id }, { user }) => {
+      return await getEmployeeByID(id)
     },
 
     filteredEmployees: async (_, { filter, sort }, { sql, user }) => {

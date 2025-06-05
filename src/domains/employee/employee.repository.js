@@ -24,6 +24,11 @@ export async function findAllEmployees(employeeID, sql) {
   return rows[0]
 }
 
+export async function findEmployeeByID(id) {
+  const [employee] = await sql`SELECT * FROM employee WHERE id = ${id}`
+  return employee
+}
+
 export async function findAllEmployeeTimeEntries(employee, sql) {
   return await sql`SELECT * FROM time_entry WHERE employee_id = ${employee.id}`
 }

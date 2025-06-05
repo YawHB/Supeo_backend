@@ -31,6 +31,7 @@ import {
   findEmployeeByEmail,
   findRoleByEmployeeRoleID,
   findPermissionByEmployeePermissionID,
+  findEmployeeByID,
 } from './employee.repository.js'
 
 import bcrypt from 'bcryptjs'
@@ -38,6 +39,10 @@ import jwt from 'jsonwebtoken'
 
 export function getEmployees() {
   return getAllEmployees()
+}
+
+export async function getEmployeeByID(id) {
+  return await findEmployeeByID(id)
 }
 
 export async function getFilteredEmployees(filter, sort) {
