@@ -9,6 +9,7 @@ import {
   UserGroupDoesNotExist,
   PermissionLevelDoesNotExist,
   EmailAlreadyExist,
+  InCorrectEmailOrPassword,
 } from '../../utils/custom-errors.js'
 import {
   getAllRoles,
