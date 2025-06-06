@@ -37,7 +37,6 @@ app.use(
   cors(),
   bodyParser.json(),
   expressMiddleware(server, {
-    //context: async () => ({ sql }),
     context,
   }),
 )
