@@ -1,6 +1,6 @@
 import { sql } from '../../db-config.js'
 
-const DEFAULT_BREAK = parseInt(process.env.PS_DEFAULT_BREAK_MINUTES ?? 30)
+const DEFAULT_BREAK = parseInt(process.env.POSTGRES_DEFAULT_BREAK_MINUTES ?? 30)
 
 const validSortFieldsForEmployee = [
   'id',
