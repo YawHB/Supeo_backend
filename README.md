@@ -40,4 +40,4 @@ This tutorial will guide you through how to install and run the application for 
    docker compose up
    ```
 
-The server will be available at [http://localhost:4000](http://localhost:4000)
+You can run the server in combination with the frontend, or on a alternative clients, such as Apollo exploror or Postman at [http://localhost:4000](http://localhost:4000/graphql)
