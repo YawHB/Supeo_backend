@@ -17,11 +17,13 @@ This tutorial will guide you through how to install and run the application for 
 
 ### Backend
 
-1. Create the .env file in the root of the backend
+1. Create the .env file in the root of the backend repository.
 
-2. Insert the .env variables in the file found in the "Credentials and .env variables" document
+
+2. Insert the .env variables found in the "Hovedopgave" document found at:
+
+    "1.1 Login credentials til afprøvning af applikationen"
    
-
 3. Open your terminal and navigate to the backend directory:
 
    ```bash
